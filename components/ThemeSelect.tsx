@@ -24,10 +24,10 @@ export function ThemeSelect() {
 
   return (
     <Select value={theme} onValueChange={onChange}>
-      <SelectTrigger className="w-40 rounded-full border theme-border theme-surface-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
+      <SelectTrigger className="w-40 rounded-full neu-layer border-0 text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
         <SelectValue placeholder="Theme" />
       </SelectTrigger>
-      <SelectContent className="border theme-border theme-surface-2 backdrop-blur-xl">
+      <SelectContent className="neu-layer border-0 backdrop-blur-xl">
         {THEMES.map((t) => (
           <SelectItem
             key={t.id}

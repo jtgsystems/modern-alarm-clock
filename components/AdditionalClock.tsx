@@ -44,8 +44,8 @@ function AdditionalClock({
   return (
     <div
       className={cn(
-        "group flex items-center gap-3 rounded-2xl border theme-border theme-surface-2 px-4 py-3",
-        "transition-all duration-200 hover:border-white/20",
+        "group flex items-center gap-3 neu-layer px-4 py-3",
+        "transition-all duration-200",
         className
       )}
       role="timer"

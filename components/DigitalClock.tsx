@@ -198,7 +198,7 @@ export default function DigitalClock() {
         }}
         showHints={true}
       >
-        <div className="relative isolate overflow-hidden rounded-[36px] border theme-border theme-surface shadow-[0_40px_80px_rgba(6,15,35,0.55)]">
+        <div className="relative isolate overflow-hidden neu-panel">
         <div className="pointer-events-none absolute inset-0 opacity-70">
           <div className="absolute -top-32 left-1/3 h-64 w-64 rounded-full bg-[radial-gradient(circle_at_center,_rgba(56,189,248,0.18),_rgba(56,189,248,0))] blur-3xl" />
           <div className="absolute bottom-[-20%] right-[-10%] h-72 w-72 rounded-full bg-[radial-gradient(circle_at_center,_rgba(167,139,250,0.18),_rgba(167,139,250,0))] blur-3xl" />
@@ -303,7 +303,7 @@ export default function DigitalClock() {
               <WeatherDisplay />
               {weatherData && (
                 <motion.div
-                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-5 shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
+                  className="neu-layer p-5 neu-interactive relative overflow-hidden"
                   whileHover={{ scale: 1.01, y: -2 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
                 >
@@ -320,7 +320,7 @@ export default function DigitalClock() {
 
             <div className="flex flex-col gap-6">
               <motion.div
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-4 sm:p-5 shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
+                className="neu-layer p-4 sm:p-5 neu-interactive relative overflow-hidden"
                 whileHover={{ scale: 1.01, y: -2 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
               >
@@ -330,7 +330,7 @@ export default function DigitalClock() {
                     <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white/50">World Clocks</h3>
                     <motion.button
                       onClick={() => setIsAddTimeZoneOpen(true)}
-                      className="group relative overflow-hidden rounded-full border border-white/10 bg-white/5 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white/70 transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                      className="rounded-full px-3 py-1 text-xs font-medium text-white/70 neu-layer neu-interactive"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
@@ -363,7 +363,7 @@ export default function DigitalClock() {
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <motion.button
                   onClick={() => setIsAlarmOpen(true)}
-                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-3 text-center text-sm font-medium text-white/80 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all hover:border-white/20 hover:bg-white/10 hover:text-white hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)]"
+                  className="neu-layer px-4 py-3 text-center text-sm font-medium text-white/80 neu-interactive"
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
@@ -373,11 +373,11 @@ export default function DigitalClock() {
                     layoutId="alarm-button-bg"
                   />
                   <span className="relative z-10 font-semibold">Set Alarm</span>
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent" />
+                  <div className="absolute inset-0 rounded-2xl" />
                 </motion.button>
                 <motion.button
                   onClick={() => setIsAddTimeZoneOpen(true)}
-                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-3 text-center text-sm font-medium text-white/80 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all hover:border-white/20 hover:bg-white/10 hover:text-white hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)]"
+                  className="neu-layer px-4 py-3 text-center text-sm font-medium text-white/80 neu-interactive"
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
@@ -387,7 +387,7 @@ export default function DigitalClock() {
                     layoutId="timezone-button-bg"
                   />
                   <span className="relative z-10 font-semibold">Add Time Zone</span>
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent" />
+                  <div className="absolute inset-0 rounded-2xl" />
                 </motion.button>
               </div>
             </div>

@@ -77,22 +77,17 @@ export default function WeatherDisplay({ city = "New York" }: WeatherDisplayProp
 
   return (
     <motion.div
-      className="relative overflow-hidden rounded-3xl backdrop-blur-xl p-6 shadow-[0_24px_60px_rgba(0,0,0,0.4)]"
-      style={{
-        background: `linear-gradient(135deg, ${currentTheme.colors.gradient}), rgba(255, 255, 255, 0.03)`,
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.08)'
-      }}
-      initial={{ opacity: 0, scale: 0.95 }}
+      className="relative neu-surface overflow-hidden backdrop-blur-xl p-6 neu-interactive"
+      initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.25 }}
     >
       {/* Dynamic background overlay */}
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-10"
         style={{
-          background: `radial-gradient(circle at 30% 20%, ${currentTheme.colors.accent}40 0%, transparent 50%),
-                      radial-gradient(circle at 70% 80%, ${currentTheme.colors.accent}20 0%, transparent 50%)`
+          background: `radial-gradient(circle at 30% 20%, ${currentTheme.colors.accent}30 0%, transparent 50%),
+                      radial-gradient(circle at 70% 80%, ${currentTheme.colors.accent}15 0%, transparent 50%)`
         }}
       />
 

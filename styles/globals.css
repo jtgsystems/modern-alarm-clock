@@ -9,6 +9,10 @@
   --border: 255 255 255 / 0.08;
   --accent: 56 189 248; /* sky-400 */
   --accent-2: 167 139 250; /* violet-400 */
+  /* Neumorphism tokens */
+  --neo-bg: rgba(22,24,32,0.95);
+  --neo-light: rgba(255,255,255,0.08);
+  --neo-dark: rgba(0,0,0,0.55);
 }
 :root[data-theme='aurora']{
   --surface: 20 24 28;
@@ -16,6 +20,9 @@
   --border: 255 255 255 / 0.08;
   --accent: 45 212 191; /* teal-400 */
   --accent-2: 147 197 253; /* blue-300 */
+  --neo-bg: rgba(18,22,26,0.95);
+  --neo-light: rgba(255,255,255,0.09);
+  --neo-dark: rgba(0,0,0,0.50);
 }
 :root[data-theme='sunset']{
   --surface: 32 24 24;
@@ -23,6 +30,9 @@
   --border: 255 255 255 / 0.1;
   --accent: 251 146 60; /* orange-400 */
   --accent-2: 244 114 182; /* pink-400 */
+  --neo-bg: rgba(28,20,20,0.95);
+  --neo-light: rgba(255,255,255,0.08);
+  --neo-dark: rgba(0,0,0,0.55);
 }
 :root[data-theme='slate']{
   --surface: 30 35 40;
@@ -30,6 +40,9 @@
   --border: 255 255 255 / 0.08;
   --accent: 148 163 184; /* slate-400 */
   --accent-2: 203 213 225; /* slate-200 */
+  --neo-bg: rgba(26,30,36,0.95);
+  --neo-light: rgba(255,255,255,0.08);
+  --neo-dark: rgba(0,0,0,0.55);
 }
 
 .theme-surface{ background-color: rgb(var(--surface)/0.9); }
@@ -38,6 +51,21 @@
 .theme-accent{ color: rgb(var(--accent)); }
 .theme-accent-bg{ background-color: rgb(var(--accent)/0.12); }
 .theme-accent-2-bg{ background-color: rgb(var(--accent-2)/0.12); }
+
+/* Neumorphism helpers */
+:root{
+  --neo-shadow-lg: 14px 14px 28px var(--neo-dark), -14px -14px 28px var(--neo-light);
+  --neo-shadow-md: 9px 9px 18px var(--neo-dark), -9px -9px 18px var(--neo-light);
+  --neo-shadow-sm: 4px 4px 8px var(--neo-dark), -4px -4px 8px var(--neo-light);
+  --neo-inset-md: inset 9px 9px 18px var(--neo-dark), inset -9px -9px 18px var(--neo-light);
+}
+
+.neu-panel{ background: var(--neo-bg); box-shadow: var(--neo-shadow-lg); border-radius: 36px; }
+.neu-surface{ background: var(--neo-bg); box-shadow: var(--neo-shadow-md); border-radius: 1rem; }
+.neu-layer{ background-color: rgb(var(--surface-2)/0.95); box-shadow: var(--neo-shadow-sm); border-radius: 1rem; }
+.neu-pressed{ background-color: rgb(var(--surface-2)/0.95); box-shadow: var(--neo-inset-md); border-radius: 1rem; }
+.neu-interactive{ transition: transform .2s ease, box-shadow .2s ease; }
+.neu-interactive:hover{ transform: translateY(-2px); box-shadow: var(--neo-shadow-lg); }
 
 /* Import modern fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
