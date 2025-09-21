@@ -1,12 +1,11 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { cn } from "@/lib/utils"
-import { Play, Pause, SkipForward, Volume2, Music2, Radio, Waves, Heart, Share2, Repeat, Shuffle } from "lucide-react"
+import { Play, Pause, SkipForward, Volume2, Music2, Radio, Waves, Heart, Shuffle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useDynamicTheme } from "./DynamicThemeProvider"
 import { toast } from "sonner"
@@ -103,7 +102,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [volume, setVolume] = useState(0.5)
   const [isFavorite, setIsFavorite] = useState(false)
-  const [isRepeat, setIsRepeat] = useState(false)
+  // Repeat disabled in UI for now; can be re-enabled later
   const [isShuffle, setIsShuffle] = useState(false)
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'error' | 'idle'>('idle')
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -208,13 +207,8 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
     }
 
     const handleEnded = () => {
-      if (isRepeat) {
-        audio.currentTime = 0
-        audio.play()
-      } else {
-        setIsPlaying(false)
-        setConnectionStatus('idle')
-      }
+      setIsPlaying(false)
+      setConnectionStatus('idle')
     }
 
     audio.addEventListener('loadstart', handleLoadStart)
@@ -228,7 +222,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
       audio.removeEventListener('error', handleError)
       audio.removeEventListener('ended', handleEnded)
     }
-  }, [currentStation, isRepeat])
+  }, [currentStation])
 
   const getStatusColor = () => {
     switch (connectionStatus) {

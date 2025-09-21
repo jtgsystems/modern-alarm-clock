@@ -16,7 +16,6 @@ interface NewsScrollerProps {
 
 const NewsScroller: React.FC<NewsScrollerProps> = ({ location }) => {
   const [news, setNews] = useState<NewsItem[]>([])
-  const [isOpen, setIsOpen] = useState(true)
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -88,4 +87,3 @@ const NewsScroller: React.FC<NewsScrollerProps> = ({ location }) => {
 }
 
 export default NewsScroller
-

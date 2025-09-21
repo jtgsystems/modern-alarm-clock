@@ -2,14 +2,13 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import Clock from "./Clock"
-import AlarmForm from "./AlarmForm"
 import ActiveAlarms from "./ActiveAlarms"
 import UpcomingAlarms from "./UpcomingAlarms"
 import SnoozePanel from "./SnoozePanel"
 import ThemeToggle from "./ThemeToggle"
 import AppointmentList from "./AppointmentList"
 import AlarmDialog from "./AlarmDialog"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+// Dialog primitives not used directly; AlarmDialog encapsulates them
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { toast } from "sonner"
@@ -56,6 +55,7 @@ interface CalendarContainerProps {
 function CalendarContainer({ isOpen, onClose, children }: CalendarContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -134,12 +134,13 @@ export default function AlarmClock() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   const [showAlarmDialog, setShowAlarmDialog] = useState(false)
-  const audioRef = useRef<HTMLAudioElement>(null)
+  // const audioRef = useRef<HTMLAudioElement>(null)
   const notification = useNotification({
     title: "Alarm Clock",
     icon: "/alarm-icon.png"
   })
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date()
@@ -427,4 +428,3 @@ export default function AlarmClock() {
     </>
   )
 }
-

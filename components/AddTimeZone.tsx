@@ -4,7 +4,6 @@ import type React from "react"
 import { Search } from "lucide-react"
 import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
@@ -275,4 +274,3 @@ export default function AddTimeZone({ onAdd, onClose }: AddTimeZoneProps) {
     </form>
   )
 }
-

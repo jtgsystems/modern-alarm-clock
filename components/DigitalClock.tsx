@@ -14,7 +14,7 @@ import AdditionalClock from "./AdditionalClock"
 import AddTimeZone from "./AddTimeZone"
 import WeatherSuggestion from "./WeatherSuggestion"
 import WeatherDisplay from "./WeatherDisplay"
-import { cn } from "@/lib/utils"
+// import { cn } from "@/lib/utils" // not used in this component
 import RadioPlayer from "./RadioPlayer"
 import Soundscapes from "./Soundscapes"
 import ThemeToggle from "./ThemeToggle"
@@ -58,6 +58,7 @@ export default function DigitalClock() {
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     setCurrentTime(new Date())
     const timer = setInterval(() => {

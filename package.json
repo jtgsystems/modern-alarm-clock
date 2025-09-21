@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "preview": "tsx scripts/preview.ts",
     "preview:pw": "tsx scripts/preview.playwright.ts"
   },

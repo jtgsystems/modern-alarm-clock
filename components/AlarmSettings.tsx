@@ -34,7 +34,7 @@ const alarmSounds = [
   { value: "rooster", label: "Rooster Crow" },
 ]
 
-export default function AlarmSettings({ onClose, is24HourFormat, onSetAlarm }: AlarmSettingsProps) {
+export default function AlarmSettings({ onClose, onSetAlarm }: AlarmSettingsProps) {
   const [alarmTime, setAlarmTime] = useState("")
   const [alarmLabel, setAlarmLabel] = useState("")
   const [isRecurring, setIsRecurring] = useState(false)
@@ -258,4 +258,3 @@ export default function AlarmSettings({ onClose, is24HourFormat, onSetAlarm }: A
     </form>
   )
 }
-
