@@ -411,7 +411,7 @@ export default function DigitalClock() {
                 setIsCalendarOpen(false)
               }
             }}
-            className="rounded-md border border-gray-200 dark:border-white/10 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-white [&_button:hover]:bg-white/10 [&_button]:text-gray-900 dark:text-white [&_.rdp-day_button:hover]:bg-white/10 [&_.rdp-day_button]:text-gray-900 dark:text-white [&_.rdp-nav_button]:text-gray-900 dark:text-white [&_.rdp-head_cell]:text-gray-900 dark:text-gray-500 dark:text-white/60"
+            className="rounded-md border border-gray-200 dark:border-white/10 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-white [&_button:hover]:bg-white/10 dark:[&_button:hover]:bg-white/5 [&_button]:text-gray-900 dark:[&_button]:text-white [&_.rdp-day_button:hover]:bg-white/10 dark:[&_.rdp-day_button:hover]:bg-white/5 [&_.rdp-day_button]:text-gray-900 dark:[&_.rdp-day_button]:text-white [&_.rdp-nav_button]:text-gray-900 dark:[&_.rdp-nav_button]:text-white [&_.rdp-head_cell]:text-gray-900 dark:[&_.rdp-head_cell]:text-white/60"
           />
         </DialogContent>
       </Dialog>
