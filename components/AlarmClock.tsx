@@ -97,7 +97,7 @@ function CalendarContainer({ isOpen, onClose, children }: CalendarContainerProps
   if (!isOpen) return null
 
   return (
-    <div 
+    <div
       ref={containerRef}
       tabIndex={-1}
       className={cn(
@@ -109,7 +109,7 @@ function CalendarContainer({ isOpen, onClose, children }: CalendarContainerProps
         if (e.target === e.currentTarget) onClose()
       }}
     >
-      <div 
+      <div
         className={cn(
           "relative",
           "bg-gray-900/95 backdrop-blur-xl",
@@ -251,7 +251,7 @@ export default function AlarmClock() {
     }
 
     toast.success("Alarm set successfully", {
-      description: settings.reminderDate 
+      description: settings.reminderDate
         ? `Set for ${settings.reminderDate.toLocaleDateString()} at ${settings.time}`
         : `Set for ${settings.time}`
     })
@@ -269,8 +269,8 @@ export default function AlarmClock() {
   const snoozeAlarm = useCallback((duration: number) => {
     if (activeAlarm) {
       const snoozeTime = new Date(currentTime.getTime() + duration * 60000)
-      const snoozeAlarm: Alarm = { 
-        ...activeAlarm, 
+      const snoozeAlarm: Alarm = {
+        ...activeAlarm,
         time: snoozeTime.toLocaleTimeString("en-US", {
           hour: "2-digit",
           minute: "2-digit",
@@ -323,7 +323,7 @@ export default function AlarmClock() {
       <div className="space-y-6">
         <ThemeToggle />
         <Clock currentTime={currentTime} />
-        
+
         {/* Buttons and Upcoming Alarms Section */}
         <div className="space-y-6">
           <div className="flex gap-2">
@@ -341,7 +341,7 @@ export default function AlarmClock() {
         <ActiveAlarms alarms={alarms} removeAlarm={removeAlarm} />
         {isSnoozing && <SnoozePanel alarm={activeAlarm} onStop={stopAlarm} onSnooze={snoozeAlarm} />}
 
-        <AppointmentList appointments={getAllAppointments()} />
+        <AppointmentList appointments={getAllAppointments} />
 
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-medium text-white/90">Calendar</h2>
@@ -386,7 +386,7 @@ export default function AlarmClock() {
                 caption: "text-white/90"
               }}
             />
-            
+
             {selectedDate && getDayReminders(selectedDate).length > 0 && (
               <div className="mt-4 p-4 rounded-lg bg-white/5 border border-white/10">
                 <h4 className="text-sm font-medium text-white/80 mb-3">
@@ -419,10 +419,10 @@ export default function AlarmClock() {
       {/* Floating Upcoming Alarms Widget */}
       <UpcomingAlarmsWidget alarms={alarms} />
       <ShortcutsHint />
-      
+
       {/* Help text for new users */}
-      <div class="fixed bottom-4 left-4 text-xs text-white/40">
-        Press <kbd class="px-1.5 py-0.5 bg-white/10 rounded">Shift + ?</kbd> for keyboard shortcuts
+      <div className="fixed bottom-4 left-4 text-xs text-white/40">
+        Press <kbd className="px-1.5 py-0.5 bg-white/10 rounded">Shift + ?</kbd> for keyboard shortcuts
       </div>
     </>
   )

@@ -1,21 +1,25 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { getMockWeather } from "@/lib/mockWeather"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Calendar } from "@/components/ui/calendar"
+import { toast } from "sonner"
 import AlarmSettings, { type AlarmSettings as AlarmSettingsType } from "./AlarmSettings"
 import AdditionalClock from "./AdditionalClock"
 import AddTimeZone from "./AddTimeZone"
 import WeatherSuggestion from "./WeatherSuggestion"
-import WeatherDisplay from "./WeatherDisplay" 
+import WeatherDisplay from "./WeatherDisplay"
 import { cn } from "@/lib/utils"
-import { Settings } from "lucide-react"
 import RadioPlayer from "./RadioPlayer"
+import Soundscapes from "./Soundscapes"
 import ThemeToggle from "./ThemeToggle"
+import { ThemeSelect } from "./ThemeSelect"
+import GestureControls from "./GestureControls"
 
 const TORONTO_TIMEZONE = "America/Toronto"
 
@@ -62,7 +66,7 @@ export default function DigitalClock() {
       checkAlarms(now)
     }, 1000)
     return () => clearInterval(timer)
-  }, [])
+  }, [alarms, activeAlarm])
 
   useEffect(() => {
     const loadWeather = () => {
@@ -92,6 +96,15 @@ export default function DigitalClock() {
     })
     return time.replace(/am|pm/i, match => match.toUpperCase())
   }
+
+  const getTimeDigits = (time: string) => {
+    const [mainTime, period] = time.split(' ')
+    const digits = mainTime.split('').filter(char => char !== ':')
+    return { digits, period }
+  }
+
+  const currentTimeString = formatTime(currentTime)
+  const { digits: timeDigits, period } = getTimeDigits(currentTimeString)
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-CA", {
@@ -150,48 +163,186 @@ export default function DigitalClock() {
   }
 
   return (
-    <div className="relative w-[95vw] sm:w-full sm:max-w-4xl mx-auto">
-      {/* Outer glow */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-cyan-600 via-purple-500 to-cyan-600 rounded-[2.1rem] opacity-40 blur-sm" />
+    <div className="relative mx-auto w-full max-w-6xl px-3 sm:px-6 lg:px-8">
+      <GestureControls
+        onSwipeLeft={() => {
+          // Previous theme
+          toast.info("Theme navigation", { duration: 1000 })
+        }}
+        onSwipeRight={() => {
+          // Next theme
+          toast.info("Theme navigation", { duration: 1000 })
+        }}
+        onSwipeUp={() => {
+          // Open settings
+          setIsSettingsOpen(true)
+          toast.info("Settings opened", { duration: 1000 })
+        }}
+        onSwipeDown={() => {
+          // Close any open dialogs
+          setIsAlarmOpen(false)
+          setIsAddTimeZoneOpen(false)
+          setIsSettingsOpen(false)
+          setIsCalendarOpen(false)
+          toast.info("Dialogs closed", { duration: 1000 })
+        }}
+        onDoubleTap={() => {
+          // Quick alarm toggle
+          setIsAlarmOpen(true)
+          toast.info("Quick alarm", { duration: 1000 })
+        }}
+        onLongPress={() => {
+          // Toggle 24-hour format
+          setIs24HourFormat(!is24HourFormat)
+          toast.info(`Switched to ${!is24HourFormat ? '24-hour' : '12-hour'} format`, { duration: 1500 })
+        }}
+        showHints={true}
+      >
+        <div className="relative isolate overflow-hidden rounded-[36px] border theme-border theme-surface shadow-[0_40px_80px_rgba(6,15,35,0.55)]">
+        <div className="pointer-events-none absolute inset-0 opacity-70">
+          <div className="absolute -top-32 left-1/3 h-64 w-64 rounded-full bg-[radial-gradient(circle_at_center,_rgba(56,189,248,0.18),_rgba(56,189,248,0))] blur-3xl" />
+          <div className="absolute bottom-[-20%] right-[-10%] h-72 w-72 rounded-full bg-[radial-gradient(circle_at_center,_rgba(167,139,250,0.18),_rgba(167,139,250,0))] blur-3xl" />
+          <div className="absolute top-1/2 left-[-10%] h-72 w-72 rounded-full bg-[radial-gradient(circle_at_center,_rgba(147,197,253,0.16),_rgba(147,197,253,0))] blur-3xl" />
+        </div>
 
-      {/* Main container */}
-      <div className="relative rounded-[2rem] overflow-hidden backdrop-blur-xl">
-        {/* Glass effect background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/95 to-gray-100/80 dark:from-gray-900/95 dark:to-gray-900/80 backdrop-blur-sm" />
-        
-        {/* Content */}
-        <div className="relative px-4 sm:px-8 pt-4 sm:pt-6 pb-6 sm:pb-8">
-          {/* Theme toggle */}
-          <ThemeToggle />
-
-          {/* Main display */}
-          <div className="flex flex-col items-center justify-center py-4">
-            <div className="text-center flex flex-col items-center">
-              <div className="text-[6rem] font-mono font-bold tracking-tighter text-gray-900 dark:text-white leading-none">
-                {formatTime(currentTime)}
-              </div>
-              <div 
-                onClick={() => setIsCalendarOpen(true)}
-                className="text-base font-normal text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors cursor-pointer mt-1"
+        <div className="relative flex flex-col gap-10 px-6 py-8 sm:px-10 sm:py-10 lg:px-14 lg:py-14">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <ThemeSelect />
+            <div className="flex items-center gap-3">
+              <motion.button
+                onClick={() => setIsSettingsOpen(true)}
+                className="group relative overflow-hidden rounded-full border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-2 text-sm font-medium text-white/70 transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
               >
-                {formatDate(currentTime)}
-              </div>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  layoutId="settings-button-bg"
+                />
+                <span className="relative z-10">Settings</span>
+              </motion.button>
+              <ThemeToggle className="bg-white/5 hover:bg-white/10" />
             </div>
           </div>
 
-          {/* Components Container */}
-          <div className="mt-8">
-            <div className="bg-white/80 dark:bg-gray-900/50 backdrop-blur-xl p-4 sm:p-6 rounded-[2rem] border border-gray-200 dark:border-white/10">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:p-6">
-                <div className="space-y-4 sm:space-y-6">
-                  <WeatherDisplay />
-                  {weatherData && <WeatherSuggestion {...weatherData} />}                  
-                  <RadioPlayer />
+          <motion.div
+            className="flex flex-col items-center gap-6 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            {/* Glassmorphic Clock Panel */}
+            <motion.div
+              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_32px_64px_rgba(0,0,0,0.3)]"
+              whileHover={{ scale: 1.02, y: -4 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+              <div className="relative px-8 py-6 sm:px-12 sm:py-8">
+                <div className="flex items-center justify-center gap-1 sm:gap-2">
+                  <AnimatePresence mode="wait">
+                    {timeDigits.map((digit, index) => (
+                      <motion.span
+                        key={`${digit}-${index}-${currentTimeString}`}
+                        className="text-[clamp(3.5rem,8vw,5.5rem)] font-mono font-bold tracking-tight text-white leading-none"
+                        initial={{ y: 30, opacity: 0, scale: 0.8 }}
+                        animate={{ y: 0, opacity: 1, scale: 1 }}
+                        exit={{ y: -30, opacity: 0, scale: 0.8 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 25,
+                          delay: index * 0.05
+                        }}
+                      >
+                        {digit}
+                      </motion.span>
+                    ))}
+                  </AnimatePresence>
+                  {period && (
+                    <motion.span
+                      className="ml-2 text-[clamp(1.2rem,3vw,2rem)] font-semibold text-white/80"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      {period}
+                    </motion.span>
+                  )}
                 </div>
-                
-                <div className="space-y-4 sm:space-y-6">
-                  {/* Additional clocks */}
-                  <div className="space-y-2">
+                {showSeconds && (
+                  <motion.div
+                    className="mt-2 text-center text-white/60 text-lg font-mono"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    {currentTime.getSeconds().toString().padStart(2, '0')}
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+
+            <motion.button
+              onClick={() => setIsCalendarOpen(true)}
+              className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-white/70 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"
+                layoutId="button-bg"
+              />
+              <span className="relative z-10">{formatDate(currentTime)}</span>
+            </motion.button>
+          </motion.div>
+
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] xl:gap-10">
+            <div className="space-y-6">
+              <WeatherDisplay />
+              {weatherData && (
+                <motion.div
+                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-5 shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
+                  whileHover={{ scale: 1.01, y: -2 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
+                  <div className="relative z-10">
+                    <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-white/50">Focus for today</h3>
+                    <WeatherSuggestion {...weatherData} />
+                  </div>
+                </motion.div>
+              )}
+              <RadioPlayer />
+              <Soundscapes />
+            </div>
+
+            <div className="flex flex-col gap-6">
+              <motion.div
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm p-4 sm:p-5 shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
+                whileHover={{ scale: 1.01, y: -2 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
+                <div className="relative z-10">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white/50">World Clocks</h3>
+                    <motion.button
+                      onClick={() => setIsAddTimeZoneOpen(true)}
+                      className="group relative overflow-hidden rounded-full border border-white/10 bg-white/5 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white/70 transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        layoutId="add-tz-button-bg"
+                      />
+                      <span className="relative z-10">Add</span>
+                    </motion.button>
+                  </div>
+                  <div className="flex flex-col gap-3">
                     {additionalTimeZones.map((tz, index) => (
                       <AdditionalClock
                         key={`${tz.countryCode}-${tz.timeZone}`}
@@ -206,47 +357,42 @@ export default function DigitalClock() {
                       />
                     ))}
                   </div>
-
-                  {/* Action buttons */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                    <button
-                      onClick={() => setIsAlarmOpen(true)}
-                      className={cn(
-                        "relative group overflow-hidden",
-                        "h-10 sm:h-12 px-4 rounded-lg",
-                        "bg-gradient-to-r from-gray-800/80 to-gray-800/60",
-                        "border border-gray-200 dark:border-white/10 backdrop-blur-sm",
-                        "transition-all duration-200",
-                        "hover:border-white/20 hover:from-gray-800/90 hover:to-gray-700/80"
-                      )}
-                    >
-                      <span className="relative z-10 text-gray-900 dark:text-white font-medium">Set Alarm</span>
-                      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-cyan-500/0 via-cyan-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </button>
-                    
-                    <button
-                      onClick={() => setIsAddTimeZoneOpen(true)}
-                      className={cn(
-                        "relative group overflow-hidden",
-                        "h-10 sm:h-12 px-4 rounded-lg",
-                        "bg-gradient-to-r from-gray-800/80 to-gray-800/60",
-                        "border border-gray-200 dark:border-white/10 backdrop-blur-sm",
-                        "transition-all duration-200",
-                        "hover:border-white/20 hover:from-gray-800/90 hover:to-gray-700/80"
-                      )}
-                    >
-                      <span className="relative z-10 text-gray-900 dark:text-white font-medium">Add Time Zone</span>
-                      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-cyan-500/0 via-cyan-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </button>
-                  </div>
                 </div>
+              </motion.div>
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <motion.button
+                  onClick={() => setIsAlarmOpen(true)}
+                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-3 text-center text-sm font-medium text-white/80 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all hover:border-white/20 hover:bg-white/10 hover:text-white hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)]"
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    layoutId="alarm-button-bg"
+                  />
+                  <span className="relative z-10 font-semibold">Set Alarm</span>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent" />
+                </motion.button>
+                <motion.button
+                  onClick={() => setIsAddTimeZoneOpen(true)}
+                  className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-3 text-center text-sm font-medium text-white/80 shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all hover:border-white/20 hover:bg-white/10 hover:text-white hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)]"
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    layoutId="timezone-button-bg"
+                  />
+                  <span className="relative z-10 font-semibold">Add Time Zone</span>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent" />
+                </motion.button>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Subtle inner border */}
-        <div className="absolute inset-0 rounded-[2rem] border border-gray-200 dark:border-white/10 pointer-events-none" />
       </div>
 
       {/* Calendar Dialog */}
@@ -327,6 +473,7 @@ export default function DigitalClock() {
       )}
 
       <audio ref={audioRef} />
+      </GestureControls>
     </div>
   )
 }

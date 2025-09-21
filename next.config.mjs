@@ -18,8 +18,12 @@ const nextConfig = {
   },
   experimental: {
     webpackBuildWorker: true,
-    turbo: true,
-    serverActions: true
+    turbo: {
+      rules: {}
+    },
+    serverActions: {
+      bodySizeLimit: '2mb'
+    }
   }
 }
 

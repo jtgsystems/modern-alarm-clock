@@ -6,100 +6,111 @@ import { Slider } from "@/components/ui/slider"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { cn } from "@/lib/utils"
-import { Play, Pause, SkipForward, Volume2, Music2, Radio } from "lucide-react"
+import { Play, Pause, SkipForward, Volume2, Music2, Radio, Waves, Heart, Share2, Repeat, Shuffle } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { useDynamicTheme } from "./DynamicThemeProvider"
+import { toast } from "sonner"
+
+interface RadioPlayerProps {
+  className?: string
+}
 
 const radioStations = [
-  // Classical & Opera (10)
-  { id: 'wqxr', name: 'WQXR New York', url: 'https://stream.wqxr.org/wqxr-web', genre: 'Classical' },
-  { id: 'wrti-classical', name: 'WRTI Classical', url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/WRTI_CLASSICAL.mp3', genre: 'Classical' },
-  { id: 'venice-classic', name: 'Venice Classic', url: 'https://uk2.streamingpulse.com/ssl/vcr1', genre: 'Classical' },
-  { id: 'classical-piano', name: 'Classical Piano', url: 'https://radio.stereoscenic.com/asp-h', genre: 'Classical' },
-  { id: 'wguc', name: 'WGUC Cincinnati', url: 'https://stream.wguc.org/wguc-128-mp3', genre: 'Classical' },
-  { id: 'symphony', name: 'Symphony Radio', url: 'https://symphonyradio.ice.infomaniak.ch/symphonyradio-128.mp3', genre: 'Classical' },
-  { id: 'concertzender', name: 'Concertzender', url: 'https://streams.greenhost.nl:8006/live', genre: 'Classical' },
-  { id: 'classical-live', name: 'Classical Live', url: 'https://radio.stereoscenic.com/cls-h', genre: 'Classical' },
-  { id: 'yourclassical', name: 'YourClassical MPR', url: 'https://cms.stream.publicradio.org/cms.mp3', genre: 'Classical' },
-  { id: 'bbc-radio3', name: 'BBC Radio 3', url: 'https://stream.live.vc.bbcmedia.co.uk/bbc_radio_three', genre: 'Classical' },
-  
-  // Jazz & Blues (10)
-  { id: 'tsf-jazz', name: 'TSF Jazz Paris', url: 'https://tsfjazz.ice.infomaniak.ch/tsfjazz-high.mp3', genre: 'Jazz' },
-  { id: 'wrti-jazz', name: 'WRTI Jazz', url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/WRTI_JAZZ.mp3', genre: 'Jazz' },
-  { id: 'jazz-groove', name: 'The Jazz Groove', url: 'http://west-aac-64.streamthejazzgroove.com/stream', genre: 'Jazz' },
-  { id: 'smooth-jazz', name: 'Smooth Jazz Global', url: 'https://smoothjazz.cdnstream1.com/2585_320.mp3', genre: 'Jazz' },
-  { id: 'jazz-cafe', name: 'Jazz Café', url: 'https://strm112.1.fm/ajazz_mobile_mp3', genre: 'Jazz' },
-  { id: 'jazz24', name: 'Jazz24', url: 'https://live.wostreaming.net/direct/ppm-jazz24aac-ibc1', genre: 'Jazz' },
-  { id: 'jazz-bits', name: 'Jazz Bits Radio', url: 'https://jazzbits.ice.infomaniak.ch/jazzbits-high.mp3', genre: 'Jazz' },
-  { id: 'blues', name: 'Blues Radio', url: 'https://stream.radiojar.com/q4ggz7n5wd0uv', genre: 'Jazz' },
-  { id: 'chiaroscuro', name: 'Chiaroscuro Jazz', url: 'https://streaming.live365.com/b48095_128mp3', genre: 'Jazz' },
-  { id: 'linn-jazz', name: 'Linn Jazz', url: 'https://radio.linn.co.uk:8443/autodj', genre: 'Jazz' },
-  
-  // Ambient & Atmospheric (10)
-  { id: 'soma-drone', name: 'SomaFM Drone Zone', url: 'https://ice1.somafm.com/dronezone-128-mp3', genre: 'Ambient' },
-  { id: 'hearts-space', name: 'Hearts of Space', url: 'https://ice1.somafm.com/spacestation-128-mp3', genre: 'Ambient' },
-  { id: 'ambient-sleeping', name: 'Ambient Sleeping Pill', url: 'https://radio.stereoscenic.com/asp-h', genre: 'Ambient' },
-  { id: 'nature-radio', name: 'Nature Radio', url: 'https://streaming.radio.co/s5c5da6a36/listen', genre: 'Ambient' },
-  { id: 'cosmic-radio', name: 'Cosmic Radio', url: 'https://cosmicradio.ice.infomaniak.ch/cosmicradio.mp3', genre: 'Ambient' },
-  { id: 'meditation', name: 'Meditation Radio', url: 'https://radio4.cdm-radio.com:18020/stream-mp3-Meditation', genre: 'Ambient' },
-  { id: 'soma-space', name: 'SomaFM Space Station', url: 'https://ice1.somafm.com/spacestation-128-mp3', genre: 'Ambient' },
-  { id: 'ambient-fm', name: 'Ambient FM', url: 'https://radio.stereoscenic.com/afm-h', genre: 'Ambient' },
-  { id: 'mother-earth', name: 'Mother Earth Radio', url: 'https://server.motherearthradio.org/radio/8000/radio.mp3', genre: 'Ambient' },
-  { id: 'soundscapes', name: 'Soundscapes Radio', url: 'https://radio.stereoscenic.com/scp-h', genre: 'Ambient' },
-  
-  // Electronic & Modern (10)
-  { id: 'paradise-main', name: 'Radio Paradise Main', url: 'https://stream.radioparadise.com/aac-320', genre: 'Eclectic' },
-  { id: 'paradise-mellow', name: 'Radio Paradise Mellow', url: 'https://stream.radioparadise.com/mellow-320', genre: 'Mellow Mix' },
-  { id: 'fip-main', name: 'FIP Radio Paris', url: 'https://stream.radiofrance.fr/fip/fip_hifi.m3u8', genre: 'Eclectic' },
-  { id: 'soma-groove', name: 'SomaFM Groove Salad', url: 'https://ice1.somafm.com/groovesalad-256-mp3', genre: 'Electronic' },
-  { id: 'lofi', name: 'Lofi Hip Hop', url: 'https://streams.ilovemusic.de/iloveradio17.mp3', genre: 'Electronic' },
-  { id: 'deep-house', name: 'Deep House Radio', url: 'https://streams.ilovemusic.de/iloveradio16.mp3', genre: 'Electronic' },
-  { id: 'proton', name: 'Proton Radio', url: 'https://shoutcast.protonradio.com/stream', genre: 'Electronic' },
-  { id: 'di-lounge', name: 'DI.FM Lounge', url: 'https://streams.di.fm/lounge', genre: 'Electronic' },
-  { id: 'cafe-del-mar', name: 'Café del Mar', url: 'https://streams.radio.co/se1a320b47/listen', genre: 'Electronic' },
-  { id: 'motion-fm', name: 'Motion FM', url: 'https://vm.motionfm.com/motionfm_main', genre: 'Electronic' },
-  
+  // Classical & Opera (Latest Working 2024-2025)
+  { id: "wqxr", name: "WQXR New York", url: "https://stream.wqxr.org/wqxr-web", genre: "Classical" },
+  { id: "wrti-classical", name: "WRTI Classical", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/WRTI_CLASSICAL.mp3", genre: "Classical" },
+  { id: "klassik-radio", name: "Klassik Radio", url: "https://edge87.streams.klassikradio.de/klassikradio-live/mp3-192/", genre: "Classical" },
+  { id: "radio-mozart", name: "Radio Mozart", url: "https://live.radiomozart.com/radiomozart.mp3", genre: "Classical" },
+  { id: "classical-247", name: "Classical 24/7", url: "https://audio-edge-es8gq.fra.h.radiomast.io/classical247", genre: "Classical" },
+  { id: "classical-king", name: "Classical KING FM", url: "https://classicalking.streamguys1.com/king-mp3", genre: "Classical" },
+  { id: "venice-classic", name: "Venice Classic", url: "https://uk2.streamingpulse.com/ssl/vcr1", genre: "Classical" },
+  { id: "yourclassical", name: "YourClassical MPR", url: "https://cms.stream.publicradio.org/cms.mp3", genre: "Classical" },
+  { id: "classical-kusc", name: "Classical KUSC", url: "https://kusc.streamguys1.com/kusc-mp3", genre: "Classical" },
+  { id: "medici-tv", name: "Medici TV Radio", url: "https://radio.medici.tv/medicitv.mp3", genre: "Classical" },
+
+  // Jazz & Blues (Latest Working 2024-2025)
+  { id: "tsf-jazz", name: "TSF Jazz Paris", url: "https://tsfjazz.ice.infomaniak.ch/tsfjazz-high.mp3", genre: "Jazz" },
+  { id: "wrti-jazz", name: "WRTI Jazz", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/WRTI_JAZZ.mp3", genre: "Jazz" },
+  { id: "smooth-jazz-global", name: "Smooth Jazz Global", url: "https://smoothjazz.cdnstream1.com/2585_320.mp3", genre: "Jazz" },
+  { id: "jazz24", name: "Jazz24", url: "https://live.wostreaming.net/direct/ppm-jazz24aac-ibc1", genre: "Jazz" },
+  { id: "smooth-jazz-cd101", name: "Smooth Jazz CD101.9", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CD1019AAC.aac", genre: "Jazz" },
+  { id: "jazz-radio-blues", name: "Jazz Radio Blues", url: "https://jazzblues.ice.infomaniak.ch/jazzblues-high.mp3", genre: "Jazz" },
+  { id: "jazz-radio-jazz", name: "Jazz Radio Jazz", url: "https://jazzradio.ice.infomaniak.ch/jazzradio-high.mp3", genre: "Jazz" },
+  { id: "wdcb-jazz", name: "WDCB Jazz", url: "https://wdcb.streamguys1.com/live-mp3", genre: "Jazz" },
+  { id: "khlu-jazz", name: "KHLU Jazz", url: "https://ice8.securenetsystems.net/KHLU", genre: "Jazz" },
+  { id: "jazz-groove", name: "The Jazz Groove", url: "https://streamingv2.shoutcast.com/thejazzgroove", genre: "Jazz" },
+
+  // Ambient & Atmospheric (Latest Working 2024-2025)
+  { id: "soma-drone", name: "SomaFM Drone Zone", url: "https://ice1.somafm.com/dronezone-128-mp3", genre: "Ambient" },
+  { id: "soma-space", name: "SomaFM Space Station", url: "https://ice1.somafm.com/spacestation-128-mp3", genre: "Ambient" },
+  { id: "ambient-sleeping", name: "Ambient Sleeping Pill", url: "https://radio.stereoscenic.com/asp-h", genre: "Ambient" },
+  { id: "ambient-nature", name: "Ambient Nature", url: "https://streaming.radionomy.com/ambientnatureradio", genre: "Ambient" },
+  { id: "chillhop", name: "Chillhop Radio", url: "https://streams.fluxfm.de/Chillhop/mp3-320/", genre: "Ambient" },
+  { id: "deep-ambient", name: "Deep Ambient", url: "https://radio.stereoscenic.com/dab-h", genre: "Ambient" },
+  { id: "meditation-radio", name: "Meditation Radio", url: "https://streaming.radionomy.com/meditationradio", genre: "Ambient" },
+  { id: "relaxing-piano", name: "Relaxing Piano", url: "https://streaming.radionomy.com/relaxingpiano", genre: "Ambient" },
+  { id: "soma-lush", name: "SomaFM Lush", url: "https://ice1.somafm.com/lush-128-mp3", genre: "Ambient" },
+  { id: "cryosleep", name: "Cryosleep", url: "https://radio.stereoscenic.com/cry-h", genre: "Ambient" },
+
+  // Electronic & Modern (Latest Working 2024-2025)
+  { id: "paradise-main", name: "Radio Paradise Main", url: "https://stream.radioparadise.com/aac-320", genre: "Eclectic" },
+  { id: "paradise-mellow", name: "Radio Paradise Mellow", url: "https://stream.radioparadise.com/mellow-320", genre: "Electronic" },
+  { id: "soma-groove", name: "SomaFM Groove Salad", url: "https://ice1.somafm.com/groovesalad-256-mp3", genre: "Electronic" },
+  { id: "chillsynth", name: "ChillSynth FM", url: "https://radio.chillsynth.fm/stream", genre: "Electronic" },
+  { id: "lofi-hip-hop", name: "Lofi Hip Hop Radio", url: "https://streams.ilovemusic.de/iloveradio17.mp3", genre: "Electronic" },
+  { id: "synthwave", name: "SynthWave Radio", url: "https://streaming.radionomy.com/synthwaveradio", genre: "Electronic" },
+  { id: "deep-house-radio", name: "Deep House Radio", url: "https://streaming.radionomy.com/deephouseradio", genre: "Electronic" },
+  { id: "di-chillout", name: "DI.FM Chillout", url: "https://prem2.di.fm:443/chillout", genre: "Electronic" },
+  { id: "cyber-radio", name: "Cyber Radio", url: "https://streaming.radionomy.com/cyberradio", genre: "Electronic" },
+  { id: "vapourwave", name: "Vapourwave Radio", url: "https://streaming.radionomy.com/vapourwaveradio", genre: "Electronic" },
+
   // World & Cultural (10)
-  { id: 'world-music', name: 'World Music Radio', url: 'https://stream.radioneo.org:8443/world.mp3', genre: 'World' },
-  { id: 'bbc-asian', name: 'BBC Asian Network', url: 'https://stream.live.vc.bbcmedia.co.uk/bbc_asian_network', genre: 'World' },
-  { id: 'latin-jazz', name: 'Latin Jazz Radio', url: 'https://stream.radiojar.com/6rxpyrnzsg0uv', genre: 'World' },
-  { id: 'bollywood', name: 'Bollywood Instrumental', url: 'https://stream.zeno.fm/g4c2qnz8rm0uv', genre: 'World' },
-  { id: 'african-music', name: 'African Music Radio', url: 'https://african1paris.ice.infomaniak.ch/african1paris-128.mp3', genre: 'World' },
-  { id: 'radio-caprice', name: 'Radio Caprice World', url: 'https://radiokaprice.ru:8000/world', genre: 'World' },
-  { id: 'celtic-radio', name: 'Celtic Radio', url: 'https://stream.radioneo.org:8443/celtic.mp3', genre: 'World' },
-  { id: 'arab-radio', name: 'Arab Music Radio', url: 'https://stream.radiojar.com/whbvyphna3quv', genre: 'World' },
-  { id: 'indian-classical', name: 'Indian Classical', url: 'https://strm112.1.fm/iclassical_mobile_mp3', genre: 'World' },
-  { id: 'reggae-trade', name: 'Reggae Trade Radio', url: 'https://stream.radiojar.com/6rxpyrnzsg0uv', genre: 'World' },
-  
-  // Contemporary & Alternative (10)
-  { id: 'kexp', name: 'KEXP Seattle', url: 'https://kexp.streamguys1.com/kexp320.aac', genre: 'Alternative' },
-  { id: 'dublab', name: 'Dublab Radio', url: 'https://dublab.out.airtime.pro/dublab_a', genre: 'Alternative' },
-  { id: 'nts-main', name: 'NTS Radio Main', url: 'https://stream-relay-geo.ntslive.net/stream', genre: 'Alternative' },
-  { id: 'worldwide-fm', name: 'Worldwide FM', url: 'https://worldwidefm.out.airtime.pro/worldwidefm_b', genre: 'Alternative' },
-  { id: 'the-lot', name: 'The Lot Radio', url: 'https://thelot.out.airtime.pro/thelot_a', genre: 'Alternative' },
-  { id: 'resonance', name: 'Resonance FM', url: 'https://stream.resonance.fm/resonance', genre: 'Alternative' },
-  { id: 'radio-reverb', name: 'Radio Reverb', url: 'https://stream.radioreverb.com:8443/reverb', genre: 'Alternative' },
-  { id: 'soho-radio', name: 'Soho Radio', url: 'https://sohoradiomusic.doughnut.net/sohoradiomusic.mp3', genre: 'Alternative' },
-  { id: 'fluid', name: 'Fluid Radio', url: 'https://fluidradio.out.airtime.pro/fluidradio_a', genre: 'Alternative' },
-  { id: 'fip-groove', name: 'FIP Groove', url: 'https://stream.radiofrance.fr/fipgroove/fipgroove_hifi.m3u8', genre: 'Alternative' }
+  { id: "world-music", name: "World Music Radio", url: "https://stream.radioneo.org:8443/world.mp3", genre: "World" },
+  { id: "bbc-asian", name: "BBC Asian Network", url: "https://stream.live.vc.bbcmedia.co.uk/bbc_asian_network", genre: "World" },
+  { id: "latin-jazz", name: "Latin Jazz Radio", url: "https://stream.radiojar.com/6rxpyrnzsg0uv", genre: "World" },
+  { id: "bollywood", name: "Bollywood Instrumental", url: "https://stream.zeno.fm/g4c2qnz8rm0uv", genre: "World" },
+  { id: "african-music", name: "African Music Radio", url: "https://african1paris.ice.infomaniak.ch/african1paris-128.mp3", genre: "World" },
+  { id: "radio-caprice", name: "Radio Caprice World", url: "https://radiokaprice.ru:8000/world", genre: "World" },
+  { id: "celtic-radio", name: "Celtic Radio", url: "https://stream.radioneo.org:8443/celtic.mp3", genre: "World" },
+  { id: "arab-radio", name: "Arab Music Radio", url: "https://stream.radiojar.com/whbvyphna3quv", genre: "World" },
+  { id: "indian-classical", name: "Indian Classical", url: "https://strm112.1.fm/iclassical_mobile_mp3", genre: "World" },
+  { id: "reggae-trade", name: "Reggae Trade Radio", url: "https://stream.radiojar.com/6rxpyrnzsg0uv", genre: "World" },
+
+  // Contemporary & Alternative (Latest Working 2024-2025)
+  { id: "kexp", name: "KEXP Seattle", url: "https://kexp.streamguys1.com/kexp320.aac", genre: "Alternative" },
+  { id: "nts-main", name: "NTS Radio", url: "https://stream-relay-geo.ntslive.net/stream", genre: "Alternative" },
+  { id: "worldwide-fm", name: "Worldwide FM", url: "https://worldwidefm.out.airtime.pro/worldwidefm_b", genre: "Alternative" },
+  { id: "dublab", name: "Dublab Radio", url: "https://dublab.out.airtime.pro/dublab_a", genre: "Alternative" },
+  { id: "the-lot", name: "The Lot Radio", url: "https://thelot.out.airtime.pro/thelot_a", genre: "Alternative" },
+  { id: "radar-radio", name: "Radar Radio", url: "https://radarradio.out.airtime.pro/radarradio_a", genre: "Alternative" },
+  { id: "reform-radio", name: "Reform Radio", url: "https://reformradio.out.airtime.pro/reformradio_a", genre: "Alternative" },
+  { id: "refuge-worldwide", name: "Refuge Worldwide", url: "https://refugeworldwide.out.airtime.pro/refugeworldwide_a", genre: "Alternative" },
+  { id: "rinse-fm", name: "Rinse FM", url: "https://stream.rinse.fm/rinse", genre: "Alternative" },
+  { id: "foundation-fm", name: "Foundation FM", url: "https://foundationfm.out.airtime.pro/foundationfm_a", genre: "Alternative" },
 ]
 
-export default function RadioPlayer() {
+export default function RadioPlayer({ className }: RadioPlayerProps) {
+  const { currentTheme } = useDynamicTheme()
   const [currentStation, setCurrentStation] = useState(radioStations[0])
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [volume, setVolume] = useState(0.5)
+  const [isFavorite, setIsFavorite] = useState(false)
+  const [isRepeat, setIsRepeat] = useState(false)
+  const [isShuffle, setIsShuffle] = useState(false)
+  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'error' | 'idle'>('idle')
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const stationsByGenre = radioStations.reduce((acc, station) => {
-    const genre = station.genre;
+    const genre = station.genre
     if (!acc[genre]) {
-      acc[genre] = [];
+      acc[genre] = []
     }
-    acc[genre].push(station);
-    return acc;
-  }, {} as Record<string, typeof radioStations>);
+    acc[genre].push(station)
+    return acc
+  }, {} as Record<string, typeof radioStations>)
 
-  const genres = Object.entries(stationsByGenre).sort((a, b) => {
-    return a[0].localeCompare(b[0]);
-  });
+  const genres = Object.entries(stationsByGenre).sort((a, b) => a[0].localeCompare(b[0]))
 
   useEffect(() => {
     if (audioRef.current) {
@@ -107,24 +118,42 @@ export default function RadioPlayer() {
     }
   }, [volume])
 
-  const handleStationChange = (station: typeof radioStations[0]) => {
+  const handleStationChange = (station: typeof radioStations[number]) => {
     setCurrentStation(station)
+    setConnectionStatus('idle')
+    toast.success(`Switched to ${station.name}`, {
+      description: station.genre,
+      duration: 2000
+    })
     if (isPlaying && audioRef.current) {
+      setIsLoading(true)
+      setConnectionStatus('connecting')
       audioRef.current.src = station.url
-      audioRef.current.play()
+      audioRef.current.play().catch(() => {
+        setConnectionStatus('error')
+        setIsLoading(false)
+        toast.error(`Failed to connect to ${station.name}`)
+      })
     }
   }
 
   const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause()
-      } else {
-        audioRef.current.src = currentStation.url
-        audioRef.current.play()
-      }
-      setIsPlaying(!isPlaying)
+    if (!audioRef.current) return
+
+    if (isPlaying) {
+      audioRef.current.pause()
+      setConnectionStatus('idle')
+    } else {
+      setIsLoading(true)
+      setConnectionStatus('connecting')
+      audioRef.current.src = currentStation.url
+      audioRef.current.play().catch(() => {
+        setConnectionStatus('error')
+        setIsLoading(false)
+        toast.error(`Failed to connect to ${currentStation.name}`)
+      })
     }
+    setIsPlaying(!isPlaying)
   }
 
   const handleVolumeChange = (value: number[]) => {
@@ -135,148 +164,409 @@ export default function RadioPlayer() {
     }
   }
 
-  return (
-    <div className="relative overflow-hidden backdrop-blur-xl">
-      {/* Outer glow */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-cyan-600/30 to-purple-600/30 rounded-[2.1rem] opacity-40 blur-sm" />
-      
-      {/* Main container */}
-      <div className="relative rounded-[2rem] overflow-hidden">
-        {/* Glass effect background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/95 to-gray-900/80 backdrop-blur-sm" />
-        
-        {/* Content */}
-        <div className="relative p-6">
-          {/* Header */}
-          <div className="flex items-center gap-2 mb-4">
-            <Radio className="h-5 w-5 text-white/70" />
-            <h3 className="text-white/90 font-medium">Radio Player</h3>
-          </div>
+  const stepStation = (direction: 1 | -1) => {
+    if (isShuffle) {
+      const randomIndex = Math.floor(Math.random() * radioStations.length)
+      handleStationChange(radioStations[randomIndex])
+    } else {
+      const currentIndex = radioStations.findIndex((s) => s.id === currentStation.id)
+      const nextIndex = (currentIndex + radioStations.length + direction) % radioStations.length
+      handleStationChange(radioStations[nextIndex])
+    }
+  }
 
-          {/* Now Playing */}
-          <div className="mb-6 p-4 rounded-lg bg-white/5 border border-white/10">
-            <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-md bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center">
-                <Music2 className="h-6 w-6 text-white/60" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-medium text-white/90 truncate">{currentStation.name}</h4>
-                <p className="text-xs text-white/60">{currentStation.genre}</p>
-              </div>
+  // Audio event handlers
+  useEffect(() => {
+    if (!audioRef.current) return
+
+    const audio = audioRef.current
+
+    const handleLoadStart = () => {
+      setIsLoading(true)
+      setConnectionStatus('connecting')
+    }
+
+    const handleCanPlay = () => {
+      setIsLoading(false)
+      setConnectionStatus('connected')
+    }
+
+    const handleError = () => {
+      setIsLoading(false)
+      setConnectionStatus('error')
+      setIsPlaying(false)
+      toast.error('Connection failed', {
+        description: `Unable to stream ${currentStation.name}`
+      })
+    }
+
+    const handleEnded = () => {
+      if (isRepeat) {
+        audio.currentTime = 0
+        audio.play()
+      } else {
+        setIsPlaying(false)
+        setConnectionStatus('idle')
+      }
+    }
+
+    audio.addEventListener('loadstart', handleLoadStart)
+    audio.addEventListener('canplay', handleCanPlay)
+    audio.addEventListener('error', handleError)
+    audio.addEventListener('ended', handleEnded)
+
+    return () => {
+      audio.removeEventListener('loadstart', handleLoadStart)
+      audio.removeEventListener('canplay', handleCanPlay)
+      audio.removeEventListener('error', handleError)
+      audio.removeEventListener('ended', handleEnded)
+    }
+  }, [currentStation, isRepeat])
+
+  const getStatusColor = () => {
+    switch (connectionStatus) {
+      case 'connected': return 'text-green-400'
+      case 'connecting': return 'text-yellow-400'
+      case 'error': return 'text-red-400'
+      default: return 'text-white/50'
+    }
+  }
+
+  const getStatusText = () => {
+    switch (connectionStatus) {
+      case 'connected': return 'Connected'
+      case 'connecting': return 'Connecting...'
+      case 'error': return 'Connection Failed'
+      default: return 'Ready'
+    }
+  }
+
+  return (
+    <motion.div
+      className={cn(
+        "group relative overflow-hidden rounded-3xl backdrop-blur-xl px-6 py-7 shadow-[0_20px_60px_rgba(0,0,0,0.4)]",
+        `bg-gradient-to-br ${currentTheme.colors.secondary}`,
+        className
+      )}
+      style={{
+        background: `linear-gradient(135deg, ${currentTheme.colors.gradient}), rgba(255, 255, 255, 0.03)`,
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255, 255, 255, 0.08)'
+      }}
+      whileHover={{ scale: 1.02, y: -4 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+    >
+      {/* Dynamic background overlay */}
+      <div
+        className="absolute inset-0 opacity-20"
+        style={{
+          background: `radial-gradient(circle at 30% 20%, ${currentTheme.colors.accent}40 0%, transparent 50%),
+                      radial-gradient(circle at 70% 80%, ${currentTheme.colors.accent}20 0%, transparent 50%)`
+        }}
+      />
+
+      <div className="relative z-10 flex flex-col gap-7">
+        {/* Header */}
+        <motion.div
+          className="flex items-center justify-between"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <div className="flex items-center gap-4">
+            <motion.div
+              className="rounded-2xl p-3 backdrop-blur-sm"
+              style={{
+                background: `linear-gradient(135deg, ${currentTheme.colors.accent}20, ${currentTheme.colors.accent}10)`,
+                border: `1px solid ${currentTheme.colors.accent}30`
+              }}
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Radio className="h-5 w-5" style={{ color: currentTheme.colors.accent }} />
+            </motion.div>
+            <div>
+              <h3 className="text-lg font-bold text-white/90">Radio Player</h3>
+              <p className="text-sm text-white/60">{currentTheme.name}</p>
+            </div>
+            <motion.div
+              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <Waves className="h-4 w-4 text-green-400" />
+            </motion.div>
+          </div>
+          <div className="text-right">
+            <div className="text-xs text-white/50">{genres.length} genres</div>
+            <div className={cn("text-xs font-medium", getStatusColor())}>
+              {getStatusText()}
             </div>
           </div>
+        </motion.div>
 
-          {/* Controls */}
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-12 w-12 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-white/80 hover:text-white"
-              onClick={() => {
-                const currentIndex = radioStations.findIndex(s => s.id === currentStation.id)
-                const nextStation = radioStations[(currentIndex + 1) % radioStations.length]
-                handleStationChange(nextStation)
+        {/* Current Station Display */}
+        <motion.div
+          className="relative overflow-hidden rounded-3xl backdrop-blur-sm px-6 py-5"
+          style={{
+            background: `linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))`,
+            border: '1px solid rgba(255, 255, 255, 0.15)'
+          }}
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.2 }}
+        >
+          <motion.div
+            className="absolute inset-0 opacity-0"
+            style={{ background: `linear-gradient(90deg, ${currentTheme.colors.accent}20, transparent)` }}
+            whileHover={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          />
+          <div className="relative z-10 flex items-center gap-4">
+            <motion.div
+              className="flex h-16 w-16 items-center justify-center rounded-2xl backdrop-blur-sm"
+              style={{
+                background: `linear-gradient(135deg, ${currentTheme.colors.accent}25, ${currentTheme.colors.accent}10)`,
+                border: `1px solid ${currentTheme.colors.accent}30`
+              }}
+              animate={isPlaying ? {
+                scale: [1, 1.05, 1],
+                boxShadow: [`0 0 0 0 ${currentTheme.colors.accent}40`, `0 0 0 10px ${currentTheme.colors.accent}00`, `0 0 0 0 ${currentTheme.colors.accent}40`]
+              } : {}}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <Music2 className={cn("h-7 w-7", isPlaying ? "text-white" : "text-white/70")} style={isPlaying ? { color: currentTheme.colors.accent } : {}} />
+            </motion.div>
+            <div className="flex-1 min-w-0">
+              <AnimatePresence mode="wait">
+                <motion.h4
+                  key={currentStation.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="truncate text-xl font-bold text-white/95 mb-1"
+                >
+                  {currentStation.name}
+                </motion.h4>
+              </AnimatePresence>
+              <div className="flex items-center gap-3">
+                <p className="text-base text-white/70">{currentStation.genre}</p>
+                {connectionStatus === 'connected' && isPlaying && (
+                  <motion.div
+                    className="flex items-center gap-1"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                  >
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="h-4 w-1 rounded-full"
+                        style={{ backgroundColor: currentTheme.colors.accent }}
+                        animate={{ scaleY: [0.3, 1, 0.3] }}
+                        transition={{
+                          duration: 0.8,
+                          repeat: Infinity,
+                          delay: i * 0.1,
+                        }}
+                      />
+                    ))}
+                  </motion.div>
+                )}
+              </div>
+            </div>
+            {isLoading && (
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                className="h-6 w-6 rounded-full border-2 border-white/20"
+                style={{ borderTopColor: currentTheme.colors.accent }}
+              />
+            )}
+          </div>
+        </motion.div>
+
+        {/* Control Buttons */}
+        <motion.div
+          className="flex items-center justify-center gap-6"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          {/* Secondary Controls */}
+          <div className="flex items-center gap-3">
+            <motion.button
+              whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
+              onClick={() => setIsShuffle(!isShuffle)}
+              className={cn(
+                "h-10 w-10 rounded-xl backdrop-blur-sm transition-all flex items-center justify-center",
+                isShuffle ? "text-white" : "text-white/60"
+              )}
+              style={{
+                background: isShuffle ? `${currentTheme.colors.accent}40` : 'rgba(255, 255, 255, 0.05)',
+                border: `1px solid ${isShuffle ? currentTheme.colors.accent + '60' : 'rgba(255, 255, 255, 0.1)'}`
               }}
             >
-              <SkipForward className="h-5 w-5" />
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "h-16 w-16 rounded-full",
-                "border border-white/10",
-                "bg-gradient-to-br from-cyan-500/20 to-purple-500/20",
-                "hover:from-cyan-500/30 hover:to-purple-500/30",
-                "text-white"
-              )}
-              onClick={togglePlay}
-            >
-              {isPlaying ? (
-                <Pause className="h-8 w-8" />
-              ) : (
-                <Play className="h-8 w-8 ml-1" />
-              )}
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-12 w-12 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-white/80 hover:text-white"
-              onClick={() => {
-                const currentIndex = radioStations.findIndex(s => s.id === currentStation.id)
-                const prevStation = radioStations[(currentIndex - 1 + radioStations.length) % radioStations.length]
-                handleStationChange(prevStation)
+              <Shuffle className="h-4 w-4" />
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
+              onClick={() => stepStation(-1)}
+              className="h-12 w-12 rounded-xl backdrop-blur-sm text-white/70 transition-all hover:text-white flex items-center justify-center"
+              style={{
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.15)'
               }}
             >
               <SkipForward className="h-5 w-5 rotate-180" />
-            </Button>
+            </motion.button>
           </div>
 
-          {/* Volume Control */}
-          <div className="flex items-center gap-2 mb-6">
-            <Volume2 className="h-4 w-4 text-white/60" />
+          {/* Main Play Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+            onClick={togglePlay}
+            className="h-20 w-20 rounded-2xl text-white backdrop-blur-sm transition-all flex items-center justify-center"
+            style={{
+              background: isPlaying
+                ? `linear-gradient(135deg, ${currentTheme.colors.accent}, ${currentTheme.colors.accent}CC)`
+                : 'rgba(255, 255, 255, 0.12)',
+              border: `2px solid ${isPlaying ? currentTheme.colors.accent : 'rgba(255, 255, 255, 0.2)'}`,
+              boxShadow: isPlaying ? `0 8px 32px ${currentTheme.colors.accent}40` : 'none'
+            }}
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={isPlaying ? 'pause' : 'play'}
+                initial={{ scale: 0, rotate: -90 }}
+                animate={{ scale: 1, rotate: 0 }}
+                exit={{ scale: 0, rotate: 90 }}
+                transition={{ duration: 0.2 }}
+              >
+                {isPlaying ? <Pause className="h-9 w-9" /> : <Play className="ml-1 h-9 w-9" />}
+              </motion.div>
+            </AnimatePresence>
+          </motion.button>
+
+          {/* Secondary Controls */}
+          <div className="flex items-center gap-3">
+            <motion.button
+              whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
+              onClick={() => stepStation(1)}
+              className="h-12 w-12 rounded-xl backdrop-blur-sm text-white/70 transition-all hover:text-white flex items-center justify-center"
+              style={{
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.15)'
+              }}
+            >
+              <SkipForward className="h-5 w-5" />
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
+              onClick={() => setIsFavorite(!isFavorite)}
+              className={cn(
+                "h-10 w-10 rounded-xl backdrop-blur-sm transition-all flex items-center justify-center",
+                isFavorite ? "text-red-400" : "text-white/60"
+              )}
+              style={{
+                background: isFavorite ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                border: `1px solid ${isFavorite ? 'rgba(239, 68, 68, 0.4)' : 'rgba(255, 255, 255, 0.1)'}`
+              }}
+            >
+              <Heart className={cn("h-4 w-4", isFavorite && "fill-current")} />
+            </motion.button>
+          </div>
+        </motion.div>
+
+        {/* Volume Control */}
+        <motion.div
+          className="space-y-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <div className="flex items-center gap-4 text-white/70">
+            <Volume2 className="h-5 w-5" />
+            <span className="text-sm font-medium uppercase tracking-wider">Volume</span>
+            <span className="ml-auto text-sm font-bold tabular-nums text-white/90">{Math.round(volume * 100)}%</span>
+          </div>
+          <div className="relative">
             <Slider
               value={[volume]}
-              onValueChange={handleVolumeChange}
               max={1}
               step={0.01}
-              className="flex-1"
+              onValueChange={handleVolumeChange}
+              className="w-full"
             />
-            <span className="text-xs text-white/60 tabular-nums w-8">{Math.round(volume * 100)}%</span>
           </div>
+        </motion.div>
 
-          {/* Station List */}
-          <ScrollArea className="h-[240px]">
-            <div className="pr-4">
-              <Accordion type="multiple" className="space-y-2">
-                {genres.map(([genre, stations]) => (
-                  <AccordionItem
-                    key={genre}
-                    value={genre}
-                    className="border border-white/10 rounded-lg overflow-hidden"
-                  >
-                    <AccordionTrigger className="hover:no-underline">
-                      <div className="flex items-center gap-2">
-                        <Music2 className="h-4 w-4 text-white/60" />
-                        <span className="text-sm font-medium text-white/80">{genre}</span>
-                        <span className="text-xs text-white/40 ml-1">({stations.length})</span>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="space-y-1">
-                        {stations.map((station) => (
-                          <button
-                            key={station.id}
-                            onClick={() => handleStationChange(station)}
-                            className={cn(
-                              "w-full p-2 rounded-md text-left transition-colors",
-                              "hover:bg-white/10",
-                              currentStation.id === station.id 
-                                ? "bg-white/10 border-white/20"
-                                : "border-transparent",
-                              "border",
-                            )}
-                          >
-                            <div className="flex items-center gap-2">
-                              <Radio className="h-4 w-4 text-white/60" />
-                              <span className="text-sm text-white/80 hover:text-white/100 transition-colors">{station.name}</span>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
+        {/* Station List */}
+        <motion.div
+          className="rounded-3xl backdrop-blur-sm px-4 py-4"
+          style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <ScrollArea className="max-h-64 pr-2">
+            <Accordion type="multiple" className="space-y-3">
+              {genres.map(([genre, stations]) => (
+                <AccordionItem
+                  key={genre}
+                  value={genre}
+                  className="overflow-hidden rounded-2xl"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)'
+                  }}
+                >
+                  <AccordionTrigger className="px-5 py-4 text-left text-sm font-semibold text-white/80 transition-colors hover:text-white">
+                    <div className="flex items-center gap-3">
+                      <Music2 className="h-4 w-4 text-white/60" />
+                      <span>{genre}</span>
+                      <span className="text-xs text-white/50 bg-white/10 px-2 py-1 rounded-full">
+                        {stations.length}
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                    <div className="space-y-2 px-4 py-4">
+                      {stations.map((station) => (
+                        <motion.button
+                          key={station.id}
+                          onClick={() => handleStationChange(station)}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className={cn(
+                            "w-full rounded-xl px-4 py-3 text-left transition-all duration-200",
+                            currentStation.id === station.id
+                              ? "text-white backdrop-blur-sm"
+                              : "text-white/70 hover:text-white hover:bg-white/5"
+                          )}
+                          style={{
+                            background: currentStation.id === station.id
+                              ? `linear-gradient(135deg, ${currentTheme.colors.accent}25, ${currentTheme.colors.accent}10)`
+                              : 'transparent',
+                            border: currentStation.id === station.id
+                              ? `1px solid ${currentTheme.colors.accent}40`
+                              : '1px solid transparent'
+                          }}
+                        >
+                          <div className="text-sm font-medium mb-1">{station.name}</div>
+                          <div className="text-xs text-white/50">{station.genre}</div>
+                        </motion.button>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </ScrollArea>
-        </div>
+        </motion.div>
 
-        {/* Audio Element */}
         <audio ref={audioRef} />
       </div>
-    </div>
+    </motion.div>
   )
 }

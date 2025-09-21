@@ -14,6 +14,7 @@ export interface WeatherData {
     date: string
     dayName: string
     temperature: number
+    description: string
     icon: string
   }>
   alerts: Array<{
@@ -52,6 +53,7 @@ interface ForecastResponse {
       temp: number
     }
     weather: Array<{
+      description: string
       icon: string
     }>
   }>
@@ -61,7 +63,7 @@ export async function fetchWeather(city: string): Promise<WeatherData> {
   const currentWeatherResponse = await fetch(
     `${BASE_URL}/weather?q=${city}&appid=${API_KEY}&units=metric`,
     {
-      next: { 
+      next: {
         revalidate: 300 // Revalidate every 5 minutes
       }
     }
@@ -69,7 +71,7 @@ export async function fetchWeather(city: string): Promise<WeatherData> {
   const forecastResponse = await fetch(
     `${BASE_URL}/forecast?q=${city}&appid=${API_KEY}&units=metric`,
     {
-      next: { 
+      next: {
         revalidate: 300 // Revalidate every 5 minutes
       }
     }
@@ -89,6 +91,7 @@ export async function fetchWeather(city: string): Promise<WeatherData> {
       date: new Date(day.dt * 1000).toLocaleDateString(),
       dayName: new Date(day.dt * 1000).toLocaleDateString("en-US", { weekday: "short" }),
       temperature: Math.round(day.main.temp),
+      description: day.weather[0].description || 'clear',
       icon: day.weather[0].icon,
     }))
 
@@ -97,7 +100,8 @@ export async function fetchWeather(city: string): Promise<WeatherData> {
       temperature: Math.round(currentWeatherData.main.temp),
       description: currentWeatherData.weather[0].description,
       humidity: currentWeatherData.main.humidity,
-      windSpeed: Math.round(currentWeatherData.wind.speed),
+      // OpenWeather metric wind speed is m/s; convert to km/h
+      windSpeed: Math.round(currentWeatherData.wind.speed * 3.6),
       icon: currentWeatherData.weather[0].icon,
       date: new Date(currentWeatherData.dt * 1000).toLocaleDateString("en-US", {
         weekday: "long",

@@ -15,9 +15,7 @@ interface NewsAPIResponse {
   articles: Array<{
     title: string
     url: string
-    [key: string]: any
   }>
-  [key: string]: any
 }
 
 export async function GET(request: NextRequest) {
@@ -26,14 +24,14 @@ export async function GET(request: NextRequest) {
 
   if (!location) {
     return NextResponse.json(
-      { error: "Location is required" }, 
+      { error: "Location is required" },
       { status: 400 }
     )
   }
 
   if (!API_KEY) {
     return NextResponse.json(
-      { error: "API key is not configured" }, 
+      { error: "API key is not configured" },
       { status: 500 }
     )
   }
@@ -42,7 +40,7 @@ export async function GET(request: NextRequest) {
     const response = await fetch(
       `https://newsapi.org/v2/everything?q=${encodeURIComponent(location)}&apiKey=${API_KEY}&pageSize=5`,
       {
-        next: { 
+        next: {
           revalidate: 1800 // Revalidate every 30 minutes
         }
       }
@@ -68,10 +66,10 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching news:", error)
     return NextResponse.json(
-      { 
-        error: "Failed to fetch news", 
-        details: error instanceof Error ? error.message : String(error) 
-      }, 
+      {
+        error: "Failed to fetch news",
+        details: error instanceof Error ? error.message : String(error)
+      },
       { status: 500 }
     )
   }

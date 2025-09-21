@@ -1,17 +1,21 @@
 import DigitalClock from "../components/DigitalClock"
+import { DynamicThemeProvider } from "../components/DynamicThemeProvider"
+import TimeBasedBackground from "../components/TimeBasedBackground"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-slate-800 dark:to-gray-900 flex items-center justify-center p-4">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -inset-[10px] opacity-50">
-          <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-purple-300 dark:bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-          <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-cyan-300 dark:bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-1/2 left-1/2 w-96 h-96 bg-emerald-300 dark:bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+    <DynamicThemeProvider>
+      <main className="relative min-h-screen overflow-hidden bg-[#060b16] text-white">
+        <TimeBasedBackground />
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,_rgba(56,189,248,0.35),_rgba(56,189,248,0))] blur-3xl" />
+          <div className="absolute bottom-[-30%] right-[-10%] h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(147,197,253,0.28),_rgba(147,197,253,0))] blur-3xl" />
+          <div className="absolute top-[20%] left-[-15%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(167,139,250,0.28),_rgba(167,139,250,0))] blur-3xl" />
         </div>
-      </div>
-      <DigitalClock />
-    </div>
+        <div className="relative flex items-center justify-center px-4 py-12 sm:py-16 lg:py-20">
+          <DigitalClock />
+        </div>
+      </main>
+    </DynamicThemeProvider>
   )
 }
-
