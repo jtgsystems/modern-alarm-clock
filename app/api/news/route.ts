@@ -29,11 +29,9 @@ export async function GET(request: NextRequest) {
     )
   }
 
+  // Degrade gracefully when no API key is set (avoid server 500s during dev/demo)
   if (!API_KEY) {
-    return NextResponse.json(
-      { error: "API key is not configured" },
-      { status: 500 }
-    )
+    return NextResponse.json([], { status: 200, headers: { 'x-news-warning': 'missing-api-key' } })
   }
 
   try {
@@ -47,8 +45,10 @@ export async function GET(request: NextRequest) {
     )
 
     if (!response.ok) {
-      const errorData = await response.json()
-      throw new Error(`News API responded with status ${response.status}: ${JSON.stringify(errorData)}`)
+      let errorBody: any = null
+      try { errorBody = await response.json() } catch {}
+      console.error('News API error', response.status, errorBody)
+      return NextResponse.json([], { status: 200, headers: { 'x-news-warning': `newsapi-${response.status}` } })
     }
 
     const data: NewsAPIResponse = await response.json()
@@ -65,12 +65,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(news)
   } catch (error) {
     console.error("Error fetching news:", error)
-    return NextResponse.json(
-      {
-        error: "Failed to fetch news",
-        details: error instanceof Error ? error.message : String(error)
-      },
-      { status: 500 }
-    )
+    // Return empty list rather than 500 to prevent page errors in demo/dev
+    return NextResponse.json([], { status: 200, headers: { 'x-news-warning': 'fetch-failed' } })
   }
 }
