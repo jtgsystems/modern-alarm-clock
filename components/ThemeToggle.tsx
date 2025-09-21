@@ -3,7 +3,7 @@
 import { Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useTheme } from "next-themes"
-import { useSettings } from "@/context/SettingsContext"
+// settings context not needed here; keep next-themes toggle minimal
 import { cn } from "@/lib/utils"
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -15,7 +15,6 @@ interface ThemeToggleProps {
 export default function ThemeToggle({ className }: ThemeToggleProps) {
   const [mounted, setMounted] = useState(false)
   const { theme, setTheme } = useTheme()
-  const { settings } = useSettings()
 
   useEffect(() => {
     setMounted(true)

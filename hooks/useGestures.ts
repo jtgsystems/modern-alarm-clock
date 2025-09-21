@@ -21,7 +21,7 @@ interface TouchPoint {
 }
 
 export function useGestures(config: GestureConfig) {
-  const elementRef = useRef<HTMLElement>(null)
+  const elementRef = useRef<HTMLDivElement>(null)
   const [touchStart, setTouchStart] = useState<TouchPoint | null>(null)
   const [touchEnd, setTouchEnd] = useState<TouchPoint | null>(null)
   const [lastTap, setLastTap] = useState<number>(0)

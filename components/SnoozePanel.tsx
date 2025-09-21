@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 
-export default function SnoozePanel({ alarm, onStop, onSnooze }) {
+interface SnoozePanelProps {
+  alarm: { label?: string }
+  onStop: () => void
+  onSnooze: (minutes: number) => void
+}
+
+export default function SnoozePanel({ alarm, onStop, onSnooze }: SnoozePanelProps) {
   const [snoozeDuration, setSnoozeDuration] = useState(5)
 
   return (
@@ -79,4 +85,3 @@ export default function SnoozePanel({ alarm, onStop, onSnooze }) {
     </div>
   )
 }
-

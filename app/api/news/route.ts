@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     )
 
     if (!response.ok) {
-      let errorBody: any = null
+      let errorBody: unknown = null
       try { errorBody = await response.json() } catch {}
       console.error('News API error', response.status, errorBody)
       return NextResponse.json([], { status: 200, headers: { 'x-news-warning': `newsapi-${response.status}` } })

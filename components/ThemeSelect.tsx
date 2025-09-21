@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { useSettings } from '@/context/SettingsContext'
+import { useSettings, type AppTheme } from '@/context/SettingsContext'
 
 const THEMES = [
   { id: 'midnight', label: 'Midnight' },
@@ -19,7 +19,7 @@ export function ThemeSelect() {
 
   const onChange = (value: string) => {
     setThemeState(value)
-    setTheme(value as any)
+    setTheme(value as AppTheme)
   }
 
   return (

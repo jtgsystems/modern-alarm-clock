@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-type SfxName = 'rain' | 'thunder' | 'wind' | 'waves' | 'fireplace' | 'forest' | 'city'
+export type SfxName = 'rain' | 'thunder' | 'wind' | 'waves' | 'fireplace' | 'forest' | 'city'
 
 const SOURCES: Record<SfxName, string> = {
   rain: '/sfx/rain.mp3',
@@ -78,4 +78,3 @@ export function useSfx(maxConcurrent = 3) {
 
   return { active, toggle, setVolume, stopAll }
 }
-

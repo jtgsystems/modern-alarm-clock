@@ -1,18 +1,33 @@
 "use client"
 
-import { useState } from "react"
+import { useState, FormEvent } from "react"
 import { v4 as uuidv4 } from "uuid"
 
-export default function AlarmForm({ addAlarm }) {
-  const [time, setTime] = useState("")
-  const [label, setLabel] = useState("")
-  const [repeatDays, setRepeatDays] = useState([])
-  const [sound, setSound] = useState("classic")
-  const [volume, setVolume] = useState(50)
+type AlarmSound = "classic" | "digital" | "gentle" | "nature"
 
-  const handleSubmit = (e) => {
+interface AlarmData {
+  id: string
+  time: string
+  label: string
+  repeatDays: string[]
+  sound: AlarmSound
+  volume: number
+}
+
+interface AlarmFormProps {
+  addAlarm: (alarm: AlarmData) => void
+}
+
+export default function AlarmForm({ addAlarm }: AlarmFormProps) {
+  const [time, setTime] = useState<string>("")
+  const [label, setLabel] = useState<string>("")
+  const [repeatDays, setRepeatDays] = useState<string[]>([])
+  const [sound, setSound] = useState<AlarmSound>("classic")
+  const [volume, setVolume] = useState<number>(50)
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const newAlarm = {
+    const newAlarm: AlarmData = {
       id: uuidv4(),
       time,
       label,
@@ -28,7 +43,7 @@ export default function AlarmForm({ addAlarm }) {
     setVolume(50)
   }
 
-  const toggleRepeatDay = (day) => {
+  const toggleRepeatDay = (day: string) => {
     setRepeatDays((prev) => (prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]))
   }
 
@@ -42,7 +57,7 @@ export default function AlarmForm({ addAlarm }) {
           type="time"
           id="alarm-time"
           value={time}
-          onChange={(e) => setTime(e.target.value)}
+          onChange={(e) => setTime((e.target as HTMLInputElement).value)}
           required
           className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
@@ -56,7 +71,7 @@ export default function AlarmForm({ addAlarm }) {
           type="text"
           id="alarm-label"
           value={label}
-          onChange={(e) => setLabel(e.target.value)}
+          onChange={(e) => setLabel((e.target as HTMLInputElement).value)}
           placeholder="e.g., Morning Meeting"
           maxLength={30}
           className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -90,7 +105,7 @@ export default function AlarmForm({ addAlarm }) {
         <select
           id="alarm-sound"
           value={sound}
-          onChange={(e) => setSound(e.target.value)}
+          onChange={(e) => setSound((e.target as HTMLSelectElement).value as AlarmSound)}
           className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         >
           <option value="classic">Classic Bell</option>
@@ -110,7 +125,7 @@ export default function AlarmForm({ addAlarm }) {
           min="0"
           max="100"
           value={volume}
-          onChange={(e) => setVolume(Number(e.target.value))}
+          onChange={(e) => setVolume(Number((e.target as HTMLInputElement).value))}
           className="w-full"
         />
       </div>
@@ -121,4 +136,3 @@ export default function AlarmForm({ addAlarm }) {
     </form>
   )
 }
-

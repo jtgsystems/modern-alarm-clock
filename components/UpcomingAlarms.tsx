@@ -424,7 +424,7 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
 
     return (
       <div 
-        ref={el => groupRefs.current[groupKey] = el}
+        ref={(el) => { groupRefs.current[groupKey] = el }}
         className={cn(
           "space-y-2 transition-colors duration-300",
           focusedGroup === groupKey && "bg-white/5 -mx-2 px-2 rounded-lg"

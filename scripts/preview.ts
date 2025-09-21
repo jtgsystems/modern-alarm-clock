@@ -37,7 +37,7 @@ async function main() {
     console.log('Preview running. Close the browser to exit.')
   } else {
     // In headless mode, wait a short time to allow observation then close
-    await page.waitForTimeout(5000)
+    await new Promise((r) => setTimeout(r, 5000))
     await browser.close()
   }
 }
@@ -47,4 +47,3 @@ main().catch((err) => {
   console.error(err)
   process.exit(1)
 })
-

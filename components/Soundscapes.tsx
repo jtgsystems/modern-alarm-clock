@@ -1,10 +1,10 @@
 "use client"
 
-import { useSfx } from '@/hooks/use-sfx'
+import { useSfx, type SfxName } from '@/hooks/use-sfx'
 import { Slider } from '@/components/ui/slider'
 import { cn } from '@/lib/utils'
 
-const SFX: { key: any; label: string; icon: string }[] = [
+const SFX: { key: SfxName; label: string; icon: string }[] = [
   { key: 'rain', label: 'Rain', icon: '🌧️' },
   { key: 'thunder', label: 'Thunder', icon: '⚡' },
   { key: 'wind', label: 'Wind', icon: '🌬️' },
