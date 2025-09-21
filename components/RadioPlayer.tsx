@@ -560,8 +560,8 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
                             <button
                               type="button"
                               onClick={(event) => {
-                                event.stopPropagation()
-                                toggleFavorite(station.id)
+                                event.stopPropagation();
+                                toggleFavorite(station.id);
                               }}
                               aria-label={isFav ? `Remove ${station.name} from favourites` : `Add ${station.name} to favourites`}
                               aria-pressed={isFav}

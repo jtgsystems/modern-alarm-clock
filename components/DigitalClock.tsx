@@ -328,7 +328,6 @@ export default function DigitalClock() {
 
               </div>
             </motion.div>
-          </motion.div>
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] xl:gap-8">
             <div className="space-y-6">
@@ -397,7 +396,8 @@ export default function DigitalClock() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
+      </div>
       </div>
 
       {/* Calendar Dialog */}
