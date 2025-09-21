@@ -18,7 +18,7 @@ export default function Soundscapes({ className }: { className?: string }) {
   const { active, toggle, setVolume, stopAll } = useSfx(3)
 
   return (
-    <div className={cn('neu-layer p-5', className)}>
+    <div className={cn('neu-layer p-5 shadow-[0_20px_60px_rgba(0,0,0,0.35)]', className)}>
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white/50">Soundscapes</h3>
         <button onClick={stopAll} className="text-xs text-white/60 hover:text-white">Stop all</button>

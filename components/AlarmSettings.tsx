@@ -7,9 +7,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Slider } from "@/components/ui/slider"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
-import { Volume2, Bell } from "lucide-react"
+import { Volume2, Bell, Radio } from "lucide-react"
+import { alarmSounds as builtInSounds, type AlarmSound as BuiltInAlarmSound } from "@/lib/sounds"
+import { radioStations } from "@/lib/radioStations"
 
 interface AlarmSettingsProps {
   onClose: () => void
@@ -26,19 +28,13 @@ export interface AlarmSettings {
   showNotification: boolean
   reminderDate?: Date
 }
-
-const alarmSounds = [
-  { value: "classic", label: "Classic Bell" },
-  { value: "digital", label: "Digital Beep" },
-  { value: "nature", label: "Nature Sounds" },
-  { value: "rooster", label: "Rooster Crow" },
-]
+type AlarmSoundValue = string
 
 export default function AlarmSettings({ onClose, onSetAlarm }: AlarmSettingsProps) {
   const [alarmTime, setAlarmTime] = useState("")
   const [alarmLabel, setAlarmLabel] = useState("")
   const [isRecurring, setIsRecurring] = useState(false)
-  const [alarmSound, setAlarmSound] = useState("classic")
+  const [alarmSound, setAlarmSound] = useState<AlarmSoundValue>("classic")
   const [volume, setVolume] = useState(50)
   const [showNotification, setShowNotification] = useState(true)
   const [reminderDate, setReminderDate] = useState<Date | undefined>()
@@ -132,7 +128,7 @@ export default function AlarmSettings({ onClose, onSetAlarm }: AlarmSettingsProp
             <Label htmlFor="sound" className="text-white/80">
               Alarm Sound
             </Label>
-            <Select onValueChange={setAlarmSound} defaultValue={alarmSound}>
+            <Select onValueChange={setAlarmSound} value={alarmSound}>
               <SelectTrigger
                 id="sound"
                 className={cn(
@@ -145,16 +141,34 @@ export default function AlarmSettings({ onClose, onSetAlarm }: AlarmSettingsProp
                 <SelectValue placeholder="Select alarm sound" />
               </SelectTrigger>
               <SelectContent className="bg-gray-800 text-white border-white/10">
-                {alarmSounds.map((sound) => (
-                  <SelectItem key={sound.value} value={sound.value}>
-                    <div className="flex items-center gap-2">
-                      <Bell className="h-4 w-4" />
-                      {sound.label}
-                    </div>
-                  </SelectItem>
-                ))}
+                <SelectGroup>
+                  <SelectLabel className="text-white/60">Built-in Tones</SelectLabel>
+                  {Object.entries(builtInSounds).map(([value, info]) => (
+                    <SelectItem key={value} value={value}>
+                      <div className="flex items-center gap-2">
+                        <Bell className="h-4 w-4" />
+                        {info.name}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel className="mt-2 text-white/60">Radio Stations</SelectLabel>
+                  {radioStations.map((station) => (
+                    <SelectItem key={station.id} value={`radio:${station.id}`}>
+                      <div className="flex items-center gap-2">
+                        <Radio className="h-4 w-4" />
+                        <span>{station.name}</span>
+                        <span className="text-white/40 text-xs">{station.genre}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
               </SelectContent>
             </Select>
+            <p className="text-xs text-white/50">
+              Streaming alarms require an internet connection. If a station cannot connect, we automatically fall back to the Classic Bell tone.
+            </p>
           </div>
 
           <div className="space-y-2">

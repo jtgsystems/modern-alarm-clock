@@ -51,7 +51,7 @@ export function getMockWeather(): WeatherData {
         day: "numeric",
       })
     },
-    forecast: Array.from({ length: 5 }, (_, i) => {
+    forecast: Array.from({ length: 7 }, (_, i) => {
       const date = new Date()
       date.setDate(date.getDate() + i)
       const forecastCondition = conditions[Math.floor(Math.random() * conditions.length)]

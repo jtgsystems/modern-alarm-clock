@@ -5,7 +5,7 @@ import { getMockWeather } from "@/lib/mockWeather"
 import { type WeatherData } from "@/lib/weather"
 import { Cloud, CloudRain, CloudSnow, Sun, Wind, Droplets } from "lucide-react"
 import { useDynamicTheme } from "./DynamicThemeProvider"
-import { motion } from "framer-motion"
+import { useSettings } from "@/context/SettingsContext"
 
 interface WeatherDisplayProps {
   city?: string
@@ -14,6 +14,8 @@ interface WeatherDisplayProps {
 export default function WeatherDisplay({ city = "New York" }: WeatherDisplayProps) {
   const { currentTheme } = useDynamicTheme()
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
+  const { settings } = useSettings()
+  // Use direct hex colors with alpha transparency
 
   useEffect(() => {
     const data = getMockWeather()
@@ -43,23 +45,43 @@ export default function WeatherDisplay({ city = "New York" }: WeatherDisplayProp
   }
 
   const getWeatherIcon = (condition: string) => {
-    if (!condition) return <Cloud className="w-10 h-10 text-gray-400" />
+    if (!condition) return <Cloud className="w-8 h-8 text-gray-400" />
     const colorClass = getIconColor(condition)
     switch (condition.toLowerCase()) {
       case 'clear':
-        return <Sun className={`w-10 h-10 ${colorClass}`} />
+        return <Sun className={`w-8 h-8 ${colorClass}`} />
       case 'cloudy':
-        return <Cloud className={`w-10 h-10 ${colorClass}`} />
+        return <Cloud className={`w-8 h-8 ${colorClass}`} />
       case 'rain':
-        return <CloudRain className={`w-10 h-10 ${colorClass}`} />
+        return <CloudRain className={`w-8 h-8 ${colorClass}`} />
       case 'snow':
-        return <CloudSnow className={`w-10 h-10 ${colorClass}`} />
+        return <CloudSnow className={`w-8 h-8 ${colorClass}`} />
       default:
-        return <Cloud className={`w-10 h-10 ${colorClass}`} />
+        return <Cloud className={`w-8 h-8 ${colorClass}`} />
     }
   }
 
-  // simple clothing advice based on temp and condition
+  const units = settings.weather.units
+
+  const formatTemperature = (value: number) => {
+    if (units === 'imperial') {
+      return Math.round((value * 9) / 5 + 32)
+    }
+    return Math.round(value)
+  }
+
+  const temperatureSymbol = units === 'imperial' ? '°F' : '°C'
+
+  const formatWindSpeed = (value: number) => {
+    if (units === 'imperial') {
+      return Math.round(value * 0.621371)
+    }
+    return Math.round(value)
+  }
+
+  const windSpeedUnit = units === 'imperial' ? 'mph' : 'km/h'
+
+  // simple clothing advice based on temp and condition (always using Celsius for logic)
   const temp = weatherData.current.temperature
   const cond = (weatherData.current.description || '').toLowerCase()
   const suggestions: { icon: string; label: string }[] = []
@@ -76,138 +98,98 @@ export default function WeatherDisplay({ city = "New York" }: WeatherDisplayProp
   if (cond.includes('snow')) suggestions.push({ icon: '🥾', label: 'Boots' })
 
   return (
-    <motion.div
-      className="relative neu-surface overflow-hidden backdrop-blur-xl p-6 neu-interactive"
-      initial={{ opacity: 0, scale: 0.98 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.25 }}
-    >
+    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_16px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl">
       {/* Dynamic background overlay */}
       <div
-        className="absolute inset-0 opacity-10"
+        className="absolute inset-0 opacity-5 pointer-events-none"
         style={{
-          background: `radial-gradient(circle at 30% 20%, ${currentTheme.colors.accent}30 0%, transparent 50%),
-                      radial-gradient(circle at 70% 80%, ${currentTheme.colors.accent}15 0%, transparent 50%)`
+          background: `radial-gradient(circle at 30% 20%, ${currentTheme.colors.accent}4D 0%, transparent 50%)`
         }}
       />
 
       <div className="relative z-10">
-        <div className="flex flex-wrap items-center justify-between gap-6">
+        <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm uppercase tracking-wider text-white/60 font-semibold">{city}</p>
-            <p className="text-base text-white/70 mt-1">{weatherData.current.date}</p>
+            <p className="text-xs uppercase tracking-wider text-white/60 font-semibold">{city}</p>
+            <p className="text-xs text-white/70 mt-0.5">{weatherData.current.date}</p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <div className="text-right">
-              <div className="text-6xl font-bold leading-none text-white mb-2" style={{ color: currentTheme.colors.accent }}>
-                {weatherData.current.temperature}°C
+              <div className="text-3xl font-bold leading-none text-white" style={{ color: currentTheme.colors.accent }}>
+                {formatTemperature(weatherData.current.temperature)}{temperatureSymbol}
               </div>
-              <div className="flex items-center justify-end gap-4 text-sm text-white/70">
-                <motion.span
-                  className="inline-flex items-center gap-2 px-3 py-1 rounded-xl backdrop-blur-sm"
-                  style={{ background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.15)' }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <Droplets className="h-4 w-4" style={{ color: currentTheme.colors.accent }} />
+              <div className="flex items-center justify-end gap-2 text-xs text-white/70 mt-1">
+                <span className="inline-flex items-center gap-1">
+                  <Droplets className="h-3 w-3" />
                   {weatherData.current.humidity}%
-                </motion.span>
-                <motion.span
-                  className="inline-flex items-center gap-2 px-3 py-1 rounded-xl backdrop-blur-sm"
-                  style={{ background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.15)' }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <Wind className="h-4 w-4" style={{ color: currentTheme.colors.accent }} />
-                  {weatherData.current.windSpeed} km/h
-                </motion.span>
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <Wind className="h-3 w-3" />
+                  {formatWindSpeed(weatherData.current.windSpeed)} {windSpeedUnit}
+                </span>
               </div>
             </div>
-            <motion.div
-              animate={{ rotate: [0, 5, -5, 0] }}
-              transition={{ duration: 4, repeat: Infinity }}
-            >
+            <div className="flex-shrink-0 w-8 h-8">
               {getWeatherIcon(weatherData.current.description)}
-            </motion.div>
+            </div>
           </div>
         </div>
 
-        <motion.div
-          className="mt-6 flex items-center gap-3"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
+        <div className="mt-3 flex items-center justify-center">
           <span
-            className="px-4 py-2 rounded-2xl text-sm font-medium capitalize text-white backdrop-blur-sm"
+            className="px-3 py-1 rounded-lg text-xs font-medium capitalize text-white/90 backdrop-blur-sm"
             style={{
-              background: `linear-gradient(135deg, ${currentTheme.colors.accent}30, ${currentTheme.colors.accent}15)`,
-              border: `1px solid ${currentTheme.colors.accent}40`
+              background: `linear-gradient(135deg, ${currentTheme.colors.accent}33, ${currentTheme.colors.accent}1A)`,
+              border: `1px solid ${currentTheme.colors.accent}4D`
             }}
           >
             {weatherData.current.description}
           </span>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="mt-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
+        <div className="mt-6">
           <h3 className="text-sm text-white/70 mb-4 tracking-wide font-semibold">Suggested Clothing</h3>
           <div className="flex flex-wrap gap-3">
             {suggestions.map((s, i) => (
-              <motion.div
+              <div
                 key={`${s.label}-${i}`}
                 className="inline-flex items-center gap-3 px-4 py-3 rounded-2xl backdrop-blur-sm"
                 style={{
                   background: 'rgba(255, 255, 255, 0.08)',
                   border: '1px solid rgba(255, 255, 255, 0.12)'
                 }}
-                whileHover={{
-                  scale: 1.05,
-                  background: `${currentTheme.colors.accent}20`
-                }}
-                transition={{ duration: 0.2 }}
               >
                 <span className="text-xl leading-none">{s.icon}</span>
                 <span className="text-sm text-white/80 font-medium">{s.label}</span>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="mt-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <h3 className="text-sm text-white/70 mb-4 tracking-wide font-semibold">5-Day Forecast</h3>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {weatherData.forecast.map((day, i) => (
-              <motion.div
+        <div className="mt-6">
+          <h3 className="text-sm text-white/70 mb-3 tracking-wide">7-Day Forecast</h3>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
+            {weatherData.forecast.slice(0,7).map((day, i) => (
+              <div
                 key={i}
                 className="rounded-2xl backdrop-blur-sm p-4 text-center"
                 style={{
                   background: 'rgba(255, 255, 255, 0.08)',
                   border: '1px solid rgba(255, 255, 255, 0.12)'
                 }}
-                whileHover={{
-                  scale: 1.05,
-                  background: `${currentTheme.colors.accent}15`
-                }}
-                transition={{ duration: 0.2 }}
               >
                 <div className="text-xs text-white/60 font-medium uppercase tracking-wide">{getDayName(day.date)}</div>
                 <div className="flex items-center justify-center h-12 mt-2">
                   {getWeatherIcon(day.description || '')}
                 </div>
-                <div className="text-lg font-bold text-white mt-2">{day.temperature}°C</div>
-              </motion.div>
+                <div className="text-lg font-bold text-white mt-2 flex justify-center">
+                  {formatTemperature(day.temperature)}{temperatureSymbol}
+                </div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   )
 }

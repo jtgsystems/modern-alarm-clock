@@ -16,14 +16,26 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // 2025 Update: Move turbo config to turbopack, remove experimental wrapper
+  turbopack: {
+    rules: {},
+    resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.json']
+  },
   experimental: {
     webpackBuildWorker: true,
-    turbo: {
-      rules: {}
-    },
     serverActions: {
       bodySizeLimit: '2mb'
-    }
+    },
+    // 2025 Stable: Modern optimizations
+    optimizePackageImports: ['framer-motion', 'lucide-react']
+  },
+  // 2025 New: Output file tracing optimization
+  outputFileTracingRoot: process.cwd(),
+  // 2025 New: Modern bundling optimizations (swcMinify is now default)
+  compiler: {
+    // 2025: React Compiler configuration
+    reactRemoveProperties: true,
+    removeConsole: process.env.NODE_ENV === 'production'
   }
 }
 

@@ -24,15 +24,15 @@ export function ThemeSelect() {
 
   return (
     <Select value={theme} onValueChange={onChange}>
-      <SelectTrigger className="w-40 rounded-full neu-layer border-0 text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
+      <SelectTrigger className="w-40 rounded-full neu-layer border border-white/10 text-xs font-semibold uppercase tracking-[0.18em] text-white/80 shadow-[0_8px_16px_rgba(0,0,0,0.25)] focus:ring-2 focus:ring-white/20 focus:border-white/20 [&>svg]:text-white/70">
         <SelectValue placeholder="Theme" />
       </SelectTrigger>
-      <SelectContent className="neu-layer border-0 backdrop-blur-xl">
+      <SelectContent className="neu-layer border border-white/10 backdrop-blur-xl text-white/90 shadow-[0_16px_32px_rgba(0,0,0,0.35)]">
         {THEMES.map((t) => (
           <SelectItem
             key={t.id}
             value={t.id}
-            className="text-xs font-medium uppercase tracking-[0.14em] text-white/70 focus:text-white"
+            className="text-xs font-medium uppercase tracking-[0.14em] text-white/80 focus:text-white"
           >
             {t.label}
           </SelectItem>

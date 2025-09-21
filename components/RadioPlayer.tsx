@@ -1,113 +1,35 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useMemo } from "react"
 import { Slider } from "@/components/ui/slider"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { cn } from "@/lib/utils"
-import { Play, Pause, SkipForward, Volume2, Music2, Radio, Waves, Heart, Shuffle } from "lucide-react"
+import { Play, Pause, SkipForward, Volume2, Music2, Heart, Shuffle } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useDynamicTheme } from "./DynamicThemeProvider"
 import { toast } from "sonner"
+import { radioStations } from "@/lib/radioStations"
 
 interface RadioPlayerProps {
   className?: string
 }
 
-const radioStations = [
-  // 🎼 Classical & Opera (Premium Quality - Verified 2025)
-  { id: "wqxr", name: "WQXR New York", url: "https://stream.wqxr.org/wqxr-web", genre: "Classical" },
-  { id: "classical-kusc", name: "Classical KUSC 91.5", url: "https://kusc.streamguys1.com/kusc-mp3", genre: "Classical" },
-  { id: "yourclassical", name: "YourClassical MPR", url: "https://cms.stream.publicradio.org/cms.mp3", genre: "Classical" },
-  { id: "classical-king", name: "Classical KING FM 98.1", url: "https://classicalking.streamguys1.com/king-mp3", genre: "Classical" },
-  { id: "wrti-classical", name: "WRTI Classical 90.1", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/WRTI_CLASSICAL.mp3", genre: "Classical" },
-  { id: "wfmt", name: "WFMT Chicago Classical", url: "https://stream.wfmt.com/main", genre: "Classical" },
-  { id: "radio-swiss-classic", name: "Radio Swiss Classic", url: "https://stream.srg-ssr.ch/rsc_de/mp3_128.m3u", genre: "Classical" },
-  { id: "france-musique", name: "France Musique", url: "https://direct.francemusique.fr/live/francemusique-midfi.mp3", genre: "Classical" },
-  { id: "br-klassik", name: "BR-KLASSIK", url: "https://dispatcher.rndfnk.com/br/brklassik/live/mp3/mid", genre: "Classical" },
-  { id: "classic-fm", name: "Classic FM (UK)", url: "https://media-ssl.musicradio.com/ClassicFM", genre: "Classical" },
-
-  // 🎷 Jazz & Blues (Premium Quality - Verified 2025)
-  { id: "tsf-jazz", name: "TSF Jazz Paris", url: "https://tsfjazz.ice.infomaniak.ch/tsfjazz-high.mp3", genre: "Jazz" },
-  { id: "wrti-jazz", name: "WRTI Jazz 90.1", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/WRTI_JAZZ.mp3", genre: "Jazz" },
-  { id: "jazz24", name: "Jazz24", url: "https://live.wostreaming.net/direct/ppm-jazz24aac-ibc1", genre: "Jazz" },
-  { id: "wdcb-jazz", name: "WDCB Jazz 90.9", url: "https://wdcb.streamguys1.com/live-mp3", genre: "Jazz" },
-  { id: "kjazz", name: "KJAZZ 88.1", url: "https://kjazz.streamguys1.com/kjazz-hi", genre: "Jazz" },
-  { id: "jazz-radio-paris", name: "Jazz Radio Paris", url: "https://jazzradio.ice.infomaniak.ch/jazzradio-high.mp3", genre: "Jazz" },
-  { id: "kcsm-jazz", name: "KCSM Jazz 91.1", url: "https://ice6.securenetsystems.net/KCSM", genre: "Jazz" },
-  { id: "smooth-jazz-247", name: "Smooth Jazz 24/7", url: "https://smoothjazz.cdnstream1.com/2585_320.mp3", genre: "Jazz" },
-  { id: "jazz-kat", name: "Jazz Kat KRTU", url: "https://streaming.trinityuniversity.edu:8000/krtu.mp3", genre: "Jazz" },
-  { id: "wbgo", name: "WBGO Jazz 88.3", url: "https://wbgo.streamguys1.com/wbgo70", genre: "Jazz" },
-
-  // 🌊 Ambient & Atmospheric (Premium Quality - Verified 2025)
-  { id: "soma-drone", name: "SomaFM Drone Zone", url: "https://ice1.somafm.com/dronezone-128-mp3", genre: "Ambient" },
-  { id: "soma-space", name: "SomaFM Space Station", url: "https://ice1.somafm.com/spacestation-128-mp3", genre: "Ambient" },
-  { id: "soma-lush", name: "SomaFM Lush", url: "https://ice1.somafm.com/lush-128-mp3", genre: "Ambient" },
-  { id: "ambient-sleeping", name: "Ambient Sleeping Pill", url: "https://radio.stereoscenic.com/asp-h", genre: "Ambient" },
-  { id: "deep-ambient", name: "Deep Space One", url: "https://radio.stereoscenic.com/dso-h", genre: "Ambient" },
-  { id: "hearts-of-space", name: "Hearts of Space", url: "https://stream.heartsofspace.com/hos-7-3-320-mp3", genre: "Ambient" },
-  { id: "stillstream", name: "Stillstream", url: "https://streams.stillstream.com/stillstream.mp3", genre: "Ambient" },
-  { id: "cryosleep", name: "Cryosleep", url: "https://radio.stereoscenic.com/cry-h", genre: "Ambient" },
-  { id: "ambient-online", name: "Ambient Online", url: "https://streams.ambient.online/ambient.mp3", genre: "Ambient" },
-  { id: "mission-control", name: "Mission Control", url: "https://radio.stereoscenic.com/spc-h", genre: "Ambient" },
-
-  // 🎛️ Electronic & Modern (Premium Quality - Verified 2025)
-  { id: "paradise-main", name: "Radio Paradise Main", url: "https://stream.radioparadise.com/aac-320", genre: "Electronic" },
-  { id: "paradise-mellow", name: "Radio Paradise Mellow", url: "https://stream.radioparadise.com/mellow-320", genre: "Electronic" },
-  { id: "soma-groove", name: "SomaFM Groove Salad", url: "https://ice1.somafm.com/groovesalad-256-mp3", genre: "Electronic" },
-  { id: "di-chillout", name: "Digitally Imported Chillout", url: "https://prem2.di.fm:443/chillout", genre: "Electronic" },
-  { id: "di-lounge", name: "Digitally Imported Lounge", url: "https://prem2.di.fm:443/lounge", genre: "Electronic" },
-  { id: "chillsynth", name: "ChillSynth FM", url: "https://radio.chillsynth.fm/stream", genre: "Electronic" },
-  { id: "retrowave", name: "Retrowave", url: "https://retrowave.ru/play/retrowave_main/aacp64", genre: "Electronic" },
-  { id: "lofi-girl", name: "Lofi Girl Radio", url: "https://streams.ilovemusic.de/iloveradio17.mp3", genre: "Electronic" },
-  { id: "cafe-del-mar", name: "Cafe del Mar", url: "https://radio4.cdm-radio.com:18020/stream-mp3-Chill", genre: "Electronic" },
-  { id: "ibiza-global", name: "Ibiza Global Radio", url: "https://ibizaglobalradio.streaming-pro.com:8024/stream.mp3", genre: "Electronic" },
-
-  // 🌍 World & Cultural (Premium Quality - Verified 2025)
-  { id: "bbc-world", name: "BBC World Service", url: "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service", genre: "World" },
-  { id: "bbc-asian", name: "BBC Asian Network", url: "https://stream.live.vc.bbcmedia.co.uk/bbc_asian_network", genre: "World" },
-  { id: "france-inter", name: "France Inter", url: "https://direct.franceinter.fr/live/franceinter-midfi.mp3", genre: "World" },
-  { id: "radio-france-intl", name: "RFI Monde", url: "https://rfimonde96k.ice.infomaniak.ch/rfimonde-96.mp3", genre: "World" },
-  { id: "fip", name: "FIP Radio", url: "https://direct.fipradio.fr/live/fip-midfi.mp3", genre: "World" },
-  { id: "nrk-alltid", name: "NRK Alltid Klassisk", url: "https://lyd.nrk.no/nrk_radio_alltid_klassisk_mp3_h", genre: "World" },
-  { id: "rai-radio3", name: "RAI Radio 3", url: "https://radiothree-live.cdn.rai.it/liveaudio/radiothree/playlist.m3u8", genre: "World" },
-  { id: "kcrw", name: "KCRW Eclectic 24", url: "https://kcrw.streamguys1.com/kcrw_192k_mp3_e24", genre: "World" },
-  { id: "resonance-fm", name: "Resonance FM", url: "https://radio.resonance.fm:8443/resonance", genre: "World" },
-  { id: "abc-jazz", name: "ABC Jazz (Australia)", url: "https://live-radio02.mediahubaustralia.com/JAZW/mp3/", genre: "World" },
-
-  // 🎸 Alternative & Indie (Premium Quality - Verified 2025)
-  { id: "kexp", name: "KEXP 90.3 Seattle", url: "https://kexp.streamguys1.com/kexp320.aac", genre: "Alternative" },
-  { id: "6music", name: "BBC Radio 6 Music", url: "https://stream.live.vc.bbcmedia.co.uk/bbc_6music", genre: "Alternative" },
-  { id: "nts-1", name: "NTS Radio 1", url: "https://stream-relay-geo.ntslive.net/stream", genre: "Alternative" },
-  { id: "nts-2", name: "NTS Radio 2", url: "https://stream-relay-geo.ntslive.net/stream2", genre: "Alternative" },
-  { id: "kcrw-music", name: "KCRW Music", url: "https://kcrw.streamguys1.com/kcrw_192k_mp3_on_air", genre: "Alternative" },
-  { id: "the-current", name: "The Current 89.3", url: "https://current.stream.publicradio.org/kcmp.mp3", genre: "Alternative" },
-  { id: "wxpn", name: "WXPN 88.5", url: "https://wxpnhi.xpn.org/xpnhi", genre: "Alternative" },
-  { id: "wfuv", name: "WFUV 90.7", url: "https://wfuv.streamguys1.com/wfuv", genre: "Alternative" },
-  { id: "kdhx", name: "KDHX 88.1", url: "https://kdhx-ice.streamguys1.com/live", genre: "Alternative" },
-  { id: "dublab", name: "Dublab Radio", url: "https://dublab.out.airtime.pro/dublab_a", genre: "Alternative" },
-
-  // 🎵 News & Talk (Premium Quality - Verified 2025)
-  { id: "npr", name: "NPR News", url: "https://npr-ice.streamguys1.com/live.mp3", genre: "News" },
-  { id: "bbc-radio4", name: "BBC Radio 4", url: "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_fourfm", genre: "News" },
-  { id: "abc-news", name: "ABC News Radio", url: "https://live-radio01.mediahubaustralia.com/2ABW/mp3/", genre: "News" },
-  { id: "cbc-radio1", name: "CBC Radio One", url: "https://cbc_r1_tor.akacast.akamaistream.net/7/442/451661/v1/rc.akacast.akamaistream.net/cbc_r1_tor", genre: "News" },
-  { id: "rthk-radio3", name: "RTHK Radio 3", url: "https://rthkaudio3-lh.akamaihd.net/i/radio3_1@349792/master.m3u8", genre: "News" },
-]
+const allStations = radioStations
 
 export default function RadioPlayer({ className }: RadioPlayerProps) {
   const { currentTheme } = useDynamicTheme()
-  const [currentStation, setCurrentStation] = useState(radioStations[0])
+  const [currentStation, setCurrentStation] = useState(allStations[0])
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [volume, setVolume] = useState(0.5)
-  const [isFavorite, setIsFavorite] = useState(false)
+  // favourites keyed by station id
+  const [favorites, setFavorites] = useState<Set<string>>(() => new Set())
   // Repeat disabled in UI for now; can be re-enabled later
   const [isShuffle, setIsShuffle] = useState(false)
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'error' | 'idle'>('idle')
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  const stationsByGenre = radioStations.reduce((acc, station) => {
+  const stationsByGenre = allStations.reduce((acc, station) => {
     const genre = station.genre
     if (!acc[genre]) {
       acc[genre] = []
@@ -117,6 +39,24 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
   }, {} as Record<string, typeof radioStations>)
 
   const genres = Object.entries(stationsByGenre).sort((a, b) => a[0].localeCompare(b[0]))
+  const stationCount = useMemo(() => allStations.length, [])
+  const genreCount = genres.length
+  const isCurrentFavorite = favorites.has(currentStation.id)
+
+  const getNextStation = (direction: 1 | -1, fromStation: typeof allStations[number] = currentStation) => {
+    const currentIndex = allStations.findIndex((s) => s.id === fromStation.id)
+    if (currentIndex === -1) return allStations[0]
+    const nextIndex = (currentIndex + allStations.length + direction) % allStations.length
+    return allStations[nextIndex]
+  }
+
+  const getRandomStation = (visited: Set<string>) => {
+    if (visited.size >= allStations.length) return undefined
+    const available = allStations.filter((station) => !visited.has(station.id))
+    if (available.length === 0) return undefined
+    const randomIndex = Math.floor(Math.random() * available.length)
+    return available[randomIndex]
+  }
 
   useEffect(() => {
     if (audioRef.current) {
@@ -124,23 +64,64 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
     }
   }, [volume])
 
-  const handleStationChange = (station: typeof radioStations[number]) => {
+  const attemptPlayStation = async (
+    station: typeof allStations[number],
+    visited: Set<string>,
+    showSuccessToast: boolean
+  ): Promise<boolean> => {
+    if (!audioRef.current) return false
+
+    setCurrentStation(station)
+    setConnectionStatus('connecting')
+    setIsLoading(true)
+    visited.add(station.id)
+
+    audioRef.current.src = station.url
+    try {
+      await audioRef.current.play()
+      setIsLoading(false)
+      setConnectionStatus('connected')
+      setIsPlaying(true)
+      if (showSuccessToast) {
+        toast.success(`Now playing ${station.name}`, { description: station.genre, duration: 2000 })
+      }
+      return true
+    } catch (error) {
+      const nextCandidate = isShuffle
+        ? getRandomStation(visited)
+        : getNextStation(1, station)
+
+      if (nextCandidate && !visited.has(nextCandidate.id)) {
+        toast.error(`Failed to connect to ${station.name}. Trying ${nextCandidate.name}...`)
+        return attemptPlayStation(nextCandidate, visited, showSuccessToast)
+      }
+
+      setIsLoading(false)
+      setConnectionStatus('error')
+      setIsPlaying(false)
+      toast.error('Unable to connect to any available station right now.')
+      return false
+    }
+  }
+
+  const handleStationChange = (station: typeof allStations[number]) => {
     setCurrentStation(station)
     setConnectionStatus('idle')
-    toast.success(`Switched to ${station.name}`, {
-      description: station.genre,
-      duration: 2000
-    })
-    if (isPlaying && audioRef.current) {
-      setIsLoading(true)
-      setConnectionStatus('connecting')
-      audioRef.current.src = station.url
-      audioRef.current.play().catch(() => {
-        setConnectionStatus('error')
-        setIsLoading(false)
-        toast.error(`Failed to connect to ${station.name}`)
-      })
+    if (isPlaying) {
+      void attemptPlayStation(station, new Set(), true)
     }
+  }
+
+  const toggleFavorite = (stationId: string) => {
+    setFavorites(prev => {
+      const next = new Set(prev)
+      if (next.has(stationId)) {
+        next.delete(stationId)
+      } else {
+        next.add(stationId)
+      }
+      return next
+    })
   }
 
   const togglePlay = () => {
@@ -149,17 +130,10 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
     if (isPlaying) {
       audioRef.current.pause()
       setConnectionStatus('idle')
+      setIsPlaying(false)
     } else {
-      setIsLoading(true)
-      setConnectionStatus('connecting')
-      audioRef.current.src = currentStation.url
-      audioRef.current.play().catch(() => {
-        setConnectionStatus('error')
-        setIsLoading(false)
-        toast.error(`Failed to connect to ${currentStation.name}`)
-      })
+      void attemptPlayStation(currentStation, new Set(), true)
     }
-    setIsPlaying(!isPlaying)
   }
 
   const handleVolumeChange = (value: number[]) => {
@@ -172,12 +146,22 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
 
   const stepStation = (direction: 1 | -1) => {
     if (isShuffle) {
-      const randomIndex = Math.floor(Math.random() * radioStations.length)
-      handleStationChange(radioStations[randomIndex])
+      const randomStation = getRandomStation(new Set([currentStation.id]))
+      if (randomStation) {
+        handleStationChange(randomStation)
+        if (isPlaying) void attemptPlayStation(randomStation, new Set([randomStation.id]), true)
+      }
     } else {
-      const currentIndex = radioStations.findIndex((s) => s.id === currentStation.id)
-      const nextIndex = (currentIndex + radioStations.length + direction) % radioStations.length
-      handleStationChange(radioStations[nextIndex])
+      const nextStation = getNextStation(direction)
+      handleStationChange(nextStation)
+      if (isPlaying) void attemptPlayStation(nextStation, new Set([nextStation.id]), true)
+    }
+  }
+
+  const handleShufflePlay = () => {
+    const randomStation = getRandomStation(new Set([currentStation.id]))
+    if (randomStation) {
+      void attemptPlayStation(randomStation, new Set(), true)
     }
   }
 
@@ -245,28 +229,19 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
   return (
     <motion.div
       className={cn(
-        "group relative overflow-hidden rounded-3xl backdrop-blur-xl px-6 py-7 shadow-[0_20px_60px_rgba(0,0,0,0.4)]",
-        `bg-gradient-to-br ${currentTheme.colors.secondary}`,
+        "group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-xl px-4 py-4 shadow-[0_20px_60px_rgba(0,0,0,0.4)]",
         className
       )}
-      style={{
-        background: `linear-gradient(135deg, ${currentTheme.colors.gradient}), rgba(255, 255, 255, 0.03)`,
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.08)'
-      }}
-      whileHover={{ scale: 1.02, y: -4 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
     >
       {/* Dynamic background overlay */}
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-70 pointer-events-none"
         style={{
-          background: `radial-gradient(circle at 30% 20%, ${currentTheme.colors.accent}40 0%, transparent 50%),
-                      radial-gradient(circle at 70% 80%, ${currentTheme.colors.accent}20 0%, transparent 50%)`
+          background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.16), rgba(147, 197, 253, 0.12), rgba(167, 139, 250, 0.16))'
         }}
       />
 
-      <div className="relative z-10 flex flex-col gap-7">
+      <div className="relative z-10 flex flex-col gap-4">
         {/* Header */}
         <motion.div
           className="flex items-center justify-between"
@@ -274,119 +249,124 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <div className="flex items-center gap-4">
-            <motion.div
-              className="rounded-2xl p-3 backdrop-blur-sm"
-              style={{
-                background: `linear-gradient(135deg, ${currentTheme.colors.accent}20, ${currentTheme.colors.accent}10)`,
-                border: `1px solid ${currentTheme.colors.accent}30`
-              }}
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Radio className="h-5 w-5" style={{ color: currentTheme.colors.accent }} />
-            </motion.div>
-            <div>
-              <h3 className="text-lg font-bold text-white/90">Radio Player</h3>
-              <p className="text-sm text-white/60">{currentTheme.name}</p>
+          <div className="flex items-center gap-3">
+            <div className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/10">
+              <Music2 className="h-5 w-5 text-white/70" aria-hidden="true" />
             </div>
-            <motion.div
-              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              <Waves className="h-4 w-4 text-green-400" />
-            </motion.div>
+            <div className="space-y-0.5">
+              <h3 className="text-sm font-semibold text-white/90 uppercase tracking-wide">Radio Player</h3>
+              <p className="text-xs text-white/50">
+                {genreCount} genres · {stationCount} stations
+              </p>
+            </div>
           </div>
           <div className="text-right">
-            <div className="text-xs text-white/50">{genres.length} genres</div>
-            <div className={cn("text-xs font-medium", getStatusColor())}>
-              {getStatusText()}
-            </div>
+            <div className="text-xs text-white/50">Theme · {currentTheme.name}</div>
+            <div className={cn("text-xs font-medium", getStatusColor())}>{getStatusText()}</div>
           </div>
         </motion.div>
 
         {/* Current Station Display */}
         <motion.div
-          className="relative overflow-hidden rounded-3xl backdrop-blur-sm px-6 py-5"
+          className="relative overflow-hidden rounded-xl backdrop-blur-sm px-4 py-4"
           style={{
-            background: `linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))`,
-            border: '1px solid rgba(255, 255, 255, 0.15)'
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
           }}
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.2 }}
         >
-          <motion.div
-            className="absolute inset-0 opacity-0"
+          <div
+            className="absolute inset-0 opacity-20 pointer-events-none"
             style={{ background: `linear-gradient(90deg, ${currentTheme.colors.accent}20, transparent)` }}
-            whileHover={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
           />
-          <div className="relative z-10 flex items-center gap-4">
-            <motion.div
-              className="flex h-16 w-16 items-center justify-center rounded-2xl backdrop-blur-sm"
-              style={{
-                background: `linear-gradient(135deg, ${currentTheme.colors.accent}25, ${currentTheme.colors.accent}10)`,
-                border: `1px solid ${currentTheme.colors.accent}30`
-              }}
-              animate={isPlaying ? {
-                scale: [1, 1.05, 1],
-                boxShadow: [`0 0 0 0 ${currentTheme.colors.accent}40`, `0 0 0 10px ${currentTheme.colors.accent}00`, `0 0 0 0 ${currentTheme.colors.accent}40`]
-              } : {}}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              <Music2 className={cn("h-7 w-7", isPlaying ? "text-white" : "text-white/70")} style={isPlaying ? { color: currentTheme.colors.accent } : {}} />
-            </motion.div>
-            <div className="flex-1 min-w-0">
-              <AnimatePresence mode="wait">
-                <motion.h4
-                  key={currentStation.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="truncate text-xl font-bold text-white/95 mb-1"
-                >
-                  {currentStation.name}
-                </motion.h4>
-              </AnimatePresence>
-              <div className="flex items-center gap-3">
-                <p className="text-base text-white/70">{currentStation.genre}</p>
-                {connectionStatus === 'connected' && isPlaying && (
-                  <motion.div
-                    className="flex items-center gap-1"
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                  >
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="h-4 w-1 rounded-full"
-                        style={{ backgroundColor: currentTheme.colors.accent }}
-                        animate={{ scaleY: [0.3, 1, 0.3] }}
-                        transition={{
-                          duration: 0.8,
-                          repeat: Infinity,
-                          delay: i * 0.1,
-                        }}
-                      />
-                    ))}
-                  </motion.div>
+          <div className="relative z-10 flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <div className="text-xs uppercase tracking-[0.18em] text-white/60">Now Playing</div>
+              <button
+                type="button"
+                aria-label={isCurrentFavorite ? "Remove from favourites" : "Add to favourites"}
+                aria-pressed={isCurrentFavorite}
+                onClick={() => toggleFavorite(currentStation.id)}
+                className={cn(
+                  "rounded-lg border px-3 py-1 text-xs font-medium transition",
+                  isCurrentFavorite
+                    ? "border-white/30 bg-white/15 text-white"
+                    : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
                 )}
-              </div>
+              >
+                <span className="inline-flex items-center">
+                  <Heart className={cn("h-3.5 w-3.5", isCurrentFavorite && "fill-current")} />
+                </span>
+              </button>
             </div>
-            {isLoading && (
+
+            <div className="flex items-center gap-3">
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                className="h-6 w-6 rounded-full border-2 border-white/20"
-                style={{ borderTopColor: currentTheme.colors.accent }}
-              />
-            )}
+                className="flex h-12 w-12 items-center justify-center rounded-xl backdrop-blur-sm"
+                style={{
+                  background: `linear-gradient(135deg, ${currentTheme.colors.accent}25, ${currentTheme.colors.accent}10)`,
+                  border: `1px solid ${currentTheme.colors.accent}30`
+                }}
+                animate={isPlaying ? {
+                  scale: [1, 1.05, 1],
+                  boxShadow: [`0 0 0 0 ${currentTheme.colors.accent}40`, `0 0 0 10px ${currentTheme.colors.accent}00`, `0 0 0 0 ${currentTheme.colors.accent}40`]
+                } : {}}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <Music2 className={cn("h-5 w-5", isPlaying ? "text-white" : "text-white/70")} style={isPlaying ? { color: currentTheme.colors.accent } : {}} />
+              </motion.div>
+              <div className="flex-1 min-w-0">
+                <AnimatePresence mode="wait">
+                  <motion.h4
+                    key={currentStation.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="truncate text-sm font-bold text-white/95 mb-0.5"
+                  >
+                    {currentStation.name}
+                  </motion.h4>
+                </AnimatePresence>
+                <div className="flex items-center gap-3">
+                  <p className="text-xs text-white/70">{currentStation.genre}</p>
+                  {connectionStatus === 'connected' && isPlaying && (
+                    <motion.div
+                      className="flex items-center gap-1"
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                    >
+                      {Array.from({ length: 4 }).map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="h-3 w-0.5 rounded-full"
+                          style={{ backgroundColor: currentTheme.colors.accent }}
+                          animate={{ scaleY: [0.3, 1, 0.3] }}
+                          transition={{
+                            duration: 0.8,
+                            repeat: Infinity,
+                            delay: i * 0.1,
+                          }}
+                        />
+                      ))}
+                    </motion.div>
+                  )}
+                </div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-white/40 mt-1">{getStatusText()}</div>
+              </div>
+              {isLoading && (
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  className="h-6 w-6 rounded-full border-2 border-white/20"
+                  style={{ borderTopColor: currentTheme.colors.accent }}
+                />
+              )}
+            </div>
           </div>
         </motion.div>
 
         {/* Control Buttons */}
         <motion.div
-          className="flex items-center justify-center gap-6"
+          className="flex items-center justify-center gap-4"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
@@ -394,45 +374,58 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
           {/* Secondary Controls */}
           <div className="flex items-center gap-3">
             <motion.button
-              whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
-              onClick={() => setIsShuffle(!isShuffle)}
+              onClick={() => {
+                const next = !isShuffle
+                setIsShuffle(next)
+                if (next) {
+                  handleShufflePlay()
+                }
+              }}
+              aria-label="Shuffle stations"
+              aria-pressed={isShuffle}
               className={cn(
-                "h-10 w-10 rounded-xl backdrop-blur-sm transition-all flex items-center justify-center",
+                "group relative overflow-hidden h-10 w-10 rounded-xl border px-0 py-0 flex items-center justify-center backdrop-blur-sm transition-colors duration-200",
                 isShuffle ? "text-white" : "text-white/60"
               )}
               style={{
-                background: isShuffle ? `${currentTheme.colors.accent}40` : 'rgba(255, 255, 255, 0.05)',
-                border: `1px solid ${isShuffle ? currentTheme.colors.accent + '60' : 'rgba(255, 255, 255, 0.1)'}`
+                borderColor: isShuffle ? `${currentTheme.colors.accent}60` : 'rgba(255, 255, 255, 0.1)',
+                background: isShuffle
+                  ? `linear-gradient(135deg, ${currentTheme.colors.accent}26, ${currentTheme.colors.accent}10)`
+                  : 'rgba(255, 255, 255, 0.05)'
               }}
             >
-              <Shuffle className="h-4 w-4" />
+              <span
+                className="absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-300 group-hover:opacity-100"
+                style={{
+                  background: `linear-gradient(135deg, ${currentTheme.colors.accent}33, transparent)`
+                }}
+              />
+              <Shuffle className="relative z-10 h-4 w-4" />
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
               onClick={() => stepStation(-1)}
-              className="h-12 w-12 rounded-xl backdrop-blur-sm text-white/70 transition-all hover:text-white flex items-center justify-center"
-              style={{
-                background: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.15)'
-              }}
+              aria-label="Previous station"
+              className="group relative overflow-hidden h-12 w-12 rounded-xl border border-white/15 bg-white/5 text-white/70 flex items-center justify-center backdrop-blur-sm transition-colors duration-200"
             >
-              <SkipForward className="h-5 w-5 rotate-180" />
+              <span className="absolute inset-0 opacity-0 pointer-events-none bg-gradient-to-r from-blue-500/15 to-purple-500/15 transition-opacity duration-300 group-hover:opacity-100" />
+              <SkipForward className="relative z-10 h-5 w-5 rotate-180" />
             </motion.button>
           </div>
 
           {/* Main Play Button */}
           <motion.button
-            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             onClick={togglePlay}
-            className="h-20 w-20 rounded-2xl text-white backdrop-blur-sm transition-all flex items-center justify-center"
+            aria-label={isPlaying ? "Pause" : "Play"}
+            className="group relative overflow-hidden h-16 w-16 rounded-xl text-white backdrop-blur-sm flex items-center justify-center transition-transform duration-200"
             style={{
               background: isPlaying
-                ? `linear-gradient(135deg, ${currentTheme.colors.accent}, ${currentTheme.colors.accent}CC)`
+                ? `linear-gradient(135deg, ${currentTheme.colors.accent}, ${currentTheme.colors.accent}80)`
                 : 'rgba(255, 255, 255, 0.12)',
               border: `2px solid ${isPlaying ? currentTheme.colors.accent : 'rgba(255, 255, 255, 0.2)'}`,
               boxShadow: isPlaying ? `0 8px 32px ${currentTheme.colors.accent}40` : 'none'
             }}
           >
+            <span className="absolute inset-0 opacity-0 pointer-events-none bg-gradient-to-br from-white/10 to-transparent transition-opacity duration-300 group-hover:opacity-100" />
             <AnimatePresence mode="wait">
               <motion.div
                 key={isPlaying ? 'pause' : 'play'}
@@ -441,7 +434,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
                 exit={{ scale: 0, rotate: 90 }}
                 transition={{ duration: 0.2 }}
               >
-                {isPlaying ? <Pause className="h-9 w-9" /> : <Play className="ml-1 h-9 w-9" />}
+                {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="ml-0.5 h-6 w-6" />}
               </motion.div>
             </AnimatePresence>
           </motion.button>
@@ -449,36 +442,42 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
           {/* Secondary Controls */}
           <div className="flex items-center gap-3">
             <motion.button
-              whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
               onClick={() => stepStation(1)}
-              className="h-12 w-12 rounded-xl backdrop-blur-sm text-white/70 transition-all hover:text-white flex items-center justify-center"
-              style={{
-                background: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.15)'
-              }}
+              aria-label="Next station"
+              className="group relative overflow-hidden h-12 w-12 rounded-xl border border-white/15 bg-white/5 text-white/70 flex items-center justify-center backdrop-blur-sm transition-colors duration-200"
             >
-              <SkipForward className="h-5 w-5" />
+              <span className="absolute inset-0 opacity-0 pointer-events-none bg-gradient-to-r from-purple-500/15 to-blue-500/15 transition-opacity duration-300 group-hover:opacity-100" />
+              <SkipForward className="relative z-10 h-5 w-5" />
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
-              onClick={() => setIsFavorite(!isFavorite)}
+              onClick={() => toggleFavorite(currentStation.id)}
+              aria-pressed={isCurrentFavorite}
+              aria-label="Toggle favourite"
               className={cn(
-                "h-10 w-10 rounded-xl backdrop-blur-sm transition-all flex items-center justify-center",
-                isFavorite ? "text-red-400" : "text-white/60"
+                "group relative overflow-hidden h-10 w-10 rounded-xl border px-0 py-0 flex items-center justify-center backdrop-blur-sm transition-colors duration-200",
+                isCurrentFavorite ? "text-red-400" : "text-white/60"
               )}
               style={{
-                background: isFavorite ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                border: `1px solid ${isFavorite ? 'rgba(239, 68, 68, 0.4)' : 'rgba(255, 255, 255, 0.1)'}`
+                borderColor: isCurrentFavorite ? 'rgba(239, 68, 68, 0.4)' : 'rgba(255, 255, 255, 0.1)',
+                background: 'rgba(255, 255, 255, 0.05)'
               }}
             >
-              <Heart className={cn("h-4 w-4", isFavorite && "fill-current")} />
+              <span
+                className="absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-300 group-hover:opacity-100"
+                style={{
+                  background: isCurrentFavorite
+                    ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.25), transparent)'
+                    : 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent)'
+                }}
+              />
+              <Heart className={cn("relative z-10 h-4 w-4", isCurrentFavorite && "fill-current")} />
             </motion.button>
           </div>
         </motion.div>
 
         {/* Volume Control */}
         <motion.div
-          className="space-y-3"
+          className="space-y-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
@@ -501,7 +500,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
 
         {/* Station List */}
         <motion.div
-          className="rounded-3xl backdrop-blur-sm px-4 py-4"
+          className="rounded-xl backdrop-blur-sm px-3 py-3"
           style={{
             background: 'rgba(255, 255, 255, 0.05)',
             border: '1px solid rgba(255, 255, 255, 0.1)'
@@ -510,8 +509,8 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <ScrollArea className="max-h-64 pr-2">
-            <Accordion type="multiple" className="space-y-3">
+          <div className="space-y-2">
+            <Accordion type="multiple" className="space-y-2">
               {genres.map(([genre, stations]) => (
                 <AccordionItem
                   key={genre}
@@ -533,37 +532,60 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
                   </AccordionTrigger>
                   <AccordionContent style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
                     <div className="space-y-2 px-4 py-4">
-                      {stations.map((station) => (
-                        <motion.button
-                          key={station.id}
-                          onClick={() => handleStationChange(station)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className={cn(
-                            "w-full rounded-xl px-4 py-3 text-left transition-all duration-200",
-                            currentStation.id === station.id
-                              ? "text-white backdrop-blur-sm"
-                              : "text-white/70 hover:text-white hover:bg-white/5"
-                          )}
-                          style={{
-                            background: currentStation.id === station.id
-                              ? `linear-gradient(135deg, ${currentTheme.colors.accent}25, ${currentTheme.colors.accent}10)`
-                              : 'transparent',
-                            border: currentStation.id === station.id
-                              ? `1px solid ${currentTheme.colors.accent}40`
-                              : '1px solid transparent'
-                          }}
-                        >
-                          <div className="text-sm font-medium mb-1">{station.name}</div>
-                          <div className="text-xs text-white/50">{station.genre}</div>
-                        </motion.button>
-                      ))}
+                      {stations.map((station) => {
+                        const isActive = currentStation.id === station.id
+                        const isFav = favorites.has(station.id)
+                        return (
+                          <div
+                            key={station.id}
+                            className={cn(
+                              "flex items-center gap-2 rounded-xl border px-3 py-2 transition-all duration-200 cursor-pointer",
+                              isActive ? "text-white" : "text-white/70 hover:text-white hover:border-white/15 hover:bg-white/5"
+                            )}
+                            style={{
+                              background: isActive
+                                ? `linear-gradient(135deg, ${currentTheme.colors.accent}20, ${currentTheme.colors.accent}08)`
+                                : 'transparent',
+                              borderColor: isActive ? `${currentTheme.colors.accent}40` : 'rgba(255, 255, 255, 0.05)'
+                            }}
+                          >
+                            <button
+                              type="button"
+                              onClick={() => handleStationChange(station)}
+                              className="flex-1 text-left"
+                            >
+                              <div className="text-sm font-semibold truncate">{station.name}</div>
+                              <div className="text-xs text-white/50">{station.genre}</div>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(event) => {
+                                event.stopPropagation()
+                                toggleFavorite(station.id)
+                              }}
+                              aria-label={isFav ? `Remove ${station.name} from favourites` : `Add ${station.name} to favourites`}
+                              aria-pressed={isFav}
+                              className={cn(
+                                "rounded-lg border p-2 transition",
+                                isFav
+                                  ? "border-white/30 bg-white/15 text-white"
+                                  : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
+                              )}
+                            >
+                              <Heart
+                                className={cn("h-4 w-4", isFav && "fill-current")}
+                                aria-hidden="true"
+                              />
+                            </button>
+                          </div>
+                        )
+                      })}
                     </div>
                   </AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
-          </ScrollArea>
+          </div>
         </motion.div>
 
         <audio ref={audioRef} />

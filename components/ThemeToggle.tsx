@@ -26,21 +26,23 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
 
   return (
     <motion.div
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      transition={{ duration: 0.2, ease: "easeInOut" }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.15 }}
     >
       <Button
         variant="ghost"
         size="icon"
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
         className={cn(
-          "group relative overflow-hidden rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-white/70 transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:text-white hover:shadow-lg hover:shadow-white/10",
+          "group relative overflow-hidden rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-white/70 transition-colors duration-150",
           className
         )}
       >
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-amber-400/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          className="absolute inset-0 bg-gradient-to-r from-amber-400/20 to-orange-500/20 opacity-0 transition-opacity duration-150"
+          initial={{ opacity: 0 }}
+          whileHover={{ opacity: 1 }}
           layoutId="theme-button-bg"
         />
         <AnimatePresence mode="wait">

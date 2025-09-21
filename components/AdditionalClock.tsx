@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, memo } from "react"
-import { ArrowUpFromLine, ArrowDownToLine, X } from "lucide-react"
+import { ArrowUpFromLine, ArrowDownToLine, GripVertical, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getCountryFlag } from "./CountryFlags"
 import { cn } from "@/lib/utils"
@@ -16,6 +16,11 @@ interface AdditionalClockProps extends ComponentPropsWithoutRef<"div"> {
   onMoveDown: () => void
   is24HourFormat: boolean
   showSeconds: boolean
+  onDragStart?: () => void
+  onDragEnter?: () => void
+  onDragEnd?: () => void
+  isDragging?: boolean
+  isDragOver?: boolean
 }
 
 function AdditionalClock({
@@ -27,6 +32,11 @@ function AdditionalClock({
   onMoveDown,
   is24HourFormat,
   showSeconds,
+  onDragStart,
+  onDragEnter,
+  onDragEnd,
+  isDragging = false,
+  isDragOver = false,
   className,
   ...props
 }: AdditionalClockProps) {
@@ -43,18 +53,41 @@ function AdditionalClock({
 
   return (
     <div
+      draggable
+      onDragStart={(event) => {
+        event.dataTransfer.effectAllowed = "move"
+        event.dataTransfer.setData("text/plain", name)
+        onDragStart?.()
+      }}
+      onDragEnter={(event) => {
+        event.preventDefault()
+        onDragEnter?.()
+      }}
+      onDragOver={(event) => {
+        event.preventDefault()
+        event.dataTransfer.dropEffect = "move"
+      }}
+      onDragEnd={() => onDragEnd?.()}
       className={cn(
-        "group flex items-center gap-3 neu-layer px-4 py-3",
-        "transition-all duration-200",
+        "group relative flex items-center gap-3 neu-layer rounded-2xl px-4 py-3 shadow-[0_12px_32px_rgba(0,0,0,0.35)]",
+        "transition-all duration-200 cursor-grab active:cursor-grabbing",
+        isDragging && "ring-2 ring-white/40 ring-offset-2 ring-offset-black/30",
+        isDragOver && !isDragging && "border border-white/20 bg-white/10/5",
         className
       )}
       role="timer"
+      aria-grabbed={isDragging}
       aria-label={`Clock for ${name}`}
       {...props}
     >
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <Flag className="h-4 w-4" />
-        <span className="truncate text-sm font-medium text-white/80">{name}</span>
+        <span className="text-white/50">
+          <GripVertical className="h-4 w-4" aria-hidden="true" />
+        </span>
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <Flag className="h-4 w-4" />
+          <span className="truncate text-sm font-medium text-white/80">{name}</span>
+        </div>
       </div>
       <div
         className="text-sm font-mono text-white/80 tabular-nums"

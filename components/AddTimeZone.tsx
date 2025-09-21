@@ -1,14 +1,15 @@
 "use client"
 
 import type React from "react"
-import { Search } from "lucide-react"
+import { Search, MapPin } from "lucide-react"
 import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { getCountryFlag } from "./CountryFlags"
+import { toast } from "sonner"
 
 interface AddTimeZoneProps {
   onAdd: (name: string, timeZone: string, countryCode: string) => void
@@ -185,6 +186,28 @@ export default function AddTimeZone({ onAdd, onClose }: AddTimeZoneProps) {
     tz.zone.toLowerCase().includes(search.toLowerCase())
   ), [search])
 
+  const detectLocalTimeZone = () => {
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    if (!zone) {
+      toast.error("Unable to detect your time zone.")
+      return
+    }
+
+    const existing = timeZones.find((tz) => tz.zone === zone)
+    if (existing) {
+      onAdd(existing.name, existing.zone, existing.countryCode)
+      toast.success(`Added ${existing.name}`)
+      onClose()
+      return
+    }
+
+    const cityName = zone.split('/').pop()?.replace(/_/g, ' ') ?? 'Local Time'
+    const regionCode = zone.split('/')[0]?.slice(0, 2).toUpperCase() ?? '??'
+    onAdd(cityName, zone, regionCode)
+    toast.success(`Added ${cityName}`)
+    onClose()
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (selectedTimeZone) {
@@ -214,6 +237,15 @@ export default function AddTimeZone({ onAdd, onClose }: AddTimeZoneProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
         </div>
 
+        <Button
+          type="button"
+          variant="outline"
+          onClick={detectLocalTimeZone}
+          className="w-full border-white/20 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white"
+        >
+          <MapPin className="h-4 w-4 mr-2" /> Detect My City
+        </Button>
+
         <Select onValueChange={setSelectedTimeZone} required>
           <SelectTrigger
             className={cn(
@@ -227,18 +259,20 @@ export default function AddTimeZone({ onAdd, onClose }: AddTimeZoneProps) {
           </SelectTrigger>
           <SelectContent className="bg-gray-900 text-white border-white/10">
             <ScrollArea className="h-[300px]">
-              {filteredTimeZones.map((tz) => {
-                const Flag = getCountryFlag(tz.countryCode)
-                return (
-                  <SelectItem key={tz.zone} value={`${tz.name}|${tz.zone}|${tz.countryCode}`}>
-                    <div className="flex items-center gap-2">
-                      <Flag className="w-4 h-4" />
-                      <span>{tz.name}</span>
-                      <span className="text-white/40 text-xs">({tz.zone})</span>
-                    </div>
-                  </SelectItem>
-                )
-              })}
+              <SelectGroup>
+                {filteredTimeZones.map((tz) => {
+                  const Flag = getCountryFlag(tz.countryCode)
+                  return (
+                    <SelectItem key={tz.zone} value={`${tz.name}|${tz.zone}|${tz.countryCode}`}>
+                      <div className="flex items-center gap-2">
+                        <Flag className="w-4 h-4" />
+                        <span>{tz.name}</span>
+                        <span className="text-white/40 text-xs">({tz.zone})</span>
+                      </div>
+                    </SelectItem>
+                  )
+                })}
+              </SelectGroup>
             </ScrollArea>
           </SelectContent>
         </Select>

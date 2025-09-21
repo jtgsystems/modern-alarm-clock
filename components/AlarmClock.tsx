@@ -13,7 +13,8 @@ import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { toast } from "sonner"
 import { useNotification } from "@/hooks/use-notification"
-import { playAlarmSound, AlarmSound } from "@/lib/sounds"
+import { alarmSounds as builtInSounds, type AlarmSound as BuiltInAlarmSound } from "@/lib/sounds"
+import { getRadioStationById } from "@/lib/radioStations"
 import UpcomingAlarmsWidget from "./UpcomingAlarmsWidget"
 import { cn } from "@/lib/utils"
 import ShortcutsHint from "./ShortcutsHint"
@@ -24,7 +25,7 @@ interface AlarmSettings {
   isRecurring: boolean
   showNotification: boolean
   reminderDate?: Date
-  sound?: AlarmSound
+  sound?: string
   volume?: number
 }
 
@@ -32,7 +33,7 @@ interface Alarm {
   id: string
   time: string
   label: string
-  sound?: AlarmSound
+  sound?: string
   volume?: number
   isRecurring?: boolean
   showNotification?: boolean
@@ -134,7 +135,7 @@ export default function AlarmClock() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   const [showAlarmDialog, setShowAlarmDialog] = useState(false)
-  // const audioRef = useRef<HTMLAudioElement>(null)
+  const alarmAudioRef = useRef<HTMLAudioElement | null>(null)
   const notification = useNotification({
     title: "Alarm Clock",
     icon: "/alarm-icon.png"
@@ -153,6 +154,15 @@ export default function AlarmClock() {
 
   useEffect(() => {
     notification.requestPermission()
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (alarmAudioRef.current) {
+        alarmAudioRef.current.pause()
+        alarmAudioRef.current = null
+      }
+    }
   }, [])
 
   useEffect(() => {
@@ -215,7 +225,60 @@ export default function AlarmClock() {
   }
 
   const triggerAlarm = (alarm: Alarm) => {
-    playAlarmSound(alarm.sound || "classic", (alarm.volume || 50) / 100)
+    const volume = Math.min(Math.max(alarm.volume ?? 50, 0), 100) / 100
+
+    const playBuiltIn = (soundKey: BuiltInAlarmSound = "classic") => {
+      const entry = builtInSounds[soundKey] ?? builtInSounds.classic
+      const audio = new Audio(entry.url)
+      audio.volume = volume
+      audio.loop = true
+      if (alarmAudioRef.current) {
+        alarmAudioRef.current.pause()
+      }
+      alarmAudioRef.current = audio
+      audio.play().catch(() => {
+        if (soundKey !== "classic") {
+          const fallback = new Audio(builtInSounds.classic.url)
+          fallback.volume = volume
+          fallback.loop = true
+          alarmAudioRef.current = fallback
+          void fallback.play()
+        }
+      })
+    }
+
+    const playRadio = async (stationId: string) => {
+      const station = getRadioStationById(stationId)
+      if (!station) throw new Error('Unknown station')
+      const audio = new Audio(station.url)
+      audio.volume = volume
+      audio.loop = true
+      if (alarmAudioRef.current) {
+        alarmAudioRef.current.pause()
+      }
+      alarmAudioRef.current = audio
+      await audio.play()
+      toast.success(`Streaming ${station.name} for this alarm`)
+    }
+
+    const start = async () => {
+      const soundId = alarm.sound || "classic"
+      if (soundId.startsWith('radio:')) {
+        const stationId = soundId.split(':')[1]
+        try {
+          await playRadio(stationId)
+        } catch (error) {
+          toast.error('Could not reach radio stream. Falling back to Classic Bell.')
+          playBuiltIn('classic')
+        }
+      } else {
+        playBuiltIn(soundId as BuiltInAlarmSound)
+      }
+    }
+
+    start().catch(() => {
+      playBuiltIn('classic')
+    })
 
     if (alarm.showNotification) {
       notification.sendNotification(alarm.label || "Your alarm is ringing!")
@@ -263,6 +326,11 @@ export default function AlarmClock() {
   }, [])
 
   const stopAlarm = useCallback(() => {
+    if (alarmAudioRef.current) {
+      alarmAudioRef.current.pause()
+      alarmAudioRef.current.currentTime = 0
+      alarmAudioRef.current = null
+    }
     setIsSnoozing(false)
     setActiveAlarm(null)
   }, [])

@@ -1,8 +1,11 @@
 import type React from "react"
 
-const flags: { [key: string]: React.FC<React.SVGProps<SVGSVGElement>> } = {
+// Generic component type for flags (SVG or emoji fallback)
+type FlagComponent = (props: { className?: string; title?: string }) => JSX.Element
+
+const flags: Record<string, FlagComponent> = {
   US: (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7410 3900" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 7410 3900" className={props.className}>
       <path fill="#b22234" d="M0 0h7410v3900H0z" />
       <path d="M0 450h7410m0 600H0m0 600h7410m0 600H0m0 600h7410m0 600H0" stroke="#fff" strokeWidth="300" />
       <path fill="#3c3b6e" d="M0 0h2964v2100H0z" />
@@ -28,7 +31,7 @@ const flags: { [key: string]: React.FC<React.SVGProps<SVGSVGElement>> } = {
     </svg>
   ),
   GB: (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" className={props.className}>
       <clipPath id="s">
         <path d="M0,0 v30 h60 v-30 z" />
       </clipPath>
@@ -45,34 +48,34 @@ const flags: { [key: string]: React.FC<React.SVGProps<SVGSVGElement>> } = {
     </svg>
   ),
   FR: (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" className={props.className}>
       <path fill="#EC1920" d="M0 0h3v2H0z" />
       <path fill="#fff" d="M0 0h2v2H0z" />
       <path fill="#051440" d="M0 0h1v2H0z" />
     </svg>
   ),
   DE: (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 3" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 3" className={props.className}>
       <path d="M0 0h5v3H0z" />
       <path fill="#D00" d="M0 1h5v2H0z" />
       <path fill="#FFCE00" d="M0 2h5v1H0z" />
     </svg>
   ),
   RU: (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" className={props.className}>
       <rect width="900" height="200" fill="#fff"/>
       <rect y="200" width="900" height="200" fill="#0039A6"/>
       <rect y="400" width="900" height="200" fill="#D52B1E"/>
     </svg>
   ),
   JP: (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" className={props.className}>
       <rect fill="#fff" height="600" width="900" />
       <circle fill="#bc002d" cx="450" cy="300" r="180" />
     </svg>
   ),
   AU: (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10080 5040" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10080 5040" className={props.className}>
       <path fill="#00008B" d="M0 0h10080v5040H0z" />
       <path fill="#fff" d="M0 0v2520h5040V0z" />
       <path fill="#00008B" d="M0 0v1260h5040V0z" />
@@ -107,7 +110,7 @@ const flags: { [key: string]: React.FC<React.SVGProps<SVGSVGElement>> } = {
     </svg>
   ),
   AE: (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" className={props.className}>
       <rect width="12" height="2" fill="#00732f" />
       <rect width="12" height="2" y="2" fill="#fff" />
       <rect width="12" height="2" y="4" fill="#000" />
@@ -115,7 +118,7 @@ const flags: { [key: string]: React.FC<React.SVGProps<SVGSVGElement>> } = {
     </svg>
   ),
   IN: (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" className={props.className}>
       <path fill="#f93" d="M0 0h900v200H0z" />
       <path fill="#fff" d="M0 200h900v200H0z" />
       <path fill="#128807" d="M0 400h900v200H0z" />
@@ -144,7 +147,7 @@ const flags: { [key: string]: React.FC<React.SVGProps<SVGSVGElement>> } = {
     </svg>
   ),
   SG: (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4320 2880" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4320 2880" className={props.className}>
       <rect width="4320" height="1440" fill="#ed2939" />
       <rect width="4320" height="1440" y="1440" fill="#fff" />
       <path fill="#fff" d="M 1481,720 a 541,541 0 1,1 0,1 z" />
@@ -152,7 +155,7 @@ const flags: { [key: string]: React.FC<React.SVGProps<SVGSVGElement>> } = {
     </svg>
   ),
   NZ: (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" className={props.className}>
       <path fill="#00247d" d="M0 0h1200v600H0z" />
       <path
         fill="#fff"
@@ -173,8 +176,25 @@ const flags: { [key: string]: React.FC<React.SVGProps<SVGSVGElement>> } = {
   )
 }
 
-const getCountryFlag = (countryCode: string) => {
-  return flags[countryCode] || (() => null)
+function countryCodeToEmoji(code: string) {
+  const cc = (code || '').toUpperCase()
+  if (cc.length !== 2) return '🏳️'
+  const A = 0x1F1E6
+  const codePoints = [...cc].map(c => A + (c.charCodeAt(0) - 65))
+  return String.fromCodePoint(...codePoints)
 }
 
-export { getCountryFlag }
+const getCountryFlag = (countryCode: string): FlagComponent => {
+  const cc = (countryCode || '').toUpperCase()
+  const SVGFlag = flags[cc]
+  if (SVGFlag) return SVGFlag
+  const emoji = countryCodeToEmoji(cc)
+  const Fallback: FlagComponent = ({ className }) => (
+    <span role="img" aria-label={`${cc} flag`} className={className} style={{ display: 'inline-block', lineHeight: 1 }}>
+      {emoji}
+    </span>
+  )
+  return Fallback
+}
+
+export { getCountryFlag, countryCodeToEmoji }
