@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { cn } from "@/lib/utils"
 
 interface SnoozePanelProps {
-  alarm: { label?: string }
+  alarm?: { label?: string } | null
   onStop: () => void
   onSnooze: (minutes: number) => void
 }
@@ -31,7 +31,7 @@ export default function SnoozePanel({ alarm, onStop, onSnooze }: SnoozePanelProp
         <div className="relative p-8 space-y-6">
           <div className="text-center space-y-2">
             <h2 className="text-3xl font-semibold text-white">Time to Wake Up!</h2>
-            {alarm.label && <p className="text-lg text-white/70">{alarm.label}</p>}
+            {alarm?.label && <p className="text-lg text-white/70">{alarm.label}</p>}
           </div>
 
           <div className="space-y-3">
