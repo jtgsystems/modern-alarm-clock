@@ -141,15 +141,7 @@ export default function AlarmClock() {
     icon: "/alarm-icon.png"
   })
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date()
-      setCurrentTime(now)
-      checkAlarmsAndReminders(now)
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [checkAlarmsAndReminders])
+  
 
 
   useEffect(() => {
@@ -198,33 +190,19 @@ export default function AlarmClock() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isCalendarOpen, selectedDate])
 
-  const checkAlarmsAndReminders = useCallback((now: Date) => {
-    const currentTimeString = now.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    })
-
-    const triggeredAlarm = alarms.find((alarm) => {
-      if (alarm.reminderDate) {
-        const reminderDate = new Date(alarm.reminderDate)
-        return (
-          alarm.time === currentTimeString &&
-          reminderDate.getDate() === now.getDate() &&
-          reminderDate.getMonth() === now.getMonth() &&
-          reminderDate.getFullYear() === now.getFullYear()
-        )
-      }
-      return alarm.time === currentTimeString
-    })
-
-    if (triggeredAlarm && !activeAlarm) {
-      setActiveAlarm(triggeredAlarm)
-      triggerAlarm(triggeredAlarm)
+  const stopAlarm = useCallback(() => {
+    if (alarmAudioRef.current) {
+      alarmAudioRef.current.pause()
+      alarmAudioRef.current.currentTime = 0
+      alarmAudioRef.current = null
     }
-  }, [alarms, activeAlarm, triggerAlarm])
+    setIsSnoozing(false)
+    setActiveAlarm(null)
+  }, [])
 
-  const triggerAlarm = (alarm: Alarm) => {
+  
+
+  const triggerAlarm = useCallback((alarm: Alarm) => {
     const volume = Math.min(Math.max(alarm.volume ?? 50, 0), 100) / 100
 
     const playBuiltIn = (soundKey: BuiltInAlarmSound = "classic") => {
@@ -294,7 +272,42 @@ export default function AlarmClock() {
 
     setActiveAlarm(alarm)
     setIsSnoozing(true)
-  }
+  }, [notification, stopAlarm])
+
+  const checkAlarmsAndReminders = useCallback((now: Date) => {
+    const currentTimeString = now.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+
+    const triggeredAlarm = alarms.find((alarm) => {
+      if (alarm.reminderDate) {
+        const reminderDate = new Date(alarm.reminderDate)
+        return (
+          alarm.time === currentTimeString &&
+          reminderDate.getDate() === now.getDate() &&
+          reminderDate.getMonth() === now.getMonth() &&
+          reminderDate.getFullYear() === now.getFullYear()
+        )
+      }
+      return alarm.time === currentTimeString
+    })
+
+    if (triggeredAlarm && !activeAlarm) {
+      setActiveAlarm(triggeredAlarm)
+      triggerAlarm(triggeredAlarm)
+    }
+  }, [alarms, activeAlarm, triggerAlarm])
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date()
+      setCurrentTime(now)
+      checkAlarmsAndReminders(now)
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [checkAlarmsAndReminders])
 
   const handleSetAlarm = useCallback((settings: AlarmSettings) => {
     const newAlarm: Alarm = {
@@ -325,15 +338,7 @@ export default function AlarmClock() {
     setAlarms(prev => prev.filter(alarm => alarm.id !== id))
   }, [])
 
-  const stopAlarm = useCallback(() => {
-    if (alarmAudioRef.current) {
-      alarmAudioRef.current.pause()
-      alarmAudioRef.current.currentTime = 0
-      alarmAudioRef.current = null
-    }
-    setIsSnoozing(false)
-    setActiveAlarm(null)
-  }, [])
+  
 
   const snoozeAlarm = useCallback((duration: number) => {
     if (activeAlarm) {

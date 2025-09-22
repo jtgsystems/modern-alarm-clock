@@ -33,7 +33,7 @@ function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
         </h2>
 
         <p className="text-gray-600 dark:text-gray-400 text-center mb-4 text-sm">
-          We encountered an unexpected error. Don't worry, this has been logged for investigation.
+          We encountered an unexpected error. Don&apos;t worry, this has been logged for investigation.
         </p>
 
         {process.env.NODE_ENV === 'development' && (
@@ -112,7 +112,8 @@ export function ModernErrorBoundary({
 export function AsyncErrorBoundary({ children }: { children: React.ReactNode }) {
   return (
     <ModernErrorBoundary
-      onError={(error, errorInfo) => {
+      onError={(error, _errorInfo) => {
+        void _errorInfo
         // 2025: Handle async errors specifically
         if (error.name === 'ChunkLoadError') {
           // Handle code-splitting errors

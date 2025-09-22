@@ -92,8 +92,8 @@ export default function DigitalClock() {
       audioRef.current.currentTime = 0
     }
     setActiveAlarm(null)
-    setAlarms(alarms.filter((alarm) => alarm.isRecurring))
-  }, [activeAlarm, alarms])
+    setAlarms(prev => prev.filter((alarm) => alarm.isRecurring))
+  }, [])
 
   const setAlarm = (alarm: AlarmSettingsType) => {
     setAlarms([...alarms, alarm])
