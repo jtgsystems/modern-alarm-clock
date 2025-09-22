@@ -1,14 +1,14 @@
 "use client"
 
-import { useState, useRef, useEffect, useMemo } from "react"
-import { Slider } from "@/components/ui/slider"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { cn } from "@/lib/utils"
-import { Play, Pause, SkipForward, Volume2, Music2, Heart, Shuffle } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
-import { useDynamicTheme } from "./DynamicThemeProvider"
-import { toast } from "sonner"
+import { Slider } from "@/components/ui/slider"
 import { radioStations } from "@/lib/radioStations"
+import { cn } from "@/lib/utils"
+import { AnimatePresence, motion } from "framer-motion"
+import { Heart, Music2, Pause, Play, Shuffle, SkipForward, Volume2 } from "lucide-react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { toast } from "sonner"
+import { useDynamicTheme } from "./DynamicThemeProvider"
 
 interface RadioPlayerProps {
   className?: string
@@ -86,7 +86,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
         toast.success(`Now playing ${station.name}`, { description: station.genre, duration: 2000 })
       }
       return true
-    } catch (error) {
+    } catch {
       const nextCandidate = isShuffle
         ? getRandomStation(visited)
         : getNextStation(1, station)

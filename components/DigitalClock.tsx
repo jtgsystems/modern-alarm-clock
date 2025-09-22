@@ -1,28 +1,29 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { getMockWeather } from "@/lib/mockWeather"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
 import { Calendar } from "@/components/ui/calendar"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
+import { getMockWeather } from "@/lib/mockWeather"
+import { AnimatePresence, motion } from "framer-motion"
+import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
-import AlarmSettings, { type AlarmSettings as AlarmSettingsType } from "./AlarmSettings"
 import AdditionalClock from "./AdditionalClock"
 import AddTimeZone from "./AddTimeZone"
-import WeatherSuggestion from "./WeatherSuggestion"
+import AlarmSettings, { type AlarmSettings as AlarmSettingsType } from "./AlarmSettings"
 import WeatherDisplay from "./WeatherDisplay"
+import WeatherSuggestion from "./WeatherSuggestion"
 // import { cn } from "@/lib/utils" // not used in this component
+import { useSettings, type AppFont } from "@/context/SettingsContext"
+import { Settings as SettingsIcon } from "lucide-react"
+import { useCallback } from "react"
+import GestureControls from "./GestureControls"
 import RadioPlayer from "./RadioPlayer"
 import Soundscapes from "./Soundscapes"
-import ThemeToggle from "./ThemeToggle"
 import { ThemeSelect } from "./ThemeSelect"
-import { Settings as SettingsIcon } from "lucide-react"
-import GestureControls from "./GestureControls"
-import { useSettings, type AppFont } from "@/context/SettingsContext"
+import ThemeToggle from "./ThemeToggle"
 
 const TORONTO_TIMEZONE = "America/Toronto"
 
@@ -77,7 +78,37 @@ export default function DigitalClock() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const { settings, setFont, setWeatherUnits } = useSettings()
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const triggerAlarm = useCallback((alarm: AlarmSettingsType) => {
+    if (audioRef.current) {
+      audioRef.current.src = `/sounds/${alarm.sound}.mp3`
+      audioRef.current.volume = alarm.volume / 100
+      audioRef.current.play()
+    }
+  }, [])
+
+  const stopAlarm = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
+    setActiveAlarm(null)
+    setAlarms(alarms.filter((alarm) => alarm.isRecurring))
+  }, [activeAlarm, alarms])
+
+  const setAlarm = (alarm: AlarmSettingsType) => {
+    setAlarms([...alarms, alarm])
+  }
+
+  const checkAlarms = useCallback((now: Date) => {
+    const currentTimeString = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false })
+    const triggeredAlarm = alarms.find((alarm) => alarm.time === currentTimeString)
+
+    if (triggeredAlarm && !activeAlarm) {
+      setActiveAlarm(triggeredAlarm)
+      triggerAlarm(triggeredAlarm)
+    }
+  }, [alarms, activeAlarm, triggerAlarm])
+
   useEffect(() => {
     setCurrentTime(new Date())
     const timer = setInterval(() => {
@@ -86,7 +117,7 @@ export default function DigitalClock() {
       checkAlarms(now)
     }, 1000)
     return () => clearInterval(timer)
-  }, [alarms, activeAlarm])
+  }, [checkAlarms])
 
   useEffect(() => {
     const loadWeather = () => {
@@ -179,37 +210,6 @@ export default function DigitalClock() {
   const handleDragEnd = () => {
     setDraggingIndex(null)
     setDragOverIndex(null)
-  }
-
-  const setAlarm = (alarm: AlarmSettingsType) => {
-    setAlarms([...alarms, alarm])
-  }
-
-  const checkAlarms = (now: Date) => {
-    const currentTimeString = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false })
-    const triggeredAlarm = alarms.find((alarm) => alarm.time === currentTimeString)
-
-    if (triggeredAlarm && !activeAlarm) {
-      setActiveAlarm(triggeredAlarm)
-      triggerAlarm(triggeredAlarm)
-    }
-  }
-
-  const triggerAlarm = (alarm: AlarmSettingsType) => {
-    if (audioRef.current) {
-      audioRef.current.src = `/sounds/${alarm.sound}.mp3`
-      audioRef.current.volume = alarm.volume / 100
-      audioRef.current.play()
-    }
-  }
-
-  const stopAlarm = () => {
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current.currentTime = 0
-    }
-    setActiveAlarm(null)
-    setAlarms(alarms.filter((alarm) => alarm.isRecurring))
   }
 
   return (

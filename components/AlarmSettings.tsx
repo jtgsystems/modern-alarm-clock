@@ -1,17 +1,17 @@
 "use client"
 
-import type React from "react"
-import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Slider } from "@/components/ui/slider"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { cn } from "@/lib/utils"
-import { Volume2, Bell, Radio } from "lucide-react"
-import { alarmSounds as builtInSounds, type AlarmSound as BuiltInAlarmSound } from "@/lib/sounds"
+import { Slider } from "@/components/ui/slider"
+import { Switch } from "@/components/ui/switch"
 import { radioStations } from "@/lib/radioStations"
+import { alarmSounds as builtInSounds } from "@/lib/sounds"
+import { cn } from "@/lib/utils"
+import { Bell, Radio, Volume2 } from "lucide-react"
+import type React from "react"
+import { useEffect, useState } from "react"
 
 interface AlarmSettingsProps {
   onClose: () => void

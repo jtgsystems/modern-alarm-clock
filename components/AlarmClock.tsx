@@ -1,23 +1,23 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback, useMemo } from "react"
-import Clock from "./Clock"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import ActiveAlarms from "./ActiveAlarms"
-import UpcomingAlarms from "./UpcomingAlarms"
+import AlarmDialog from "./AlarmDialog"
+import AppointmentList from "./AppointmentList"
+import Clock from "./Clock"
 import SnoozePanel from "./SnoozePanel"
 import ThemeToggle from "./ThemeToggle"
-import AppointmentList from "./AppointmentList"
-import AlarmDialog from "./AlarmDialog"
+import UpcomingAlarms from "./UpcomingAlarms"
 // Dialog primitives not used directly; AlarmDialog encapsulates them
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { toast } from "sonner"
 import { useNotification } from "@/hooks/use-notification"
-import { alarmSounds as builtInSounds, type AlarmSound as BuiltInAlarmSound } from "@/lib/sounds"
 import { getRadioStationById } from "@/lib/radioStations"
-import UpcomingAlarmsWidget from "./UpcomingAlarmsWidget"
+import { alarmSounds as builtInSounds, type AlarmSound as BuiltInAlarmSound } from "@/lib/sounds"
 import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 import ShortcutsHint from "./ShortcutsHint"
+import UpcomingAlarmsWidget from "./UpcomingAlarmsWidget"
 
 interface AlarmSettings {
   time: string
@@ -149,12 +149,12 @@ export default function AlarmClock() {
       checkAlarmsAndReminders(now)
     }, 1000)
     return () => clearInterval(timer)
-  }, [alarms, reminders])
+  }, [checkAlarmsAndReminders])
 
 
   useEffect(() => {
     notification.requestPermission()
-  }, [])
+  }, [notification])
 
   useEffect(() => {
     return () => {
@@ -198,7 +198,7 @@ export default function AlarmClock() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isCalendarOpen, selectedDate])
 
-  const checkAlarmsAndReminders = (now: Date) => {
+  const checkAlarmsAndReminders = useCallback((now: Date) => {
     const currentTimeString = now.toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
@@ -222,7 +222,7 @@ export default function AlarmClock() {
       setActiveAlarm(triggeredAlarm)
       triggerAlarm(triggeredAlarm)
     }
-  }
+  }, [alarms, activeAlarm, triggerAlarm])
 
   const triggerAlarm = (alarm: Alarm) => {
     const volume = Math.min(Math.max(alarm.volume ?? 50, 0), 100) / 100
@@ -267,7 +267,7 @@ export default function AlarmClock() {
         const stationId = soundId.split(':')[1]
         try {
           await playRadio(stationId)
-        } catch (error) {
+        } catch {
           toast.error('Could not reach radio stream. Falling back to Classic Bell.')
           playBuiltIn('classic')
         }

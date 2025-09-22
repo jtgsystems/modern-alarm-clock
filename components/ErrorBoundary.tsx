@@ -1,10 +1,10 @@
 "use client"
 
 // 2025 Modern Error Boundary with React Error Boundary Library
-import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
-import { motion } from 'framer-motion'
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { motion } from 'framer-motion'
+import { AlertTriangle, Home, RefreshCw } from 'lucide-react'
+import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
 
 interface ErrorFallbackProps {
   error: Error

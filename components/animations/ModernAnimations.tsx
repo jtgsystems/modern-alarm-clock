@@ -1,7 +1,7 @@
 "use client"
 
 // 2025 Modern Animation Patterns with Framer Motion
-import { motion, type Variants, type Transition } from 'framer-motion'
+import { motion, type Transition, type Variants } from 'framer-motion'
 
 // 2025 Modern Animation Presets
 export const modernTransitions = {
@@ -343,7 +343,7 @@ export function StaggerItem({ children, className = '' }: StaggerItemProps) {
   )
 }
 
-export default {
+const ModernAnimations = {
   modernTransitions,
   fadeInUp,
   scaleIn,
@@ -363,3 +363,5 @@ export default {
   StaggerContainer,
   StaggerItem
 }
+
+export default ModernAnimations
