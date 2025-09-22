@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { getMockWeather } from "@/lib/mockWeather"
+import { getRadioStationById } from "@/lib/radioStations"
 import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
@@ -79,10 +80,32 @@ export default function DigitalClock() {
   const { settings, setFont, setWeatherUnits } = useSettings()
 
   const triggerAlarm = useCallback((alarm: AlarmSettingsType) => {
-    if (audioRef.current) {
-      audioRef.current.src = `/sounds/${alarm.sound}.mp3`
-      audioRef.current.volume = alarm.volume / 100
-      audioRef.current.play()
+    if (!audioRef.current) return
+    const audio = audioRef.current
+    const volume = Math.min(Math.max(alarm.volume ?? 50, 0), 100) / 100
+    audio.loop = true
+
+    const playBuiltIn = (soundId: string = 'classic') => {
+      audio.src = `/sounds/${soundId}.mp3`
+      audio.volume = volume
+      void audio.play()
+    }
+
+    if (alarm.sound?.startsWith('radio:')) {
+      const stationId = alarm.sound.split(':')[1]
+      const station = getRadioStationById(stationId)
+      if (station) {
+        audio.src = station.url
+        audio.volume = volume
+        audio.play().catch(() => {
+          toast.error('Could not reach radio stream. Falling back to Classic Bell.')
+          playBuiltIn('classic')
+        })
+      } else {
+        playBuiltIn('classic')
+      }
+    } else {
+      playBuiltIn(alarm.sound || 'classic')
     }
   }, [])
 
@@ -96,7 +119,10 @@ export default function DigitalClock() {
   }, [])
 
   const setAlarm = (alarm: AlarmSettingsType) => {
-    setAlarms([...alarms, alarm])
+    setAlarms(prev => [...prev, alarm])
+    toast.success('Alarm set', {
+      description: `Time: ${alarm.time}${alarm.label ? ` — ${alarm.label}` : ''}`
+    })
   }
 
   const checkAlarms = useCallback((now: Date) => {
@@ -349,7 +375,7 @@ export default function DigitalClock() {
 
             <div className="flex flex-col gap-5">
               <motion.div
-                className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5 relative overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.35)] mt-10"
+                className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5 relative overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.35)]"
               >
                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/5 to-transparent" />
                 <div className="relative z-10">
