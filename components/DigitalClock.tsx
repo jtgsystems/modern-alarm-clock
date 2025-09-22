@@ -6,25 +6,40 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
+import { useAlarm } from '@/hooks/useAlarm'
 import { getMockWeather } from "@/lib/mockWeather"
-import { getRadioStationById } from "@/lib/radioStations"
 import { AnimatePresence, motion } from "framer-motion"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState, useTransition } from "react"
 import { toast } from "sonner"
 import AdditionalClock from "./AdditionalClock"
 import AddTimeZone from "./AddTimeZone"
-import AlarmSettings, { type AlarmSettings as AlarmSettingsType } from "./AlarmSettings"
-import WeatherDisplay from "./WeatherDisplay"
+import AlarmSettings from "./AlarmSettings"
 import WeatherSuggestion from "./WeatherSuggestion"
 // import { cn } from "@/lib/utils" // not used in this component
 import { useSettings, type AppFont } from "@/context/SettingsContext"
 import { Settings as SettingsIcon } from "lucide-react"
-import { useCallback } from "react"
 import GestureControls from "./GestureControls"
-import RadioPlayer from "./RadioPlayer"
-import Soundscapes from "./Soundscapes"
 import { ThemeSelect } from "./ThemeSelect"
 import ThemeToggle from "./ThemeToggle"
+
+import dynamic from 'next/dynamic'
+
+const DynamicWeatherDisplay = dynamic(() => import('./WeatherDisplay'), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />
+})
+const DynamicRadioPlayer = dynamic(() => import('./RadioPlayer'), {
+  ssr: false,
+  loading: () => <div className="h-48 bg-white/5 rounded-2xl animate-pulse" />
+})
+const DynamicSoundscapes = dynamic(() => import('./Soundscapes'), {
+  ssr: false,
+  loading: () => <div className="h-48 bg-white/5 rounded-2xl animate-pulse" />
+})
+const DynamicStopwatch = dynamic(() => import('./Stopwatch'), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />
+})
 
 const TORONTO_TIMEZONE = "America/Toronto"
 
@@ -42,6 +57,7 @@ const TEMPERATURE_UNIT_OPTIONS: Array<{ value: 'metric' | 'imperial'; label: str
 ]
 
 export default function DigitalClock() {
+  const [, startTransition] = useTransition()
   const [currentTime, setCurrentTime] = useState(() => new Date())
   const [isAlarmOpen, setIsAlarmOpen] = useState(false)
   const [isAddTimeZoneOpen, setIsAddTimeZoneOpen] = useState(false)
@@ -67,8 +83,6 @@ export default function DigitalClock() {
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
   const [is24HourFormat, setIs24HourFormat] = useState(false)
   const [showSeconds, setShowSeconds] = useState(false)
-  const [alarms, setAlarms] = useState<AlarmSettingsType[]>([])
-  const [activeAlarm, setActiveAlarm] = useState<AlarmSettingsType | null>(null)
   const [weatherData, setWeatherData] = useState<{
     temperature: number;
     condition: string;
@@ -76,64 +90,16 @@ export default function DigitalClock() {
     windSpeed: number;
   } | null>(null)
 
-  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const { activeAlarm, setAlarm, stopAlarm, checkAlarms } = useAlarm()
   const { settings, setFont, setWeatherUnits } = useSettings()
 
-  const triggerAlarm = useCallback((alarm: AlarmSettingsType) => {
-    if (!audioRef.current) return
-    const audio = audioRef.current
-    const volume = Math.min(Math.max(alarm.volume ?? 50, 0), 100) / 100
-    audio.loop = true
+  // triggerAlarm handled by hook
 
-    const playBuiltIn = (soundId: string = 'classic') => {
-      audio.src = `/sounds/${soundId}.mp3`
-      audio.volume = volume
-      void audio.play()
-    }
+  // stopAlarm handled by hook
 
-    if (alarm.sound?.startsWith('radio:')) {
-      const stationId = alarm.sound.split(':')[1]
-      const station = getRadioStationById(stationId)
-      if (station) {
-        audio.src = station.url
-        audio.volume = volume
-        audio.play().catch(() => {
-          toast.error('Could not reach radio stream. Falling back to Classic Bell.')
-          playBuiltIn('classic')
-        })
-      } else {
-        playBuiltIn('classic')
-      }
-    } else {
-      playBuiltIn(alarm.sound || 'classic')
-    }
-  }, [])
+  // setAlarm handled by hook
 
-  const stopAlarm = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current.currentTime = 0
-    }
-    setActiveAlarm(null)
-    setAlarms(prev => prev.filter((alarm) => alarm.isRecurring))
-  }, [])
-
-  const setAlarm = (alarm: AlarmSettingsType) => {
-    setAlarms(prev => [...prev, alarm])
-    toast.success('Alarm set', {
-      description: `Time: ${alarm.time}${alarm.label ? ` — ${alarm.label}` : ''}`
-    })
-  }
-
-  const checkAlarms = useCallback((now: Date) => {
-    const currentTimeString = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false })
-    const triggeredAlarm = alarms.find((alarm) => alarm.time === currentTimeString)
-
-    if (triggeredAlarm && !activeAlarm) {
-      setActiveAlarm(triggeredAlarm)
-      triggerAlarm(triggeredAlarm)
-    }
-  }, [alarms, activeAlarm, triggerAlarm])
+  // checkAlarms handled by hook
 
   useEffect(() => {
     setCurrentTime(new Date())
@@ -303,10 +269,10 @@ export default function DigitalClock() {
             >
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/10 to-transparent" />
               <div className="relative px-8 py-6 sm:px-10 sm:py-7">
-                <div className="mb-4 text-center text-sm font-medium text-white/70 uppercase tracking-[0.28em]">
+                <div className="mb-4 text-center text-sm font-medium text-white/70 uppercase tracking-[0.28em]" suppressHydrationWarning>
                   {formatDate(currentTime)}
                 </div>
-                <div className="flex items-center justify-center gap-1 sm:gap-2">
+                <div className="flex items-center justify-center gap-1 sm:gap-2" suppressHydrationWarning>
                   <AnimatePresence mode="popLayout">
                     {timeDigits.map((digit, index) => (
                       <motion.span
@@ -357,7 +323,7 @@ export default function DigitalClock() {
 
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] xl:gap-8">
             <div className="space-y-6">
-              <WeatherDisplay />
+              <DynamicWeatherDisplay />
               {weatherData && (
                 <motion.div
                   className="rounded-2xl border border-white/10 bg-white/5 p-5 relative overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.35)]"
@@ -369,8 +335,9 @@ export default function DigitalClock() {
                   </div>
                 </motion.div>
               )}
-              <RadioPlayer />
-              <Soundscapes />
+              <DynamicRadioPlayer />
+              <DynamicSoundscapes />
+              <DynamicStopwatch />
             </div>
 
             <div className="flex flex-col gap-5">
@@ -413,7 +380,7 @@ export default function DigitalClock() {
 
               <div className="grid grid-cols-1 gap-3">
                 <button
-                  onClick={() => setIsAlarmOpen(true)}
+                  onClick={() => { startTransition(() => setIsAlarmOpen(true)) }}
                   className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-white/70 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white"
                 >
                   <span className="relative z-10">Set Alarm</span>
@@ -427,7 +394,7 @@ export default function DigitalClock() {
       </div>
 
       {/* Calendar Dialog */}
-      <Dialog open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+      <Dialog open={isCalendarOpen} onOpenChange={(open) => startTransition(() => setIsCalendarOpen(open))}>
         <DialogContent className="bg-gray-900/95 backdrop-blur-xl text-gray-900 dark:text-white border-gray-200 dark:border-white/10">
           <DialogHeader>
             <DialogTitle>Calendar</DialogTitle>
@@ -448,7 +415,7 @@ export default function DigitalClock() {
       </Dialog>
 
       {/* Other Dialogs */}
-      <Dialog open={isAlarmOpen} onOpenChange={setIsAlarmOpen}>
+      <Dialog open={isAlarmOpen} onOpenChange={(open) => startTransition(() => setIsAlarmOpen(open))}>
         <DialogContent className="bg-gray-900/95 backdrop-blur-xl text-gray-900 dark:text-white border-gray-200 dark:border-white/10">
           <DialogHeader>
             <DialogTitle>Set Alarm</DialogTitle>
@@ -457,7 +424,7 @@ export default function DigitalClock() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isAddTimeZoneOpen} onOpenChange={setIsAddTimeZoneOpen}>
+      <Dialog open={isAddTimeZoneOpen} onOpenChange={(open) => startTransition(() => setIsAddTimeZoneOpen(open))}>
         <DialogContent className="bg-gray-900/95 backdrop-blur-xl text-gray-900 dark:text-white border-gray-200 dark:border-white/10">
           <DialogHeader>
             <DialogTitle>Add Time Zone</DialogTitle>
@@ -466,7 +433,7 @@ export default function DigitalClock() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+      <Dialog open={isSettingsOpen} onOpenChange={(open) => startTransition(() => setIsSettingsOpen(open))}>
         <DialogContent className="bg-gray-900/95 backdrop-blur-xl text-gray-900 dark:text-white border-gray-200 dark:border-white/10">
           <DialogHeader>
             <DialogTitle>Settings</DialogTitle>
@@ -536,7 +503,7 @@ export default function DigitalClock() {
         </Dialog>
       )}
 
-      <audio ref={audioRef} />
+      {/* audioRef handled by hook */}
       </GestureControls>
     </div>
   )

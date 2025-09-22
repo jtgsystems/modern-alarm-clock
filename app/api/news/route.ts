@@ -20,13 +20,9 @@ interface NewsAPIResponse {
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
-  const location = searchParams.get("location")
-
+  let location = searchParams.get("location")
   if (!location) {
-    return NextResponse.json(
-      { error: "Location is required" },
-      { status: 400 }
-    )
+    location = 'Toronto' // Default location
   }
 
   // Degrade gracefully when no API key is set (avoid server 500s during dev/demo)

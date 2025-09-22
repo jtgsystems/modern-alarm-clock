@@ -1,19 +1,19 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import dynamic from 'next/dynamic'
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react"
 import ActiveAlarms from "./ActiveAlarms"
-import AlarmDialog from "./AlarmDialog"
 import AppointmentList from "./AppointmentList"
 import Clock from "./Clock"
 import SnoozePanel from "./SnoozePanel"
 import ThemeToggle from "./ThemeToggle"
 import UpcomingAlarms from "./UpcomingAlarms"
+const DynamicAlarmDialog = dynamic(() => import('./AlarmDialog'), { ssr: false, loading: () => <div className="h-96 bg-white/5 rounded-xl animate-pulse" /> })
 // Dialog primitives not used directly; AlarmDialog encapsulates them
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { useNotification } from "@/hooks/use-notification"
-import { getRadioStationById } from "@/lib/radioStations"
-import { alarmSounds as builtInSounds, type AlarmSound as BuiltInAlarmSound } from "@/lib/sounds"
+import { useAlarm } from "@/hooks/useAlarm"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import ShortcutsHint from "./ShortcutsHint"
@@ -27,17 +27,6 @@ interface AlarmSettings {
   reminderDate?: Date
   sound?: string
   volume?: number
-}
-
-interface Alarm {
-  id: string
-  time: string
-  label: string
-  sound?: string
-  volume?: number
-  isRecurring?: boolean
-  showNotification?: boolean
-  reminderDate?: Date
 }
 
 interface Reminder {
@@ -127,35 +116,26 @@ function CalendarContainer({ isOpen, onClose, children }: CalendarContainerProps
 }
 
 export default function AlarmClock() {
+  const [, startTransition] = useTransition()
   const [currentTime, setCurrentTime] = useState(new Date())
-  const [alarms, setAlarms] = useState<Alarm[]>([])
-  const [isSnoozing, setIsSnoozing] = useState(false)
-  const [activeAlarm, setActiveAlarm] = useState<Alarm | null>(null)
+  const [isSnoozing] = useState(false)
   const [reminders, setReminders] = useState<Reminder[]>([])
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   const [isCalendarOpen, setIsCalendarOpen] = useState(false)
   const [showAlarmDialog, setShowAlarmDialog] = useState(false)
-  const alarmAudioRef = useRef<HTMLAudioElement | null>(null)
+  const { alarms, activeAlarm, setAlarm: hookSetAlarm, removeAlarm: hookRemoveAlarm, stopAlarm: hookStopAlarm, snoozeAlarm: hookSnoozeAlarm, checkAlarms } = useAlarm()
   const notification = useNotification({
     title: "Alarm Clock",
     icon: "/alarm-icon.png"
   })
 
-  
+
 
 
   useEffect(() => {
     notification.requestPermission()
   }, [notification])
 
-  useEffect(() => {
-    return () => {
-      if (alarmAudioRef.current) {
-        alarmAudioRef.current.pause()
-        alarmAudioRef.current = null
-      }
-    }
-  }, [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -190,115 +170,14 @@ export default function AlarmClock() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isCalendarOpen, selectedDate])
 
-  const stopAlarm = useCallback(() => {
-    if (alarmAudioRef.current) {
-      alarmAudioRef.current.pause()
-      alarmAudioRef.current.currentTime = 0
-      alarmAudioRef.current = null
-    }
-    setIsSnoozing(false)
-    setActiveAlarm(null)
-  }, [])
+  // stopAlarm from hook
 
-  
 
-  const triggerAlarm = useCallback((alarm: Alarm) => {
-    const volume = Math.min(Math.max(alarm.volume ?? 50, 0), 100) / 100
 
-    const playBuiltIn = (soundKey: BuiltInAlarmSound = "classic") => {
-      const entry = builtInSounds[soundKey] ?? builtInSounds.classic
-      const audio = new Audio(entry.url)
-      audio.volume = volume
-      audio.loop = true
-      if (alarmAudioRef.current) {
-        alarmAudioRef.current.pause()
-      }
-      alarmAudioRef.current = audio
-      audio.play().catch(() => {
-        if (soundKey !== "classic") {
-          const fallback = new Audio(builtInSounds.classic.url)
-          fallback.volume = volume
-          fallback.loop = true
-          alarmAudioRef.current = fallback
-          void fallback.play()
-        }
-      })
-    }
-
-    const playRadio = async (stationId: string) => {
-      const station = getRadioStationById(stationId)
-      if (!station) throw new Error('Unknown station')
-      const audio = new Audio(station.url)
-      audio.volume = volume
-      audio.loop = true
-      if (alarmAudioRef.current) {
-        alarmAudioRef.current.pause()
-      }
-      alarmAudioRef.current = audio
-      await audio.play()
-      toast.success(`Streaming ${station.name} for this alarm`)
-    }
-
-    const start = async () => {
-      const soundId = alarm.sound || "classic"
-      if (soundId.startsWith('radio:')) {
-        const stationId = soundId.split(':')[1]
-        try {
-          await playRadio(stationId)
-        } catch {
-          toast.error('Could not reach radio stream. Falling back to Classic Bell.')
-          playBuiltIn('classic')
-        }
-      } else {
-        playBuiltIn(soundId as BuiltInAlarmSound)
-      }
-    }
-
-    start().catch(() => {
-      playBuiltIn('classic')
-    })
-
-    if (alarm.showNotification) {
-      notification.sendNotification(alarm.label || "Your alarm is ringing!")
-    }
-
-    toast("Alarm", {
-      description: alarm.label || "Your alarm is ringing!",
-      action: {
-        label: "Stop",
-        onClick: () => stopAlarm(),
-      },
-    })
-
-    setActiveAlarm(alarm)
-    setIsSnoozing(true)
-  }, [notification, stopAlarm])
 
   const checkAlarmsAndReminders = useCallback((now: Date) => {
-    const currentTimeString = now.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    })
-
-    const triggeredAlarm = alarms.find((alarm) => {
-      if (alarm.reminderDate) {
-        const reminderDate = new Date(alarm.reminderDate)
-        return (
-          alarm.time === currentTimeString &&
-          reminderDate.getDate() === now.getDate() &&
-          reminderDate.getMonth() === now.getMonth() &&
-          reminderDate.getFullYear() === now.getFullYear()
-        )
-      }
-      return alarm.time === currentTimeString
-    })
-
-    if (triggeredAlarm && !activeAlarm) {
-      setActiveAlarm(triggeredAlarm)
-      triggerAlarm(triggeredAlarm)
-    }
-  }, [alarms, activeAlarm, triggerAlarm])
+    checkAlarms(now)
+  }, [checkAlarms])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -310,12 +189,7 @@ export default function AlarmClock() {
   }, [checkAlarmsAndReminders])
 
   const handleSetAlarm = useCallback((settings: AlarmSettings) => {
-    const newAlarm: Alarm = {
-      ...settings,
-      id: crypto.randomUUID(),
-    }
-
-    setAlarms(prev => [...prev, newAlarm])
+    hookSetAlarm(settings)
 
     if (settings.reminderDate) {
       const reminder: Reminder = {
@@ -332,29 +206,17 @@ export default function AlarmClock() {
         ? `Set for ${settings.reminderDate.toLocaleDateString()} at ${settings.time}`
         : `Set for ${settings.time}`
     })
-  }, [])
+  }, [hookSetAlarm])
 
   const removeAlarm = useCallback((id: string) => {
-    setAlarms(prev => prev.filter(alarm => alarm.id !== id))
-  }, [])
+    hookRemoveAlarm(id)
+  }, [hookRemoveAlarm])
 
-  
+
 
   const snoozeAlarm = useCallback((duration: number) => {
-    if (activeAlarm) {
-      const snoozeTime = new Date(currentTime.getTime() + duration * 60000)
-      const snoozeAlarm: Alarm = {
-        ...activeAlarm,
-        time: snoozeTime.toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-        })
-      }
-      setAlarms(prev => [...prev, snoozeAlarm])
-      stopAlarm()
-    }
-  }, [activeAlarm, currentTime, stopAlarm])
+    hookSnoozeAlarm(duration, currentTime)
+  }, [hookSnoozeAlarm, currentTime])
 
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date)
@@ -401,10 +263,10 @@ export default function AlarmClock() {
         {/* Buttons and Upcoming Alarms Section */}
         <div className="space-y-6">
           <div className="flex gap-2">
-            <button onClick={() => setShowAlarmDialog(true)} className="flex-1 p-3 rounded-lg bg-gray-900/50 text-white/90 hover:bg-gray-900/70 border border-white/10 transition-colors">
+            <button onClick={() => { startTransition(() => setShowAlarmDialog(true)) }} className="flex-1 p-3 rounded-lg bg-gray-900/50 text-white/90 hover:bg-gray-900/70 border border-white/10 transition-colors" aria-label="Open dialog to set a new alarm">
               Set Alarm
             </button>
-            <button onClick={() => setIsCalendarOpen(true)} className="flex-1 p-3 rounded-lg bg-gray-900/50 text-white/90 hover:bg-gray-900/70 border border-white/10 transition-colors">
+            <button onClick={() => { startTransition(() => setIsCalendarOpen(true)) }} className="flex-1 p-3 rounded-lg bg-gray-900/50 text-white/90 hover:bg-gray-900/70 border border-white/10 transition-colors" aria-label="Open calendar to add a time zone">
               Add Time Zone
             </button>
           </div>
@@ -413,7 +275,7 @@ export default function AlarmClock() {
           </div>
         </div>
         <ActiveAlarms alarms={alarms} removeAlarm={removeAlarm} />
-        {isSnoozing && <SnoozePanel alarm={activeAlarm} onStop={stopAlarm} onSnooze={snoozeAlarm} />}
+        {isSnoozing && <SnoozePanel alarm={activeAlarm} onStop={hookStopAlarm} onSnooze={snoozeAlarm} />}
 
         <AppointmentList appointments={getAllAppointments} />
 
@@ -421,8 +283,9 @@ export default function AlarmClock() {
           <h2 className="text-lg font-medium text-white/90">Calendar</h2>
           <Button
             variant="outline"
-            onClick={() => setIsCalendarOpen(true)}
+            onClick={() => { startTransition(() => setIsCalendarOpen(true)) }}
             className="border-white/10 text-white/80 hover:bg-white/5"
+            aria-label="Open calendar dialog"
           >
             Open Calendar
           </Button>
@@ -482,7 +345,7 @@ export default function AlarmClock() {
           </div>
         </CalendarContainer>
 
-        <AlarmDialog
+        <DynamicAlarmDialog
           open={showAlarmDialog}
           onOpenChange={setShowAlarmDialog}
           onSetAlarm={handleSetAlarm}

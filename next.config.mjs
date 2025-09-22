@@ -26,6 +26,7 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '2mb'
     },
+    reactCompiler: true,
     // 2025 Stable: Modern optimizations
     optimizePackageImports: ['framer-motion', 'lucide-react']
   },

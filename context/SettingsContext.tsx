@@ -63,8 +63,10 @@ const applyFont = (font: AppFont) => {
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<SettingsSchema>(DEFAULT_SETTINGS)
 
-  // hydrate
+  // hydrate - only on client to avoid hydration mismatch
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
       if (raw) {
