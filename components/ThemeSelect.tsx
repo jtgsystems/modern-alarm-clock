@@ -9,6 +9,11 @@ const THEMES = [
   { id: 'aurora', label: 'Aurora' },
   { id: 'sunset', label: 'Sunset' },
   { id: 'slate', label: 'Slate' },
+  { id: 'light', label: 'Light' },
+  { id: 'dark', label: 'Dark' },
+  { id: 'cyberpunk', label: 'Cyberpunk' },
+  { id: 'neon-blue', label: 'Neon Blue' },
+  { id: 'purple-glow', label: 'Purple Glow' },
 ]
 
 export function ThemeSelect() {

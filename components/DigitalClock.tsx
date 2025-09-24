@@ -18,6 +18,7 @@ import WeatherSuggestion from "./WeatherSuggestion"
 // import { cn } from "@/lib/utils" // not used in this component
 import { useSettings, type AppFont } from "@/context/SettingsContext"
 import { Settings as SettingsIcon } from "lucide-react"
+import { useDynamicTheme } from "./DynamicThemeProvider"
 import GestureControls from "./GestureControls"
 import { ThemeSelect } from "./ThemeSelect"
 import ThemeToggle from "./ThemeToggle"
@@ -25,6 +26,10 @@ import ThemeToggle from "./ThemeToggle"
 import dynamic from 'next/dynamic'
 
 const DynamicWeatherDisplay = dynamic(() => import('./WeatherDisplay'), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />
+})
+const DynamicTodoWidget = dynamic(() => import('./TodoWidget'), {
   ssr: false,
   loading: () => <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />
 })
@@ -92,6 +97,7 @@ export default function DigitalClock() {
 
   const { activeAlarm, setAlarm, stopAlarm, checkAlarms } = useAlarm()
   const { settings, setFont, setWeatherUnits } = useSettings()
+  const { currentTheme } = useDynamicTheme()
 
   // triggerAlarm handled by hook
 
@@ -240,7 +246,7 @@ export default function DigitalClock() {
         }}
         showHints={true}
       >
-        <div className="relative rounded-3xl border border-white/10 bg-black/40 backdrop-blur-md shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+        <div className={`relative rounded-3xl border border-white/10 ${currentTheme.colors.primary} backdrop-blur-md shadow-[0_20px_60px_rgba(0,0,0,0.45)]`}>
 
         <div className="relative flex flex-col gap-8 px-6 py-8 sm:px-9 sm:py-9 lg:px-12 lg:py-12">
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -265,7 +271,7 @@ export default function DigitalClock() {
           >
             {/* Glassmorphic Clock Panel */}
             <motion.div
-              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_24px_48px_rgba(0,0,0,0.35)]"
+              className={`relative overflow-hidden rounded-3xl border border-white/10 ${currentTheme.colors.secondary} backdrop-blur-xl shadow-[0_24px_48px_rgba(0,0,0,0.35)]`}
             >
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/10 to-transparent" />
               <div className="relative px-8 py-6 sm:px-10 sm:py-7">
@@ -286,7 +292,7 @@ export default function DigitalClock() {
                           duration: 0.2,
                           ease: "easeInOut"
                         }}
-                        style={{ textShadow: '0 12px 32px rgba(0, 0, 0, 0.55)' }}
+                        style={{ textShadow: `0 0 20px ${currentTheme.colors.accent}30, 0 12px 32px rgba(0, 0, 0, 0.55)` }}
                       >
                         {digit}
                       </motion.span>
@@ -324,9 +330,10 @@ export default function DigitalClock() {
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] xl:gap-8">
             <div className="space-y-6">
               <DynamicWeatherDisplay />
+              <DynamicTodoWidget />
               {weatherData && (
                 <motion.div
-                  className="rounded-2xl border border-white/10 bg-white/5 p-5 relative overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.35)]"
+                  className={`rounded-2xl border border-white/10 ${currentTheme.colors.secondary} p-5 relative overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.35)]`}
                 >
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/5 to-transparent" />
                   <div className="relative z-10">
@@ -342,7 +349,7 @@ export default function DigitalClock() {
 
             <div className="flex flex-col gap-5">
               <motion.div
-                className="rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5 relative overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.35)]"
+                className={`rounded-2xl border border-white/10 ${currentTheme.colors.secondary} p-4 sm:p-5 relative overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.35)]`}
               >
                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/5 to-transparent" />
                 <div className="relative z-10">
@@ -381,10 +388,10 @@ export default function DigitalClock() {
               <div className="grid grid-cols-1 gap-3">
                 <button
                   onClick={() => { startTransition(() => setIsAlarmOpen(true)) }}
-                  className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-white/70 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white"
+                  className={`group relative overflow-hidden rounded-xl border border-white/10 ${currentTheme.colors.secondary} px-6 py-3 text-sm font-medium text-cyber-text-primary backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white`}
                 >
                   <span className="relative z-10">Set Alarm</span>
-                  <span className="absolute inset-0 pointer-events-none bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 transition-opacity group-hover:opacity-100" />
+                  <span className="absolute inset-0 pointer-events-none bg-gradient-to-r from-cyber-accent/20 to-cyber-secondary-accent/20 opacity-0 transition-opacity group-hover:opacity-100" />
                 </button>
               </div>
             </div>
@@ -395,7 +402,7 @@ export default function DigitalClock() {
 
       {/* Calendar Dialog */}
       <Dialog open={isCalendarOpen} onOpenChange={(open) => startTransition(() => setIsCalendarOpen(open))}>
-        <DialogContent className="bg-gray-900/95 backdrop-blur-xl text-gray-900 dark:text-white border-gray-200 dark:border-white/10">
+        <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-white/10`}>
           <DialogHeader>
             <DialogTitle>Calendar</DialogTitle>
             <DialogDescription>Select a date to view or set reminders</DialogDescription>
@@ -416,7 +423,7 @@ export default function DigitalClock() {
 
       {/* Other Dialogs */}
       <Dialog open={isAlarmOpen} onOpenChange={(open) => startTransition(() => setIsAlarmOpen(open))}>
-        <DialogContent className="bg-gray-900/95 backdrop-blur-xl text-gray-900 dark:text-white border-gray-200 dark:border-white/10">
+        <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-white/10`}>
           <DialogHeader>
             <DialogTitle>Set Alarm</DialogTitle>
           </DialogHeader>
@@ -425,7 +432,7 @@ export default function DigitalClock() {
       </Dialog>
 
       <Dialog open={isAddTimeZoneOpen} onOpenChange={(open) => startTransition(() => setIsAddTimeZoneOpen(open))}>
-        <DialogContent className="bg-gray-900/95 backdrop-blur-xl text-gray-900 dark:text-white border-gray-200 dark:border-white/10">
+        <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-white/10`}>
           <DialogHeader>
             <DialogTitle>Add Time Zone</DialogTitle>
           </DialogHeader>
@@ -434,7 +441,7 @@ export default function DigitalClock() {
       </Dialog>
 
       <Dialog open={isSettingsOpen} onOpenChange={(open) => startTransition(() => setIsSettingsOpen(open))}>
-        <DialogContent className="bg-gray-900/95 backdrop-blur-xl text-gray-900 dark:text-white border-gray-200 dark:border-white/10">
+        <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-white/10`}>
           <DialogHeader>
             <DialogTitle>Settings</DialogTitle>
           </DialogHeader>
@@ -486,7 +493,7 @@ export default function DigitalClock() {
 
       {activeAlarm && (
         <Dialog open={!!activeAlarm} onOpenChange={() => {}}>
-          <DialogContent className="bg-gray-900/95 backdrop-blur-xl text-gray-900 dark:text-white border-gray-200 dark:border-white/10" >
+          <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-white/10`}>
             <DialogHeader>
               <DialogTitle>Alarm</DialogTitle>
             </DialogHeader>

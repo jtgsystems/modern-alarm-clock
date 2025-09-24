@@ -1,7 +1,7 @@
 import type React from "react"
 
 // Generic component type for flags (SVG or emoji fallback)
-type FlagComponent = (props: { className?: string; title?: string }) => JSX.Element
+type FlagComponent = (props: { className?: string; title?: string }) => React.JSX.Element
 
 const flags: Record<string, FlagComponent> = {
   US: (props) => (

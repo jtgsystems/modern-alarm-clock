@@ -33,6 +33,221 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+
+    /* Light theme vars */
+    --light-background: 0 0% 100%;
+    --light-foreground: 222.2 84% 4.9%;
+    --light-card: 0 0% 100%;
+    --light-card-foreground: 222.2 84% 4.9%;
+    --light-popover: 0 0% 100%;
+    --light-popover-foreground: 222.2 84% 4.9%;
+    --light-primary: 222.2 47.4% 11.2%;
+    --light-primary-foreground: 210 40% 98%;
+    --light-secondary: 210 40% 96.1%;
+    --light-secondary-foreground: 222.2 47.4% 11.2%;
+    --light-muted: 210 40% 96.1%;
+    --light-muted-foreground: 215.4 16.3% 46.9%;
+    --light-accent: 221.2 83.2% 53.3%;
+    --light-accent-foreground: 210 40% 98%;
+    --light-destructive: 0 84.2% 60.2%;
+    --light-destructive-foreground: 210 40% 98%;
+    --light-border: 214.3 31.8% 91.4%;
+    --light-input: 214.3 31.8% 91.4%;
+    --light-ring: 221.2 83.2% 53.3%;
+
+    /* Dark theme vars */
+    --dark-background: 224 71% 4%;
+    --dark-foreground: 213 31% 91%;
+    --dark-card: 224 71% 4%;
+    --dark-card-foreground: 213 31% 91%;
+    --dark-popover: 224 71% 4%;
+    --dark-popover-foreground: 213 31% 91%;
+    --dark-primary: 220 70% 50%;
+    --dark-primary-foreground: 213 31% 91%;
+    --dark-secondary: 215 28% 17%;
+    --dark-secondary-foreground: 213 31% 91%;
+    --dark-muted: 217.2 32.6% 17.5%;
+    --dark-muted-foreground: 215 20.2% 65.1%;
+    --dark-accent: 217.2 91.2% 59.8%;
+    --dark-accent-foreground: 213 31% 91%;
+    --dark-destructive: 0 62.8% 30.6%;
+    --dark-destructive-foreground: 213 31% 91%;
+    --dark-border: 217.2 32.6% 17.5%;
+    --dark-input: 217.2 32.6% 17.5%;
+    --dark-ring: 224 71% 4%;
+
+    /* Cyberpunk theme vars */
+    --cyberpunk-background: 0 0% 3.9%;
+    --cyberpunk-foreground: 0 0% 100%;
+    --cyberpunk-card: 0 0% 10.2%;
+    --cyberpunk-card-foreground: 0 0% 100%;
+    --cyberpunk-popover: 0 0% 10.2%;
+    --cyberpunk-popover-foreground: 0 0% 100%;
+    --cyberpunk-primary: 0 0% 10.2%;
+    --cyberpunk-primary-foreground: 0 0% 100%;
+    --cyberpunk-secondary: 0 0% 20.4%;
+    --cyberpunk-secondary-foreground: 0 0% 100%;
+    --cyberpunk-muted: 0 0% 20.4%;
+    --cyberpunk-muted-foreground: 0 0% 94.1%;
+    --cyberpunk-accent: 180 100% 50%;
+    --cyberpunk-accent-foreground: 0 0% 100%;
+    --cyberpunk-destructive: 0 84.2% 60.2%;
+    --cyberpunk-destructive-foreground: 0 0% 100%;
+    --cyberpunk-border: 0 0% 20.4%;
+    --cyberpunk-input: 0 0% 20.4%;
+    --cyberpunk-ring: 180 100% 50%;
+
+    /* Neon Blue theme vars */
+    --neon-blue-background: 0 0% 0%;
+    --neon-blue-foreground: 0 0% 100%;
+    --neon-blue-card: 0 0% 3.9%;
+    --neon-blue-card-foreground: 0 0% 100%;
+    --neon-blue-popover: 0 0% 3.9%;
+    --neon-blue-popover-foreground: 0 0% 100%;
+    --neon-blue-primary: 0 0% 3.9%;
+    --neon-blue-primary-foreground: 0 0% 100%;
+    --neon-blue-secondary: 240 100% 50%;
+    --neon-blue-secondary-foreground: 0 0% 100%;
+    --neon-blue-muted: 240 100% 50%;
+    --neon-blue-muted-foreground: 200 100% 50%;
+    --neon-blue-accent: 180 100% 50%;
+    --neon-blue-accent-foreground: 0 0% 100%;
+    --neon-blue-destructive: 0 84.2% 60.2%;
+    --neon-blue-destructive-foreground: 0 0% 100%;
+    --neon-blue-border: 240 100% 50%;
+    --neon-blue-input: 240 100% 50%;
+    --neon-blue-ring: 180 100% 50%;
+
+    /* Purple Glow theme vars */
+    --purple-glow-background: 270 10% 5%;
+    --purple-glow-foreground: 270 100% 90%;
+    --purple-glow-card: 270 20% 10%;
+    --purple-glow-card-foreground: 270 100% 90%;
+    --purple-glow-popover: 270 20% 10%;
+    --purple-glow-popover-foreground: 270 100% 90%;
+    --purple-glow-primary: 270 20% 10%;
+    --purple-glow-primary-foreground: 270 100% 90%;
+    --purple-glow-secondary: 270 30% 20%;
+    --purple-glow-secondary-foreground: 270 100% 90%;
+    --purple-glow-muted: 270 30% 20%;
+    --purple-glow-muted-foreground: 270 100% 70%;
+    --purple-glow-accent: 270 100% 60%;
+    --purple-glow-accent-foreground: 270 100% 90%;
+    --purple-glow-destructive: 0 84.2% 60.2%;
+    --purple-glow-destructive-foreground: 270 100% 90%;
+    --purple-glow-border: 270 30% 20%;
+    --purple-glow-input: 270 30% 20%;
+    --purple-glow-ring: 270 100% 60%;
+  }
+
+  [data-theme="light"] {
+    --background: var(--light-background);
+    --foreground: var(--light-foreground);
+    --card: var(--light-card);
+    --card-foreground: var(--light-card-foreground);
+    --popover: var(--light-popover);
+    --popover-foreground: var(--light-popover-foreground);
+    --primary: var(--light-primary);
+    --primary-foreground: var(--light-primary-foreground);
+    --secondary: var(--light-secondary);
+    --secondary-foreground: var(--light-secondary-foreground);
+    --muted: var(--light-muted);
+    --muted-foreground: var(--light-muted-foreground);
+    --accent: var(--light-accent);
+    --accent-foreground: var(--light-accent-foreground);
+    --destructive: var(--light-destructive);
+    --destructive-foreground: var(--light-destructive-foreground);
+    --border: var(--light-border);
+    --input: var(--light-input);
+    --ring: var(--light-ring);
+  }
+
+  [data-theme="dark"] {
+    --background: var(--dark-background);
+    --foreground: var(--dark-foreground);
+    --card: var(--dark-card);
+    --card-foreground: var(--dark-card-foreground);
+    --popover: var(--dark-popover);
+    --popover-foreground: var(--dark-popover-foreground);
+    --primary: var(--dark-primary);
+    --primary-foreground: var(--dark-primary-foreground);
+    --secondary: var(--dark-secondary);
+    --secondary-foreground: var(--dark-secondary-foreground);
+    --muted: var(--dark-muted);
+    --muted-foreground: var(--dark-muted-foreground);
+    --accent: var(--dark-accent);
+    --accent-foreground: var(--dark-accent-foreground);
+    --destructive: var(--dark-destructive);
+    --destructive-foreground: var(--dark-destructive-foreground);
+    --border: var(--dark-border);
+    --input: var(--dark-input);
+    --ring: var(--dark-ring);
+  }
+
+  [data-theme="cyberpunk"] {
+    --background: var(--cyberpunk-background);
+    --foreground: var(--cyberpunk-foreground);
+    --card: var(--cyberpunk-card);
+    --card-foreground: var(--cyberpunk-card-foreground);
+    --popover: var(--cyberpunk-popover);
+    --popover-foreground: var(--cyberpunk-popover-foreground);
+    --primary: var(--cyberpunk-primary);
+    --primary-foreground: var(--cyberpunk-primary-foreground);
+    --secondary: var(--cyberpunk-secondary);
+    --secondary-foreground: var(--cyberpunk-secondary-foreground);
+    --muted: var(--cyberpunk-muted);
+    --muted-foreground: var(--cyberpunk-muted-foreground);
+    --accent: var(--cyberpunk-accent);
+    --accent-foreground: var(--cyberpunk-accent-foreground);
+    --destructive: var(--cyberpunk-destructive);
+    --destructive-foreground: var(--cyberpunk-destructive-foreground);
+    --border: var(--cyberpunk-border);
+    --input: var(--cyberpunk-input);
+    --ring: var(--cyberpunk-ring);
+  }
+
+  [data-theme="neon-blue"] {
+    --background: var(--neon-blue-background);
+    --foreground: var(--neon-blue-foreground);
+    --card: var(--neon-blue-card);
+    --card-foreground: var(--neon-blue-card-foreground);
+    --popover: var(--neon-blue-popover);
+    --popover-foreground: var(--neon-blue-popover-foreground);
+    --primary: var(--neon-blue-primary);
+    --primary-foreground: var(--neon-blue-primary-foreground);
+    --secondary: var(--neon-blue-secondary);
+    --secondary-foreground: var(--neon-blue-secondary-foreground);
+    --muted: var(--neon-blue-muted);
+    --muted-foreground: var(--neon-blue-muted-foreground);
+    --accent: var(--neon-blue-accent);
+    --accent-foreground: var(--neon-blue-accent-foreground);
+    --destructive: var(--neon-blue-destructive);
+    --destructive-foreground: var(--neon-blue-destructive-foreground);
+    --border: var(--neon-blue-border);
+    --input: var(--neon-blue-input);
+    --ring: var(--neon-blue-ring);
+  }
+
+  [data-theme="purple-glow"] {
+    --background: var(--purple-glow-background);
+    --foreground: var(--purple-glow-foreground);
+    --card: var(--purple-glow-card);
+    --card-foreground: var(--purple-glow-card-foreground);
+    --popover: var(--purple-glow-popover);
+    --popover-foreground: var(--purple-glow-popover-foreground);
+    --primary: var(--purple-glow-primary);
+    --primary-foreground: var(--purple-glow-primary-foreground);
+    --secondary: var(--purple-glow-secondary);
+    --secondary-foreground: var(--purple-glow-secondary-foreground);
+    --muted: var(--purple-glow-muted);
+    --muted-foreground: var(--purple-glow-muted-foreground);
+    --accent: var(--purple-glow-accent);
+    --accent-foreground: var(--purple-glow-accent-foreground);
+    --destructive: var(--purple-glow-destructive);
+    --destructive-foreground: var(--purple-glow-destructive-foreground);
+    --border: var(--purple-glow-border);
+    --input: var(--purple-glow-input);
+    --ring: var(--purple-glow-ring);
   }
 }
 
@@ -92,4 +307,3 @@
     padding: 1rem;
   }
 }
-

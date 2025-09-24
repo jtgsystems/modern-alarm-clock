@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
 
-export type AppTheme = 'midnight' | 'aurora' | 'sunset' | 'slate'
+export type AppTheme = 'midnight' | 'aurora' | 'sunset' | 'slate' | 'light' | 'dark' | 'cyberpunk' | 'neon-blue' | 'purple-glow'
 export type AppFont = 'inter' | 'roboto' | 'montserrat' | 'lora' | 'space-grotesk'
 
 export interface SettingsSchema {

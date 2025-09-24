@@ -15,6 +15,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { useNotification } from "@/hooks/use-notification"
 import { useAlarm } from "@/hooks/useAlarm"
 import { cn } from "@/lib/utils"
+import { useDynamicTheme, type TimeBasedTheme } from "./DynamicThemeProvider"
 import { toast } from "sonner"
 import ShortcutsHint from "./ShortcutsHint"
 import UpcomingAlarmsWidget from "./UpcomingAlarmsWidget"
@@ -40,9 +41,10 @@ interface CalendarContainerProps {
   isOpen: boolean
   onClose: () => void
   children: React.ReactNode
+  currentTheme: TimeBasedTheme
 }
 
-function CalendarContainer({ isOpen, onClose, children }: CalendarContainerProps) {
+function CalendarContainer({ isOpen, onClose, children, currentTheme }: CalendarContainerProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,7 +95,7 @@ function CalendarContainer({ isOpen, onClose, children }: CalendarContainerProps
       className={cn(
         "fixed inset-0 z-50",
         "flex items-center justify-center",
-        "bg-black/50 backdrop-blur-sm"
+        `bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-sm`
       )}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
@@ -102,7 +104,7 @@ function CalendarContainer({ isOpen, onClose, children }: CalendarContainerProps
       <div
         className={cn(
           "relative",
-          "bg-gray-900/95 backdrop-blur-xl",
+          `bg-gradient-to-b ${currentTheme.colors.primary}`,
           "border border-white/10 rounded-xl",
           "p-4 shadow-2xl",
           "transform transition-all duration-200",
@@ -128,6 +130,8 @@ export default function AlarmClock() {
     title: "Alarm Clock",
     icon: "/alarm-icon.png"
   })
+
+  const { currentTheme } = useDynamicTheme()
 
 
 
@@ -263,14 +267,14 @@ export default function AlarmClock() {
         {/* Buttons and Upcoming Alarms Section */}
         <div className="space-y-6">
           <div className="flex gap-2">
-            <button onClick={() => { startTransition(() => setShowAlarmDialog(true)) }} className="flex-1 p-3 rounded-lg bg-gray-900/50 text-white/90 hover:bg-gray-900/70 border border-white/10 transition-colors" aria-label="Open dialog to set a new alarm">
+            <button onClick={() => { startTransition(() => setShowAlarmDialog(true)) }} className={`flex-1 p-3 rounded-lg ${currentTheme.colors.secondary} text-cyber-text-primary hover:bg-white/10 border border-white/10 transition-colors`} aria-label="Open dialog to set a new alarm">
               Set Alarm
             </button>
-            <button onClick={() => { startTransition(() => setIsCalendarOpen(true)) }} className="flex-1 p-3 rounded-lg bg-gray-900/50 text-white/90 hover:bg-gray-900/70 border border-white/10 transition-colors" aria-label="Open calendar to add a time zone">
+            <button onClick={() => { startTransition(() => setIsCalendarOpen(true)) }} className={`flex-1 p-3 rounded-lg ${currentTheme.colors.secondary} text-cyber-text-primary hover:bg-white/10 border border-white/10 transition-colors`} aria-label="Open calendar to add a time zone">
               Add Time Zone
             </button>
           </div>
-          <div className="p-4 rounded-xl bg-gray-900/30 border border-white/5 backdrop-blur-sm">
+          <div className={`p-4 rounded-xl ${currentTheme.colors.secondary} border border-white/10 backdrop-blur-sm`}>
             <UpcomingAlarms alarms={alarms} />
           </div>
         </div>
@@ -284,14 +288,14 @@ export default function AlarmClock() {
           <Button
             variant="outline"
             onClick={() => { startTransition(() => setIsCalendarOpen(true)) }}
-            className="border-white/10 text-white/80 hover:bg-white/5"
+            className={`border-white/10 text-cyber-text-secondary hover:${currentTheme.colors.secondary}`}
             aria-label="Open calendar dialog"
           >
             Open Calendar
           </Button>
         </div>
 
-        <CalendarContainer isOpen={isCalendarOpen} onClose={() => setIsCalendarOpen(false)}>
+        <CalendarContainer isOpen={isCalendarOpen} onClose={() => setIsCalendarOpen(false)} currentTheme={currentTheme}>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
@@ -314,13 +318,13 @@ export default function AlarmClock() {
               }}
               className="rounded-lg border border-white/10 p-3"
               classNames={{
-                day_selected: "bg-indigo-600 text-white hover:bg-indigo-600",
-                day_today: "bg-white/5 text-white font-semibold",
-                day: "text-white/80 hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white",
-                nav_button_previous: "text-white/60 hover:text-white",
-                nav_button_next: "text-white/60 hover:text-white",
-                head_cell: "text-white/60",
-                caption: "text-white/90"
+                day_selected: `bg-cyber-accent text-cyber-text-primary hover:bg-cyber-accent`,
+                day_today: `${currentTheme.colors.secondary} text-cyber-text-primary font-semibold`,
+                day: `text-cyber-text-secondary hover:${currentTheme.colors.secondary} hover:text-cyber-text-primary focus:${currentTheme.colors.secondary} focus:text-cyber-text-primary`,
+                nav_button_previous: "text-cyber-text-secondary hover:text-cyber-text-primary",
+                nav_button_next: "text-cyber-text-secondary hover:text-cyber-text-primary",
+                head_cell: "text-cyber-text-secondary",
+                caption: "text-cyber-text-primary"
               }}
             />
 

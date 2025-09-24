@@ -11,17 +11,15 @@ const DynamicDigitalClock = dynamic(() => import('../components/DigitalClock'), 
 // 2025 Modern Home Page with Full Alarm Clock
 export default function Home() {
   return (
-    <SettingsProvider>
-      <DynamicThemeProvider>
-        <ClientMotionWrapper className="relative min-h-screen overflow-hidden bg-[#060b16] text-white">
-
-          {/* Main Digital Clock Application with streamlined styling */}
-          <Suspense fallback={<div className="h-screen flex items-center justify-center text-white">Loading clock...</div>}>
-            <DynamicDigitalClock />
-          </Suspense>
-
-        </ClientMotionWrapper>
-      </DynamicThemeProvider>
-    </SettingsProvider>
+    <DynamicThemeProvider>
+      <ClientMotionWrapper className="relative min-h-screen overflow-hidden bg-[#060b16] text-white">
+ 
+        {/* Main Digital Clock Application with streamlined styling */}
+        <Suspense fallback={<div className="h-screen flex items-center justify-center text-white">Loading clock...</div>}>
+          <DynamicDigitalClock />
+        </Suspense>
+ 
+      </ClientMotionWrapper>
+    </DynamicThemeProvider>
   )
 }
