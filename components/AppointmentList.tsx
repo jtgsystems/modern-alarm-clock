@@ -45,14 +45,14 @@ export default function AppointmentList({ appointments }: AppointmentListProps) 
   if (sortedAppointments.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-white/60">No upcoming appointments</p>
+        <p className="text-foreground/60">No upcoming appointments</p>
       </div>
     )
   }
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-medium text-white/90">Upcoming</h2>
+      <h2 className="text-lg font-medium text-foreground/90">Upcoming</h2>
       <div className="relative">
         <div className="absolute top-0 bottom-0 left-5 w-px bg-gradient-to-b from-cyan-500/20 to-purple-500/20" />
         <div className="space-y-3">
@@ -64,36 +64,36 @@ export default function AppointmentList({ appointments }: AppointmentListProps) 
               <div className="absolute left-4 top-3 h-3 w-3 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500" />
               <div className={cn(
                 "group relative",
-                "bg-white/5 hover:bg-white/10",
+                "bg-foreground/5 hover:bg-foreground/10",
                 "backdrop-blur-sm",
                 "rounded-lg p-3",
-                "border border-white/10",
+                "border border-border/10",
                 "transition-all duration-200"
               )}>
                 <div className="flex items-center gap-3">
                   {appointment.date ? (
-                    <Calendar className="h-4 w-4 text-white/60" />
+                    <Calendar className="h-4 w-4 text-foreground/60" />
                   ) : (
-                    <Clock className="h-4 w-4 text-white/60" />
+                    <Clock className="h-4 w-4 text-foreground/60" />
                   )}
                   <div>
-                    <p className="text-sm font-medium text-white/90">
+                    <p className="text-sm font-medium text-foreground/90">
                       {appointment.label || "Untitled"}
                     </p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <p className="text-xs text-white/60">{appointment.time}</p>
+                      <p className="text-xs text-foreground/60">{appointment.time}</p>
                       {appointment.date && (
                         <>
-                          <span className="text-white/30">•</span>
-                          <p className="text-xs text-white/60">
+                          <span className="text-foreground/30">•</span>
+                          <p className="text-xs text-foreground/60">
                             {appointment.date.toLocaleDateString()}
                           </p>
                         </>
                       )}
                       {appointment.isRecurring && (
                         <>
-                          <span className="text-white/30">•</span>
-                          <p className="text-xs text-white/60">Recurring</p>
+                          <span className="text-foreground/30">•</span>
+                          <p className="text-xs text-foreground/60">Recurring</p>
                         </>
                       )}
                     </div>

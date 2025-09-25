@@ -28,9 +28,9 @@ export default function SettingsButton({ onClick, isActive = false, className = 
         onMouseDown={() => setIsPressed(true)}
         onMouseUp={() => setIsPressed(false)}
         onMouseLeave={() => setIsPressed(false)}
-        className={`h-12 w-12 rounded-full backdrop-blur-sm border border-white/20 transition-colors duration-150 ${
-          isActive ? 'bg-white/25 border-white/40' : 'bg-white/10'
-        } ${isPressed ? 'bg-white/30' : ''}`}
+        className={`h-12 w-12 rounded-full backdrop-blur-sm border border-border/20 transition-colors duration-150 ${
+          isActive ? 'bg-foreground/25 border-border/40' : 'bg-foreground/10'
+        } ${isPressed ? 'bg-foreground/30' : ''}`}
       >
         <motion.div
           animate={{

@@ -59,7 +59,7 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="overflow-hidden border border-white/20 bg-white/5 p-0 backdrop-blur-xl">
+      <DialogContent className="overflow-hidden border border-border/20 bg-foreground/5 p-0 backdrop-blur-xl">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -68,7 +68,7 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
           className="relative"
         >
           {/* Glassmorphic background with gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-foreground/10 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/10 to-transparent" />
 
           {/* Floating background elements */}
@@ -76,7 +76,7 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
             {Array.from({ length: 8 }).map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute h-1 w-1 rounded-full bg-white/30"
+                className="absolute h-1 w-1 rounded-full bg-foreground/30"
                 style={{
                   left: `${20 + (i * 10)}%`,
                   top: `${15 + (i * 8)}%`,
@@ -109,7 +109,7 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
                 >
                   <Clock className="h-5 w-5 text-cyan-400" />
                 </motion.div>
-                <DialogTitle className="text-xl font-semibold text-white">
+                <DialogTitle className="text-xl font-semibold text-foreground">
                   Set New Alarm
                 </DialogTitle>
                 <motion.div
@@ -133,7 +133,7 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Label htmlFor="alarm-time" className="text-white/80 font-medium">
+                  <Label htmlFor="alarm-time" className="text-foreground/80 font-medium">
                     Time
                   </Label>
                   <div className="relative">
@@ -144,8 +144,8 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
                       value={alarmTime}
                       onChange={(e) => setAlarmTime(e.target.value)}
                       className={cn(
-                        "border border-white/20 bg-white/10 backdrop-blur-sm",
-                        "text-white text-lg font-mono",
+                        "border border-border/20 bg-foreground/10 backdrop-blur-sm",
+                        "text-foreground text-lg font-mono",
                         "focus:border-cyan-400/50 focus:ring-2 focus:ring-cyan-400/20 focus:ring-offset-0",
                         "transition-all duration-300"
                       )}
@@ -163,7 +163,7 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Label htmlFor="alarm-label" className="text-white/80 font-medium">
+                  <Label htmlFor="alarm-label" className="text-foreground/80 font-medium">
                     Label
                   </Label>
                   <div className="relative">
@@ -174,8 +174,8 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
                       onChange={(e) => setAlarmLabel(e.target.value)}
                       placeholder="Add a label (optional)"
                       className={cn(
-                        "border border-white/20 bg-white/10 backdrop-blur-sm",
-                        "text-white placeholder:text-white/50",
+                        "border border-border/20 bg-foreground/10 backdrop-blur-sm",
+                        "text-foreground placeholder:text-foreground/50",
                         "focus:border-purple-400/50 focus:ring-2 focus:ring-purple-400/20 focus:ring-offset-0",
                         "transition-all duration-300"
                       )}
@@ -194,12 +194,12 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="relative overflow-hidden rounded-lg border border-white/20 bg-white/10 p-3 backdrop-blur-sm"
+                      className="relative overflow-hidden rounded-lg border border-border/20 bg-foreground/10 p-3 backdrop-blur-sm"
                     >
                       <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-blue-500/20" />
                       <div className="relative flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-emerald-400" />
-                        <span className="text-sm font-medium text-white/90">
+                        <span className="text-sm font-medium text-foreground/90">
                           {reminderDate.toLocaleDateString()}
                         </span>
                       </div>
@@ -209,9 +209,9 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="flex items-center justify-between rounded-lg border border-white/20 bg-white/10 p-3 backdrop-blur-sm"
+                      className="flex items-center justify-between rounded-lg border border-border/20 bg-foreground/10 p-3 backdrop-blur-sm"
                     >
-                      <Label htmlFor="recurring" className="text-white/80 font-medium">
+                      <Label htmlFor="recurring" className="text-foreground/80 font-medium">
                         Recurring
                       </Label>
                       <Switch
@@ -225,11 +225,11 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
                 </AnimatePresence>
 
                 <motion.div
-                  className="flex items-center justify-between rounded-lg border border-white/20 bg-white/10 p-3 backdrop-blur-sm"
+                  className="flex items-center justify-between rounded-lg border border-border/20 bg-foreground/10 p-3 backdrop-blur-sm"
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Label htmlFor="notifications" className="text-white/80 font-medium">
+                  <Label htmlFor="notifications" className="text-foreground/80 font-medium">
                     Show Notifications
                   </Label>
                   <Switch
@@ -252,7 +252,7 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
                     type="button"
                     variant="ghost"
                     onClick={() => onOpenChange(false)}
-                    className="relative overflow-hidden border border-white/20 bg-white/5 text-white/70 backdrop-blur-sm transition-all hover:border-white/30 hover:bg-white/10 hover:text-white"
+                    className="relative overflow-hidden border border-border/20 bg-foreground/5 text-foreground/70 backdrop-blur-sm transition-all hover:border-border/30 hover:bg-foreground/10 hover:text-foreground"
                   >
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-gray-500/20 to-slate-500/20 opacity-0"
@@ -266,13 +266,13 @@ export default function AlarmDialog({ open, onOpenChange, onSetAlarm, selectedDa
                   <Button
                     type="submit"
                     className={cn(
-                      "relative overflow-hidden border border-cyan-400/30 bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg shadow-cyan-500/20",
+                      "relative overflow-hidden border border-cyan-400/30 bg-gradient-to-r from-cyan-500 to-purple-500 text-foreground shadow-lg shadow-cyan-500/20",
                       "hover:from-cyan-600 hover:to-purple-600 hover:shadow-cyan-500/30",
                       "transition-all duration-300"
                     )}
                   >
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0"
+                      className="absolute inset-0 bg-gradient-to-r from-foreground/20 to-transparent opacity-0"
                       whileHover={{ opacity: 1 }}
                       transition={{ duration: 0.2 }}
                     />

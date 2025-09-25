@@ -71,8 +71,8 @@ function AdditionalClock({
       className={cn(
         "group relative flex items-center gap-3 neu-layer rounded-2xl px-4 py-3 shadow-[0_12px_32px_rgba(0,0,0,0.35)]",
         "transition-all duration-200 cursor-grab active:cursor-grabbing",
-        isDragging && "ring-2 ring-white/40 ring-offset-2 ring-offset-black/30",
-        isDragOver && !isDragging && "border border-white/20 bg-white/10/5",
+        isDragging && "ring-2 ring-ring/40 ring-offset-2 ring-offset-black/30",
+        isDragOver && !isDragging && "border border-border/20 bg-foreground/10/5",
         className
       )}
       role="timer"
@@ -81,16 +81,16 @@ function AdditionalClock({
       {...props}
     >
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <span className="text-white/50">
+        <span className="text-foreground/50">
           <GripVertical className="h-4 w-4" aria-hidden="true" />
         </span>
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <Flag className="h-4 w-4" />
-          <span className="truncate text-sm font-medium text-white/80">{name}</span>
+          <span className="truncate text-sm font-medium text-foreground/80">{name}</span>
         </div>
       </div>
       <div
-        className="text-sm font-mono text-white/80 tabular-nums"
+        className="text-sm font-mono text-foreground/80 tabular-nums"
         suppressHydrationWarning
       >
         {time.toLocaleTimeString("en-US", {
@@ -106,7 +106,7 @@ function AdditionalClock({
           size="icon"
           variant="ghost"
           onClick={onMoveUp}
-          className="h-6 w-6 rounded-full text-white/50 hover:text-white hover:bg-white/10"
+          className="h-6 w-6 rounded-full text-foreground/50 hover:text-foreground hover:bg-foreground/10"
         >
           <ArrowUpFromLine className="h-3 w-3" />
           <span className="sr-only">Move up</span>
@@ -115,7 +115,7 @@ function AdditionalClock({
           size="icon"
           variant="ghost"
           onClick={onMoveDown}
-          className="h-6 w-6 rounded-full text-white/50 hover:text-white hover:bg-white/10"
+          className="h-6 w-6 rounded-full text-foreground/50 hover:text-foreground hover:bg-foreground/10"
         >
           <ArrowDownToLine className="h-3 w-3" />
           <span className="sr-only">Move down</span>

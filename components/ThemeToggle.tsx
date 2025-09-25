@@ -35,7 +35,7 @@ export default function ThemeToggle({ className }: ThemeToggleProps) {
         size="icon"
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
         className={cn(
-          "group relative overflow-hidden rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-white/70 transition-colors duration-150",
+          "group relative overflow-hidden rounded-full border border-border/10 bg-foreground/5 backdrop-blur-sm text-foreground/70 transition-colors duration-150",
           className
         )}
       >

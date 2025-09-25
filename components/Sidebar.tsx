@@ -47,7 +47,7 @@ function SidebarPanel({ children, className = '' }: SidebarPanelProps) {
     <motion.div
       whileHover={{ scale: 1.01 }}
       transition={{ duration: 0.2 }}
-      className={`rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 p-4 hover:bg-white/8 hover:border-white/15 transition-all duration-300 ${className}`}
+      className={`rounded-xl bg-foreground/5 backdrop-blur-sm border border-border/10 p-4 hover:bg-foreground/8 hover:border-border/15 transition-all duration-300 ${className}`}
     >
       {children}
     </motion.div>

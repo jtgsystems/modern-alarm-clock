@@ -55,8 +55,8 @@ const NewsScroller: React.FC<NewsScrollerProps> = ({ location }) => {
         {/* Content */}
         <div className="relative p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Newspaper className="h-5 w-5 text-white/70" />
-            <h3 className="text-white/90 font-medium">Local News</h3>
+            <Newspaper className="h-5 w-5 text-foreground/70" />
+            <h3 className="text-foreground/90 font-medium">Local News</h3>
           </div>
 
           <ScrollArea className="h-[200px] pr-4">
@@ -67,12 +67,12 @@ const NewsScroller: React.FC<NewsScrollerProps> = ({ location }) => {
                   href={item.url}
                   className={cn(
                     "block p-3 rounded-lg",
-                    "bg-white/5 hover:bg-white/10",
-                    "border border-white/10 hover:border-white/20",
+                    "bg-foreground/5 hover:bg-foreground/10",
+                    "border border-border/10 hover:border-border/20",
                     "transition-all duration-200"
                   )}
                 >
-                  <p className="text-sm text-white/80 leading-relaxed">{item.title}</p>
+                  <p className="text-sm text-foreground/80 leading-relaxed">{item.title}</p>
                 </a>
               ))}
             </div>
@@ -80,7 +80,7 @@ const NewsScroller: React.FC<NewsScrollerProps> = ({ location }) => {
         </div>
 
         {/* Subtle inner border */}
-        <div className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
+        <div className="absolute inset-0 rounded-[2rem] border border-border/10 pointer-events-none" />
       </div>
     </div>
   )

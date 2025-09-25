@@ -17,6 +17,254 @@ export interface TimeBasedTheme {
 type TimePeriod = 'midnight' | 'dawn' | 'morning' | 'afternoon' | 'evening' | 'night'
 
 const TIME_THEMES: Record<string, Record<TimePeriod, TimeBasedTheme>> = {
+  midnight: {
+    midnight: {
+      name: 'Midnight',
+      colors: {
+        primary: 'from-slate-900 to-slate-800',
+        secondary: 'from-slate-700/20 to-slate-600/20',
+        accent: '#64748b',
+        gradient: 'from-slate-700/30 via-slate-600/20 to-slate-800/30'
+      },
+      atmosphere: 'Deep midnight blue'
+    },
+    dawn: {
+      name: 'Midnight Dawn',
+      colors: {
+        primary: 'from-slate-900 to-slate-800',
+        secondary: 'from-orange-400/30 to-yellow-400/30',
+        accent: '#f59e0b',
+        gradient: 'from-orange-500/40 via-yellow-500/30 to-slate-800/20'
+      },
+      atmosphere: 'Midnight dawn transition'
+    },
+    morning: {
+      name: 'Midnight Morning',
+      colors: {
+        primary: 'from-slate-900 to-slate-800',
+        secondary: 'from-blue-300/40 to-cyan-300/40',
+        accent: '#06b6d4',
+        gradient: 'from-blue-400/50 via-cyan-400/40 to-slate-800/30'
+      },
+      atmosphere: 'Midnight morning light'
+    },
+    afternoon: {
+      name: 'Midnight Afternoon',
+      colors: {
+        primary: 'from-slate-900 to-slate-800',
+        secondary: 'from-yellow-200/30 to-orange-200/30',
+        accent: '#f97316',
+        gradient: 'from-yellow-300/50 via-orange-300/40 to-slate-800/30'
+      },
+      atmosphere: 'Midnight afternoon warmth'
+    },
+    evening: {
+      name: 'Midnight Evening',
+      colors: {
+        primary: 'from-slate-900 to-slate-800',
+        secondary: 'from-purple-500/20 to-pink-500/20',
+        accent: '#8b5cf6',
+        gradient: 'from-purple-500/40 via-pink-500/30 to-slate-800/20'
+      },
+      atmosphere: 'Midnight evening twilight'
+    },
+    night: {
+      name: 'Midnight Night',
+      colors: {
+        primary: 'from-slate-900 to-slate-800',
+        secondary: 'from-slate-600/30 to-slate-700/30',
+        accent: '#64748b',
+        gradient: 'from-slate-600/30 via-slate-700/20 to-slate-900/30'
+      },
+      atmosphere: 'Deep midnight night'
+    }
+  },
+  aurora: {
+    midnight: {
+      name: 'Aurora Midnight',
+      colors: {
+        primary: 'from-emerald-900 to-emerald-800',
+        secondary: 'from-green-700/20 to-emerald-600/20',
+        accent: '#10b981',
+        gradient: 'from-green-700/30 via-emerald-600/20 to-emerald-800/30'
+      },
+      atmosphere: 'Aurora midnight green'
+    },
+    dawn: {
+      name: 'Aurora Dawn',
+      colors: {
+        primary: 'from-emerald-900 to-emerald-800',
+        secondary: 'from-orange-400/30 to-yellow-400/30',
+        accent: '#f59e0b',
+        gradient: 'from-orange-500/40 via-yellow-500/30 to-emerald-800/20'
+      },
+      atmosphere: 'Aurora dawn glow'
+    },
+    morning: {
+      name: 'Aurora Morning',
+      colors: {
+        primary: 'from-emerald-900 to-emerald-800',
+        secondary: 'from-blue-300/40 to-cyan-300/40',
+        accent: '#06b6d4',
+        gradient: 'from-blue-400/50 via-cyan-400/40 to-emerald-800/30'
+      },
+      atmosphere: 'Aurora morning light'
+    },
+    afternoon: {
+      name: 'Aurora Afternoon',
+      colors: {
+        primary: 'from-emerald-900 to-emerald-800',
+        secondary: 'from-yellow-200/30 to-orange-200/30',
+        accent: '#f97316',
+        gradient: 'from-yellow-300/50 via-orange-300/40 to-emerald-800/30'
+      },
+      atmosphere: 'Aurora afternoon vibrancy'
+    },
+    evening: {
+      name: 'Aurora Evening',
+      colors: {
+        primary: 'from-emerald-900 to-emerald-800',
+        secondary: 'from-purple-500/20 to-pink-500/20',
+        accent: '#8b5cf6',
+        gradient: 'from-purple-500/40 via-pink-500/30 to-emerald-800/20'
+      },
+      atmosphere: 'Aurora evening twilight'
+    },
+    night: {
+      name: 'Aurora Night',
+      colors: {
+        primary: 'from-emerald-900 to-emerald-800',
+        secondary: 'from-emerald-600/30 to-emerald-700/30',
+        accent: '#10b981',
+        gradient: 'from-emerald-600/30 via-emerald-700/20 to-emerald-900/30'
+      },
+      atmosphere: 'Deep aurora night'
+    }
+  },
+  sunset: {
+    midnight: {
+      name: 'Sunset Midnight',
+      colors: {
+        primary: 'from-orange-900 to-orange-800',
+        secondary: 'from-red-700/20 to-orange-600/20',
+        accent: '#f97316',
+        gradient: 'from-red-700/30 via-orange-600/20 to-orange-800/30'
+      },
+      atmosphere: 'Sunset midnight orange'
+    },
+    dawn: {
+      name: 'Sunset Dawn',
+      colors: {
+        primary: 'from-orange-900 to-orange-800',
+        secondary: 'from-orange-400/30 to-yellow-400/30',
+        accent: '#f59e0b',
+        gradient: 'from-orange-500/40 via-yellow-500/30 to-orange-800/20'
+      },
+      atmosphere: 'Sunset dawn warmth'
+    },
+    morning: {
+      name: 'Sunset Morning',
+      colors: {
+        primary: 'from-orange-900 to-orange-800',
+        secondary: 'from-blue-300/40 to-cyan-300/40',
+        accent: '#06b6d4',
+        gradient: 'from-blue-400/50 via-cyan-400/40 to-orange-800/30'
+      },
+      atmosphere: 'Sunset morning light'
+    },
+    afternoon: {
+      name: 'Sunset Afternoon',
+      colors: {
+        primary: 'from-orange-900 to-orange-800',
+        secondary: 'from-yellow-200/30 to-orange-200/30',
+        accent: '#f97316',
+        gradient: 'from-yellow-300/50 via-orange-300/40 to-orange-800/30'
+      },
+      atmosphere: 'Sunset afternoon vibrancy'
+    },
+    evening: {
+      name: 'Sunset Evening',
+      colors: {
+        primary: 'from-orange-900 to-orange-800',
+        secondary: 'from-purple-500/20 to-pink-500/20',
+        accent: '#8b5cf6',
+        gradient: 'from-purple-500/40 via-pink-500/30 to-orange-800/20'
+      },
+      atmosphere: 'Sunset evening twilight'
+    },
+    night: {
+      name: 'Sunset Night',
+      colors: {
+        primary: 'from-orange-900 to-orange-800',
+        secondary: 'from-orange-600/30 to-orange-700/30',
+        accent: '#f97316',
+        gradient: 'from-orange-600/30 via-orange-700/20 to-orange-900/30'
+      },
+      atmosphere: 'Deep sunset night'
+    }
+  },
+  slate: {
+    midnight: {
+      name: 'Slate Midnight',
+      colors: {
+        primary: 'from-slate-900 to-slate-800',
+        secondary: 'from-slate-700/20 to-slate-600/20',
+        accent: '#64748b',
+        gradient: 'from-slate-700/30 via-slate-600/20 to-slate-800/30'
+      },
+      atmosphere: 'Slate midnight gray'
+    },
+    dawn: {
+      name: 'Slate Dawn',
+      colors: {
+        primary: 'from-slate-900 to-slate-800',
+        secondary: 'from-orange-400/30 to-yellow-400/30',
+        accent: '#f59e0b',
+        gradient: 'from-orange-500/40 via-yellow-500/30 to-slate-800/20'
+      },
+      atmosphere: 'Slate dawn transition'
+    },
+    morning: {
+      name: 'Slate Morning',
+      colors: {
+        primary: 'from-slate-900 to-slate-800',
+        secondary: 'from-blue-300/40 to-cyan-300/40',
+        accent: '#06b6d4',
+        gradient: 'from-blue-400/50 via-cyan-400/40 to-slate-800/30'
+      },
+      atmosphere: 'Slate morning light'
+    },
+    afternoon: {
+      name: 'Slate Afternoon',
+      colors: {
+        primary: 'from-slate-900 to-slate-800',
+        secondary: 'from-yellow-200/30 to-orange-200/30',
+        accent: '#f97316',
+        gradient: 'from-yellow-300/50 via-orange-300/40 to-slate-800/30'
+      },
+      atmosphere: 'Slate afternoon warmth'
+    },
+    evening: {
+      name: 'Slate Evening',
+      colors: {
+        primary: 'from-slate-900 to-slate-800',
+        secondary: 'from-purple-500/20 to-pink-500/20',
+        accent: '#8b5cf6',
+        gradient: 'from-purple-500/40 via-pink-500/30 to-slate-800/20'
+      },
+      atmosphere: 'Slate evening twilight'
+    },
+    night: {
+      name: 'Slate Night',
+      colors: {
+        primary: 'from-slate-900 to-slate-800',
+        secondary: 'from-slate-600/30 to-slate-700/30',
+        accent: '#64748b',
+        gradient: 'from-slate-600/30 via-slate-700/20 to-slate-900/30'
+      },
+      atmosphere: 'Deep slate night'
+    }
+  },
   cyberpunk: {
     midnight: {
       name: 'Cyber Midnight',

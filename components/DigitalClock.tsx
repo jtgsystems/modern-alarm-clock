@@ -27,23 +27,23 @@ import dynamic from 'next/dynamic'
 
 const DynamicWeatherDisplay = dynamic(() => import('./WeatherDisplay'), {
   ssr: false,
-  loading: () => <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />
+  loading: () => <div className="h-64 bg-foreground/5 rounded-2xl animate-pulse" />
 })
 const DynamicTodoWidget = dynamic(() => import('./TodoWidget'), {
   ssr: false,
-  loading: () => <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />
+  loading: () => <div className="h-64 bg-foreground/5 rounded-2xl animate-pulse" />
 })
 const DynamicRadioPlayer = dynamic(() => import('./RadioPlayer'), {
   ssr: false,
-  loading: () => <div className="h-48 bg-white/5 rounded-2xl animate-pulse" />
+  loading: () => <div className="h-48 bg-foreground/5 rounded-2xl animate-pulse" />
 })
 const DynamicSoundscapes = dynamic(() => import('./Soundscapes'), {
   ssr: false,
-  loading: () => <div className="h-48 bg-white/5 rounded-2xl animate-pulse" />
+  loading: () => <div className="h-48 bg-foreground/5 rounded-2xl animate-pulse" />
 })
 const DynamicStopwatch = dynamic(() => import('./Stopwatch'), {
   ssr: false,
-  loading: () => <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />
+  loading: () => <div className="h-64 bg-foreground/5 rounded-2xl animate-pulse" />
 })
 
 const TORONTO_TIMEZONE = "America/Toronto"
@@ -246,20 +246,20 @@ export default function DigitalClock() {
         }}
         showHints={true}
       >
-        <div className={`relative rounded-3xl border border-white/10 ${currentTheme.colors.primary} backdrop-blur-md shadow-[0_20px_60px_rgba(0,0,0,0.45)]`}>
+        <div className={`relative rounded-3xl border border-border/10 ${currentTheme.colors.primary} backdrop-blur-md shadow-[0_20px_60px_rgba(0,0,0,0.45)]`}>
 
-        <div className="relative flex flex-col gap-8 px-6 py-8 sm:px-9 sm:py-9 lg:px-12 lg:py-12">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <ThemeSelect />
-            <div className="flex items-center gap-3">
+        <div className="relative flex flex-col gap-9 px-6 py-8 sm:px-10 sm:py-10 lg:px-14 lg:py-12">
+          <div className="flex w-full flex-wrap items-start justify-between gap-6">
+            <ThemeSelect className="flex-1 min-w-[16rem] max-w-[20rem]" />
+            <div className="flex items-center gap-3 sm:ml-auto">
               <button
                 onClick={() => setIsSettingsOpen(true)}
                 aria-label="Settings"
-                className="relative rounded-full h-10 w-10 flex items-center justify-center border border-white/10 bg-white/5 text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                className="relative rounded-full h-10 w-10 flex items-center justify-center border border-border/10 bg-foreground/5 text-foreground/80 hover:text-foreground hover:bg-foreground/10 transition-colors"
               >
                 <SettingsIcon className="h-5 w-5" />
               </button>
-              <ThemeToggle className="bg-white/5 hover:bg-white/10" />
+              <ThemeToggle className="bg-foreground/5 hover:bg-foreground/10" />
             </div>
           </div>
 
@@ -271,11 +271,11 @@ export default function DigitalClock() {
           >
             {/* Glassmorphic Clock Panel */}
             <motion.div
-              className={`relative overflow-hidden rounded-3xl border border-white/10 ${currentTheme.colors.secondary} backdrop-blur-xl shadow-[0_24px_48px_rgba(0,0,0,0.35)]`}
+              className={`relative overflow-hidden rounded-3xl border border-border/10 ${currentTheme.colors.secondary} backdrop-blur-xl shadow-[0_24px_48px_rgba(0,0,0,0.35)]`}
             >
-              <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/10 to-transparent" />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-foreground/12 to-transparent" />
               <div className="relative px-8 py-6 sm:px-10 sm:py-7">
-                <div className="mb-4 text-center text-sm font-medium text-white/70 uppercase tracking-[0.28em]" suppressHydrationWarning>
+                <div className="mb-4 text-center text-sm font-medium text-foreground/70 uppercase tracking-[0.28em]" suppressHydrationWarning>
                   {formatDate(currentTime)}
                 </div>
                 <div className="flex items-center justify-center gap-1 sm:gap-2" suppressHydrationWarning>
@@ -283,7 +283,7 @@ export default function DigitalClock() {
                     {timeDigits.map((digit, index) => (
                       <motion.span
                         key={`${digit}-${index}-${currentTimeString}`}
-                        className="text-[clamp(3.5rem,8vw,5.5rem)] font-mono font-bold tracking-tight text-white leading-none"
+                        className="text-[clamp(3.5rem,8vw,5.5rem)] font-mono font-bold tracking-tight text-foreground leading-none"
                         layout
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -300,7 +300,7 @@ export default function DigitalClock() {
                   </AnimatePresence>
                   {period && (
                     <motion.span
-                      className="ml-2 text-[clamp(1.2rem,3vw,2rem)] font-semibold text-white/80"
+                      className="ml-2 text-[clamp(1.2rem,3vw,2rem)] font-semibold text-foreground/80"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.3 }}
@@ -313,7 +313,7 @@ export default function DigitalClock() {
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={currentTime.getSeconds()}
-                      className="mt-2 text-center text-white/60 text-lg font-mono"
+                      className="mt-2 text-center text-foreground/60 text-lg font-mono"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
@@ -333,11 +333,11 @@ export default function DigitalClock() {
               <DynamicTodoWidget />
               {weatherData && (
                 <motion.div
-                  className={`rounded-2xl border border-white/10 ${currentTheme.colors.secondary} p-5 relative overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.35)]`}
+                  className={`rounded-2xl border border-border/10 ${currentTheme.colors.secondary} p-5 relative overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.35)]`}
                 >
-                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/5 to-transparent" />
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-foreground/8 to-transparent" />
                   <div className="relative z-10">
-                    <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-white/50">Focus for today</h3>
+                    <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/50">Focus for today</h3>
                     <WeatherSuggestion {...weatherData} />
                   </div>
                 </motion.div>
@@ -349,15 +349,15 @@ export default function DigitalClock() {
 
             <div className="flex flex-col gap-5">
               <motion.div
-                className={`rounded-2xl border border-white/10 ${currentTheme.colors.secondary} p-4 sm:p-5 relative overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.35)]`}
+                className={`rounded-2xl border border-border/10 ${currentTheme.colors.secondary} p-4 sm:p-5 relative overflow-hidden shadow-[0_16px_40px_rgba(0,0,0,0.35)]`}
               >
-                <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/5 to-transparent" />
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-foreground/8 to-transparent" />
                 <div className="relative z-10">
                   <div className="mb-4 flex items-center justify-between">
-                    <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white/50">World Clocks</h3>
+                    <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground/50">World Clocks</h3>
                     <button
                       onClick={() => setIsAddTimeZoneOpen(true)}
-                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/70 transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white"
+                      className="rounded-full border border-border/10 bg-foreground/5 px-3 py-1 text-xs font-medium text-foreground/70 transition-colors hover:border-border/20 hover:bg-foreground/10 hover:text-foreground"
                     >
                       Add
                     </button>
@@ -388,7 +388,7 @@ export default function DigitalClock() {
               <div className="grid grid-cols-1 gap-3">
                 <button
                   onClick={() => { startTransition(() => setIsAlarmOpen(true)) }}
-                  className={`group relative overflow-hidden rounded-xl border border-white/10 ${currentTheme.colors.secondary} px-6 py-3 text-sm font-medium text-cyber-text-primary backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white`}
+                  className={`group relative overflow-hidden rounded-xl border border-border/10 ${currentTheme.colors.secondary} px-6 py-3 text-sm font-medium text-cyber-text-primary backdrop-blur-sm transition-colors hover:border-border/20 hover:bg-foreground/10 hover:text-foreground`}
                 >
                   <span className="relative z-10">Set Alarm</span>
                   <span className="absolute inset-0 pointer-events-none bg-gradient-to-r from-cyber-accent/20 to-cyber-secondary-accent/20 opacity-0 transition-opacity group-hover:opacity-100" />
@@ -402,7 +402,7 @@ export default function DigitalClock() {
 
       {/* Calendar Dialog */}
       <Dialog open={isCalendarOpen} onOpenChange={(open) => startTransition(() => setIsCalendarOpen(open))}>
-        <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-white/10`}>
+        <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-border/10`}>
           <DialogHeader>
             <DialogTitle>Calendar</DialogTitle>
             <DialogDescription>Select a date to view or set reminders</DialogDescription>
@@ -416,14 +416,14 @@ export default function DigitalClock() {
                 setIsCalendarOpen(false)
               }
             }}
-            className="rounded-md border border-gray-200 dark:border-white/10 bg-white/80 dark:bg-gray-900/50 text-gray-900 dark:text-white [&_button:hover]:bg-white/10 dark:[&_button:hover]:bg-white/5 [&_button]:text-gray-900 dark:[&_button]:text-white [&_.rdp-day_button:hover]:bg-white/10 dark:[&_.rdp-day_button:hover]:bg-white/5 [&_.rdp-day_button]:text-gray-900 dark:[&_.rdp-day_button]:text-white [&_.rdp-nav_button]:text-gray-900 dark:[&_.rdp-nav_button]:text-white [&_.rdp-head_cell]:text-gray-900 dark:[&_.rdp-head_cell]:text-white/60"
+            className="rounded-md border border-gray-200 dark:border-border/10 bg-foreground/80 dark:bg-gray-900/50 text-gray-900 dark:text-foreground [&_button:hover]:bg-foreground/10 dark:[&_button:hover]:bg-foreground/5 [&_button]:text-gray-900 dark:[&_button]:text-foreground [&_.rdp-day_button:hover]:bg-foreground/10 dark:[&_.rdp-day_button:hover]:bg-foreground/5 [&_.rdp-day_button]:text-gray-900 dark:[&_.rdp-day_button]:text-foreground [&_.rdp-nav_button]:text-gray-900 dark:[&_.rdp-nav_button]:text-foreground [&_.rdp-head_cell]:text-gray-900 dark:[&_.rdp-head_cell]:text-foreground/60"
           />
         </DialogContent>
       </Dialog>
 
       {/* Other Dialogs */}
       <Dialog open={isAlarmOpen} onOpenChange={(open) => startTransition(() => setIsAlarmOpen(open))}>
-        <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-white/10`}>
+        <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-border/10`}>
           <DialogHeader>
             <DialogTitle>Set Alarm</DialogTitle>
           </DialogHeader>
@@ -432,7 +432,7 @@ export default function DigitalClock() {
       </Dialog>
 
       <Dialog open={isAddTimeZoneOpen} onOpenChange={(open) => startTransition(() => setIsAddTimeZoneOpen(open))}>
-        <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-white/10`}>
+        <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-border/10`}>
           <DialogHeader>
             <DialogTitle>Add Time Zone</DialogTitle>
           </DialogHeader>
@@ -441,7 +441,7 @@ export default function DigitalClock() {
       </Dialog>
 
       <Dialog open={isSettingsOpen} onOpenChange={(open) => startTransition(() => setIsSettingsOpen(open))}>
-        <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-white/10`}>
+        <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-border/10`}>
           <DialogHeader>
             <DialogTitle>Settings</DialogTitle>
           </DialogHeader>
@@ -449,15 +449,15 @@ export default function DigitalClock() {
               <div className="space-y-2">
                 <Label htmlFor="font-choice">Font</Label>
                 <Select value={selectedFont} onValueChange={(value) => setFont(value as AppFont)}>
-                  <SelectTrigger id="font-choice" className="w-full border-white/15 bg-white/5 text-left text-white/80">
+                  <SelectTrigger id="font-choice" className="w-full border-border/15 bg-foreground/5 text-left text-foreground/80">
                     <SelectValue placeholder="Choose a font" />
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-900/95 backdrop-blur border border-white/10">
+                  <SelectContent className="bg-gray-900/95 backdrop-blur border border-border/10">
                     {FONT_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="text-white/80">
+                      <SelectItem key={option.value} value={option.value} className="text-foreground/80">
                         <div className="flex flex-col">
                           <span className="text-sm font-medium">{option.label}</span>
-                          <span className="text-xs text-white/50">{option.description}</span>
+                          <span className="text-xs text-foreground/50">{option.description}</span>
                         </div>
                       </SelectItem>
                     ))}
@@ -467,12 +467,12 @@ export default function DigitalClock() {
               <div className="space-y-2">
                 <Label htmlFor="temperature-units">Temperature Units</Label>
                 <Select value={temperatureUnits} onValueChange={(value) => setWeatherUnits(value as 'metric' | 'imperial')}>
-                  <SelectTrigger id="temperature-units" className="w-full border-white/15 bg-white/5 text-left text-white/80">
+                  <SelectTrigger id="temperature-units" className="w-full border-border/15 bg-foreground/5 text-left text-foreground/80">
                     <SelectValue placeholder="Choose units" />
                   </SelectTrigger>
-                  <SelectContent className="bg-gray-900/95 backdrop-blur border border-white/10">
+                  <SelectContent className="bg-gray-900/95 backdrop-blur border border-border/10">
                     {TEMPERATURE_UNIT_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value} className="text-white/80">
+                      <SelectItem key={option.value} value={option.value} className="text-foreground/80">
                         {option.label}
                       </SelectItem>
                     ))}
@@ -493,7 +493,7 @@ export default function DigitalClock() {
 
       {activeAlarm && (
         <Dialog open={!!activeAlarm} onOpenChange={() => {}}>
-          <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-white/10`}>
+          <DialogContent className={`bg-gradient-to-b ${currentTheme.colors.primary} backdrop-blur-xl text-cyber-text-primary border-border/10`}>
             <DialogHeader>
               <DialogTitle>Alarm</DialogTitle>
             </DialogHeader>
@@ -501,7 +501,7 @@ export default function DigitalClock() {
               <p className="text-2xl font-bold text-center">{activeAlarm.label || "Alarm"}</p>
               <p className="text-xl text-center">{activeAlarm.time}</p>
               <div className="flex justify-center">
-                <Button onClick={stopAlarm} className="bg-red-500 hover:bg-red-600 text-gray-900 dark:text-white">
+                <Button onClick={stopAlarm} className="bg-red-500 hover:bg-red-600 text-gray-900 dark:text-foreground">
                   Stop Alarm
                 </Button>
               </div>

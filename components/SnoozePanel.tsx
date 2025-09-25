@@ -30,19 +30,19 @@ export default function SnoozePanel({ alarm, onStop, onSnooze }: SnoozePanelProp
         {/* Content */}
         <div className="relative p-8 space-y-6">
           <div className="text-center space-y-2">
-            <h2 className="text-3xl font-semibold text-white">Time to Wake Up!</h2>
-            {alarm?.label && <p className="text-lg text-white/70">{alarm.label}</p>}
+            <h2 className="text-3xl font-semibold text-foreground">Time to Wake Up!</h2>
+            {alarm?.label && <p className="text-lg text-foreground/70">{alarm.label}</p>}
           </div>
 
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-white/80">
+            <label className="block text-sm font-medium text-foreground/80">
               Snooze Duration
             </label>
             <Select value={String(snoozeDuration)} onValueChange={(value) => setSnoozeDuration(Number(value))}>
-              <SelectTrigger className="w-full bg-white/5 border-white/10 text-white">
+              <SelectTrigger className="w-full bg-foreground/5 border-border/10 text-foreground">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-gray-900 border-white/10">
+              <SelectContent className="bg-gray-900 border-border/10">
                 <SelectItem value="5">5 minutes</SelectItem>
                 <SelectItem value="10">10 minutes</SelectItem>
                 <SelectItem value="15">15 minutes</SelectItem>
@@ -80,7 +80,7 @@ export default function SnoozePanel({ alarm, onStop, onSnooze }: SnoozePanelProp
         </div>
 
         {/* Subtle inner border */}
-        <div className="absolute inset-0 rounded-[2rem] border border-white/10 pointer-events-none" />
+        <div className="absolute inset-0 rounded-[2rem] border border-border/10 pointer-events-none" />
       </div>
     </div>
   )

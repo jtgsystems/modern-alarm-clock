@@ -105,22 +105,22 @@ export default function UpcomingAlarmsWidget({ alarms }: UpcomingAlarmsWidgetPro
       "fixed bottom-4 right-4",
       "w-64 rounded-lg shadow-lg",
       "bg-gray-900/95 backdrop-blur-xl",
-      "border border-white/10",
+      "border border-border/10",
       "transition-all duration-300",
       isMinimized && "w-auto"
     )}>
-      <div className="flex items-center justify-between p-3 border-b border-white/10">
+      <div className="flex items-center justify-between p-3 border-b border-border/10">
         <div className="flex items-center gap-2">
-          <Bell className="h-4 w-4 text-white/70" />
-          <span className="text-sm font-medium text-white/90">
+          <Bell className="h-4 w-4 text-foreground/70" />
+          <span className="text-sm font-medium text-foreground/90">
             Next Alarms
-            <span className="ml-2 text-xs text-white/50">Alt+A to toggle</span>
+            <span className="ml-2 text-xs text-foreground/50">Alt+A to toggle</span>
           </span>
         </div>
         <div className="flex items-center gap-1">
           <button
             onClick={() => setIsMinimized(!isMinimized)}
-            className="p-1 rounded-md text-white/50 hover:text-white/90 hover:bg-white/5"
+            className="p-1 rounded-md text-foreground/50 hover:text-foreground/90 hover:bg-foreground/5"
             title={isMinimized ? "Maximize (Alt+M)" : "Minimize (Alt+M)"}
           >
             {isMinimized ? (
@@ -131,7 +131,7 @@ export default function UpcomingAlarmsWidget({ alarms }: UpcomingAlarmsWidgetPro
           </button>
           <button
             onClick={() => setIsHidden(true)}
-            className="p-1 rounded-md text-white/50 hover:text-white/90 hover:bg-white/5"
+            className="p-1 rounded-md text-foreground/50 hover:text-foreground/90 hover:bg-foreground/5"
             title="Close (Alt+A)"
           >
             <X className="h-3.5 w-3.5" />
@@ -144,15 +144,15 @@ export default function UpcomingAlarmsWidget({ alarms }: UpcomingAlarmsWidgetPro
           {sortedAlarms.map((alarm) => (
             <div
               key={alarm.id}
-              className="flex items-center justify-between p-2 rounded-md hover:bg-white/5 transition-colors"
+              className="flex items-center justify-between p-2 rounded-md hover:bg-foreground/5 transition-colors"
             >
               <div className="min-w-0">
-                <p className="text-sm font-medium text-white/80 truncate">
+                <p className="text-sm font-medium text-foreground/80 truncate">
                   {alarm.label || "Alarm"}
                 </p>
-                <p className="text-xs text-white/50">{alarm.time}</p>
+                <p className="text-xs text-foreground/50">{alarm.time}</p>
               </div>
-              <span className="text-xs font-medium text-white/70 tabular-nums">
+              <span className="text-xs font-medium text-foreground/70 tabular-nums">
                 {getTimeUntil(alarm)}
               </span>
             </div>

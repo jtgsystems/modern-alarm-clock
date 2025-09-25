@@ -50,7 +50,7 @@ export default function AlarmForm({ addAlarm }: AlarmFormProps) {
   return (
     <form onSubmit={handleSubmit} className="mb-6" aria-label="Set alarm">
       <div className="mb-4">
-        <label htmlFor="alarm-time" className="block text-lg dark:text-white">
+        <label htmlFor="alarm-time" className="block text-lg dark:text-foreground">
           Set Alarm Time
         </label>
         <input
@@ -59,12 +59,12 @@ export default function AlarmForm({ addAlarm }: AlarmFormProps) {
           value={time}
           onChange={(e) => setTime((e.target as HTMLInputElement).value)}
           required
-          className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-foreground"
         />
       </div>
 
       <div className="mb-4">
-        <label htmlFor="alarm-label" className="block text-lg dark:text-white">
+        <label htmlFor="alarm-label" className="block text-lg dark:text-foreground">
           Alarm Label (Optional)
         </label>
         <input
@@ -74,12 +74,12 @@ export default function AlarmForm({ addAlarm }: AlarmFormProps) {
           onChange={(e) => setLabel((e.target as HTMLInputElement).value)}
           placeholder="e.g., Morning Meeting"
           maxLength={30}
-          className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-foreground"
         />
       </div>
 
       <div className="mb-4">
-        <label className="block text-lg dark:text-white">Repeat</label>
+        <label className="block text-lg dark:text-foreground">Repeat</label>
         <div className="repeat-options flex gap-2" role="group" aria-label="Repeat alarm on">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <button
@@ -88,7 +88,7 @@ export default function AlarmForm({ addAlarm }: AlarmFormProps) {
               onClick={() => toggleRepeatDay(day)}
               className={`p-2 rounded-full ${
                 repeatDays.includes(day)
-                  ? "bg-blue-600 text-white"
+                  ? "bg-blue-600 text-foreground"
                   : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300"
               }`}
             >
@@ -99,14 +99,14 @@ export default function AlarmForm({ addAlarm }: AlarmFormProps) {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="alarm-sound" className="block text-lg dark:text-white">
+        <label htmlFor="alarm-sound" className="block text-lg dark:text-foreground">
           Alarm Sound
         </label>
         <select
           id="alarm-sound"
           value={sound}
           onChange={(e) => setSound((e.target as HTMLSelectElement).value as AlarmSound)}
-          className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          className="w-full p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-foreground"
         >
           <option value="classic">Classic Bell</option>
           <option value="digital">Digital Beep</option>
@@ -116,7 +116,7 @@ export default function AlarmForm({ addAlarm }: AlarmFormProps) {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="alarm-volume" className="block text-lg dark:text-white">
+        <label htmlFor="alarm-volume" className="block text-lg dark:text-foreground">
           Alarm Volume
         </label>
         <input
@@ -130,7 +130,7 @@ export default function AlarmForm({ addAlarm }: AlarmFormProps) {
         />
       </div>
 
-      <button type="submit" className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+      <button type="submit" className="w-full p-3 bg-blue-600 text-foreground rounded-lg hover:bg-blue-700 transition">
         Set Alarm
       </button>
     </form>

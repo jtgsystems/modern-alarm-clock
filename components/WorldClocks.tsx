@@ -87,7 +87,7 @@ export default function WorldClocks({ onAddTimeZone, className = '' }: WorldCloc
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05 }}
-            className="flex items-center justify-between p-2.5 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-200"
+            className="flex items-center justify-between p-2.5 rounded-lg bg-foreground/5 backdrop-blur-sm border border-border/10 hover:bg-foreground/10 transition-all duration-200"
           >
             <div className="flex items-center gap-2.5">
               <span className="text-base">{getCountryFlag(tz.countryCode)}</span>

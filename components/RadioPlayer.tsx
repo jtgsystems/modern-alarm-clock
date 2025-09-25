@@ -213,7 +213,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
       case 'connected': return 'text-green-400'
       case 'connecting': return 'text-yellow-400'
       case 'error': return 'text-red-400'
-      default: return 'text-white/50'
+      default: return 'text-foreground/50'
     }
   }
 
@@ -229,7 +229,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
   return (
     <motion.div
       className={cn(
-        "group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-xl px-4 py-4 shadow-[0_20px_60px_rgba(0,0,0,0.4)]",
+        "group relative overflow-hidden rounded-xl border border-border/10 bg-foreground/5 backdrop-blur-xl px-4 py-4 shadow-[0_20px_60px_rgba(0,0,0,0.4)]",
         className
       )}
     >
@@ -250,18 +250,18 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
           transition={{ delay: 0.1 }}
         >
           <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/10">
-              <Music2 className="h-5 w-5 text-white/70" aria-hidden="true" />
+            <div className="grid h-10 w-10 place-items-center rounded-xl border border-border/10 bg-foreground/10">
+              <Music2 className="h-5 w-5 text-foreground/70" aria-hidden="true" />
             </div>
             <div className="space-y-0.5">
-              <h3 className="text-sm font-semibold text-white/90 uppercase tracking-wide">Radio Player</h3>
-              <p className="text-xs text-white/50">
+              <h3 className="text-sm font-semibold text-foreground/90 uppercase tracking-wide">Radio Player</h3>
+              <p className="text-xs text-foreground/50">
                 {genreCount} genres · {stationCount} stations
               </p>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-xs text-white/50">Theme · {currentTheme.name}</div>
+            <div className="text-xs text-foreground/50">Theme · {currentTheme.name}</div>
             <div className={cn("text-xs font-medium", getStatusColor())}>{getStatusText()}</div>
           </div>
         </motion.div>
@@ -280,7 +280,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
           />
           <div className="relative z-10 flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <div className="text-xs uppercase tracking-[0.18em] text-white/60">Now Playing</div>
+              <div className="text-xs uppercase tracking-[0.18em] text-foreground/60">Now Playing</div>
               <button
                 type="button"
                 aria-label={isCurrentFavorite ? "Remove from favourites" : "Add to favourites"}
@@ -289,8 +289,8 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
                 className={cn(
                   "rounded-lg border px-3 py-1 text-xs font-medium transition",
                   isCurrentFavorite
-                    ? "border-white/30 bg-white/15 text-white"
-                    : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
+                    ? "border-border/30 bg-foreground/15 text-foreground"
+                    : "border-border/10 bg-foreground/5 text-foreground/70 hover:bg-foreground/10"
                 )}
               >
                 <span className="inline-flex items-center">
@@ -312,7 +312,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
                 } : {}}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                <Music2 className={cn("h-5 w-5", isPlaying ? "text-white" : "text-white/70")} style={isPlaying ? { color: currentTheme.colors.accent } : {}} />
+                <Music2 className={cn("h-5 w-5", isPlaying ? "text-foreground" : "text-foreground/70")} style={isPlaying ? { color: currentTheme.colors.accent } : {}} />
               </motion.div>
               <div className="flex-1 min-w-0">
                 <AnimatePresence mode="wait">
@@ -321,13 +321,13 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="truncate text-sm font-bold text-white/95 mb-0.5"
+                    className="truncate text-sm font-bold text-foreground/95 mb-0.5"
                   >
                     {currentStation.name}
                   </motion.h4>
                 </AnimatePresence>
                 <div className="flex items-center gap-3">
-                  <p className="text-xs text-white/70">{currentStation.genre}</p>
+                  <p className="text-xs text-foreground/70">{currentStation.genre}</p>
                   {connectionStatus === 'connected' && isPlaying && (
                     <motion.div
                       className="flex items-center gap-1"
@@ -350,13 +350,13 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
                     </motion.div>
                   )}
                 </div>
-                <div className="text-[11px] uppercase tracking-[0.18em] text-white/40 mt-1">{getStatusText()}</div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-foreground/40 mt-1">{getStatusText()}</div>
               </div>
               {isLoading && (
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="h-6 w-6 rounded-full border-2 border-white/20"
+                  className="h-6 w-6 rounded-full border-2 border-border/20"
                   style={{ borderTopColor: currentTheme.colors.accent }}
                 />
               )}
@@ -385,7 +385,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
               aria-pressed={isShuffle}
               className={cn(
                 "group relative overflow-hidden h-10 w-10 rounded-xl border px-0 py-0 flex items-center justify-center backdrop-blur-sm transition-colors duration-200",
-                isShuffle ? "text-white" : "text-white/60"
+                isShuffle ? "text-foreground" : "text-foreground/60"
               )}
               style={{
                 borderColor: isShuffle ? `${currentTheme.colors.accent}60` : 'rgba(255, 255, 255, 0.1)',
@@ -405,7 +405,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
             <motion.button
               onClick={() => stepStation(-1)}
               aria-label="Previous station"
-              className="group relative overflow-hidden h-12 w-12 rounded-xl border border-white/15 bg-white/5 text-white/70 flex items-center justify-center backdrop-blur-sm transition-colors duration-200"
+              className="group relative overflow-hidden h-12 w-12 rounded-xl border border-border/15 bg-foreground/5 text-foreground/70 flex items-center justify-center backdrop-blur-sm transition-colors duration-200"
             >
               <span className="absolute inset-0 opacity-0 pointer-events-none bg-gradient-to-r from-blue-500/15 to-purple-500/15 transition-opacity duration-300 group-hover:opacity-100" />
               <SkipForward className="relative z-10 h-5 w-5 rotate-180" />
@@ -416,7 +416,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
           <motion.button
             onClick={togglePlay}
             aria-label={isPlaying ? "Pause" : "Play"}
-            className="group relative overflow-hidden h-16 w-16 rounded-xl text-white backdrop-blur-sm flex items-center justify-center transition-transform duration-200"
+            className="group relative overflow-hidden h-16 w-16 rounded-xl text-foreground backdrop-blur-sm flex items-center justify-center transition-transform duration-200"
             style={{
               background: isPlaying
                 ? `linear-gradient(135deg, ${currentTheme.colors.accent}, ${currentTheme.colors.accent}80)`
@@ -425,7 +425,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
               boxShadow: isPlaying ? `0 8px 32px ${currentTheme.colors.accent}40` : 'none'
             }}
           >
-            <span className="absolute inset-0 opacity-0 pointer-events-none bg-gradient-to-br from-white/10 to-transparent transition-opacity duration-300 group-hover:opacity-100" />
+            <span className="absolute inset-0 opacity-0 pointer-events-none bg-gradient-to-br from-foreground/12 to-transparent transition-opacity duration-300 group-hover:opacity-100" />
             <AnimatePresence mode="wait">
               <motion.div
                 key={isPlaying ? 'pause' : 'play'}
@@ -444,7 +444,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
             <motion.button
               onClick={() => stepStation(1)}
               aria-label="Next station"
-              className="group relative overflow-hidden h-12 w-12 rounded-xl border border-white/15 bg-white/5 text-white/70 flex items-center justify-center backdrop-blur-sm transition-colors duration-200"
+              className="group relative overflow-hidden h-12 w-12 rounded-xl border border-border/15 bg-foreground/5 text-foreground/70 flex items-center justify-center backdrop-blur-sm transition-colors duration-200"
             >
               <span className="absolute inset-0 opacity-0 pointer-events-none bg-gradient-to-r from-purple-500/15 to-blue-500/15 transition-opacity duration-300 group-hover:opacity-100" />
               <SkipForward className="relative z-10 h-5 w-5" />
@@ -455,7 +455,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
               aria-label="Toggle favourite"
               className={cn(
                 "group relative overflow-hidden h-10 w-10 rounded-xl border px-0 py-0 flex items-center justify-center backdrop-blur-sm transition-colors duration-200",
-                isCurrentFavorite ? "text-red-400" : "text-white/60"
+                isCurrentFavorite ? "text-red-400" : "text-foreground/60"
               )}
               style={{
                 borderColor: isCurrentFavorite ? 'rgba(239, 68, 68, 0.4)' : 'rgba(255, 255, 255, 0.1)',
@@ -482,10 +482,10 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <div className="flex items-center gap-4 text-white/70">
+          <div className="flex items-center gap-4 text-foreground/70">
             <Volume2 className="h-5 w-5" />
             <span className="text-sm font-medium uppercase tracking-wider">Volume</span>
-            <span className="ml-auto text-sm font-bold tabular-nums text-white/90">{Math.round(volume * 100)}%</span>
+            <span className="ml-auto text-sm font-bold tabular-nums text-foreground/90">{Math.round(volume * 100)}%</span>
           </div>
           <div className="relative">
             <Slider
@@ -521,11 +521,11 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
                     border: '1px solid rgba(255, 255, 255, 0.08)'
                   }}
                 >
-                  <AccordionTrigger className="px-5 py-4 text-left text-sm font-semibold text-white/80 transition-colors hover:text-white">
+                  <AccordionTrigger className="px-5 py-4 text-left text-sm font-semibold text-foreground/80 transition-colors hover:text-foreground">
                     <div className="flex items-center gap-3">
-                      <Music2 className="h-4 w-4 text-white/60" />
+                      <Music2 className="h-4 w-4 text-foreground/60" />
                       <span>{genre}</span>
-                      <span className="text-xs text-white/50 bg-white/10 px-2 py-1 rounded-full">
+                      <span className="text-xs text-foreground/50 bg-foreground/10 px-2 py-1 rounded-full">
                         {stations.length}
                       </span>
                     </div>
@@ -540,7 +540,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
                             key={station.id}
                             className={cn(
                               "flex items-center gap-2 rounded-xl border px-3 py-2 transition-all duration-200 cursor-pointer",
-                              isActive ? "text-white" : "text-white/70 hover:text-white hover:border-white/15 hover:bg-white/5"
+                              isActive ? "text-foreground" : "text-foreground/70 hover:text-foreground hover:border-border/15 hover:bg-foreground/5"
                             )}
                             style={{
                               background: isActive
@@ -555,7 +555,7 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
                               className="flex-1 text-left"
                             >
                               <div className="text-sm font-semibold truncate">{station.name}</div>
-                              <div className="text-xs text-white/50">{station.genre}</div>
+                              <div className="text-xs text-foreground/50">{station.genre}</div>
                             </button>
                             <button
                               type="button"
@@ -568,8 +568,8 @@ export default function RadioPlayer({ className }: RadioPlayerProps) {
                               className={cn(
                                 "rounded-lg border p-2 transition",
                                 isFav
-                                  ? "border-white/30 bg-white/15 text-white"
-                                  : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
+                                  ? "border-border/30 bg-foreground/15 text-foreground"
+                                  : "border-border/10 bg-foreground/5 text-foreground/70 hover:bg-foreground/10"
                               )}
                             >
                               <Heart

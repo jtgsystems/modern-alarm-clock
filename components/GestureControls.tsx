@@ -88,16 +88,16 @@ export default function GestureControls({
           transition={{ duration: 0.2 }}
         >
           <motion.div
-            className="rounded-full bg-white/20 backdrop-blur-sm p-4 shadow-lg"
+            className="rounded-full bg-foreground/20 backdrop-blur-sm p-4 shadow-lg"
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 0.3 }}
           >
-            {activeGesture === 'swipe-left' && <ArrowLeft className="h-8 w-8 text-white" />}
-            {activeGesture === 'swipe-right' && <ArrowRight className="h-8 w-8 text-white" />}
-            {activeGesture === 'swipe-up' && <ArrowUp className="h-8 w-8 text-white" />}
-            {activeGesture === 'swipe-down' && <ArrowDown className="h-8 w-8 text-white" />}
-            {activeGesture === 'double-tap' && <Smartphone className="h-8 w-8 text-white" />}
-            {activeGesture === 'long-press' && <Hand className="h-8 w-8 text-white" />}
+            {activeGesture === 'swipe-left' && <ArrowLeft className="h-8 w-8 text-foreground" />}
+            {activeGesture === 'swipe-right' && <ArrowRight className="h-8 w-8 text-foreground" />}
+            {activeGesture === 'swipe-up' && <ArrowUp className="h-8 w-8 text-foreground" />}
+            {activeGesture === 'swipe-down' && <ArrowDown className="h-8 w-8 text-foreground" />}
+            {activeGesture === 'double-tap' && <Smartphone className="h-8 w-8 text-foreground" />}
+            {activeGesture === 'long-press' && <Hand className="h-8 w-8 text-foreground" />}
           </motion.div>
         </motion.div>
       )}
@@ -111,12 +111,12 @@ export default function GestureControls({
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm p-3">
+          <div className="rounded-xl border border-border/20 bg-foreground/10 backdrop-blur-sm p-3">
             <div className="mb-2 flex items-center gap-2">
-              <Hand className="h-4 w-4 text-white/70" />
-              <span className="text-xs font-medium text-white/70">Gesture Controls</span>
+              <Hand className="h-4 w-4 text-foreground/70" />
+              <span className="text-xs font-medium text-foreground/70">Gesture Controls</span>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-xs text-white/60">
+            <div className="grid grid-cols-2 gap-2 text-xs text-foreground/60">
               {onSwipeLeft && (
                 <div className="flex items-center gap-1">
                   <ArrowLeft className="h-3 w-3" />
@@ -155,7 +155,7 @@ export default function GestureControls({
               )}
             </div>
             <motion.button
-              className="mt-2 text-xs text-white/50 hover:text-white/70"
+              className="mt-2 text-xs text-foreground/50 hover:text-foreground/70"
               onClick={() => setShowGestureHints(false)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -169,7 +169,7 @@ export default function GestureControls({
       {/* Toggle Hints Button */}
       {!showGestureHints && (
         <motion.button
-          className="absolute bottom-4 right-4 z-40 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm p-2 text-white/60 transition-colors hover:text-white/80"
+          className="absolute bottom-4 right-4 z-40 rounded-full border border-border/20 bg-foreground/10 backdrop-blur-sm p-2 text-foreground/60 transition-colors hover:text-foreground/80"
           onClick={() => setShowGestureHints(true)}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}

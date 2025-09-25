@@ -38,7 +38,7 @@ export default function SettingsPanel({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 max-w-md w-full"
+            className="bg-foreground/10 backdrop-blur-md border border-border/20 rounded-2xl p-6 max-w-md w-full"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -48,7 +48,7 @@ export default function SettingsPanel({
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="h-8 w-8 rounded-full hover:bg-white/20"
+                className="h-8 w-8 rounded-full hover:bg-foreground/20"
               >
                 <X size={16} />
               </Button>
@@ -99,12 +99,12 @@ function SettingRow({ label, value, onToggle }: SettingRowProps) {
         className={`relative w-12 h-6 rounded-full border transition-all duration-200 ${
           value
             ? 'bg-blue-500 border-blue-400'
-            : 'bg-white/10 border-white/20'
+            : 'bg-foreground/10 border-border/20'
         }`}
         whileTap={{ scale: 0.95 }}
       >
         <motion.div
-          className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-lg transition-transform duration-200 ${
+          className={`absolute top-0.5 w-5 h-5 rounded-full bg-background shadow-lg transition-transform duration-200 ${
             value ? 'translate-x-6' : 'translate-x-0.5'
           }`}
           layout

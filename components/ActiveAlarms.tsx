@@ -20,14 +20,14 @@ export default function ActiveAlarms({ alarms, removeAlarm, className, ...props 
   if (alarms.length === 0) {
     return (
       <div className="p-8 text-center">
-        <p className="text-white/60">No active alarms</p>
+        <p className="text-foreground/60">No active alarms</p>
       </div>
     )
   }
 
   return (
     <section className={cn("space-y-3", className)} aria-live="polite" {...props}>
-      <h2 className="text-lg font-medium text-white/90">Active Alarms</h2>
+      <h2 className="text-lg font-medium text-foreground/90">Active Alarms</h2>
       <ul className="space-y-2" role="list">
         {alarms.map((alarm) => (
           <li
@@ -42,16 +42,16 @@ export default function ActiveAlarms({ alarms, removeAlarm, className, ...props 
           >
             <div className="flex items-center justify-between">
               <div className="space-y-1">
-                <p className="font-mono text-lg text-white/90">{alarm.time}</p>
+                <p className="font-mono text-lg text-foreground/90">{alarm.time}</p>
                 {alarm.label && (
-                  <p className="text-sm text-white/60">{alarm.label}</p>
+                  <p className="text-sm text-foreground/60">{alarm.label}</p>
                 )}
               </div>
               <Button
                 onClick={() => removeAlarm(alarm.id)}
                 size="icon"
                 variant="ghost"
-                className="h-8 w-8 rounded-full text-white/60 hover:text-white hover:bg-red-500/20"
+                className="h-8 w-8 rounded-full text-foreground/60 hover:text-foreground hover:bg-red-500/20"
               >
                 <Trash2 className="h-4 w-4" />
                 <span className="sr-only">Remove alarm</span>

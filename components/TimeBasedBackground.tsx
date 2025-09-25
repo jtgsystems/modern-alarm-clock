@@ -17,7 +17,7 @@ export default function TimeBasedBackground() {
           {Array.from({ length: 20 }).map((_, i) => (
             <motion.div
               key={`star-${i}`}
-              className="absolute h-1 w-1 rounded-full bg-white/40"
+              className="absolute h-1 w-1 rounded-full bg-foreground/40"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 60}%`,
@@ -98,7 +98,7 @@ export default function TimeBasedBackground() {
           {Array.from({ length: 4 }).map((_, i) => (
             <motion.div
               key={`cloud-${i}`}
-              className="absolute rounded-full bg-white/10"
+              className="absolute rounded-full bg-foreground/10"
               style={{
                 width: `${60 + Math.random() * 40}px`,
                 height: `${30 + Math.random() * 20}px`,
@@ -183,7 +183,7 @@ export default function TimeBasedBackground() {
       {Array.from({ length: 15 }).map((_, i) => (
         <motion.div
           key={`particle-${i}`}
-          className="absolute h-0.5 w-0.5 rounded-full bg-white/20"
+          className="absolute h-0.5 w-0.5 rounded-full bg-foreground/20"
           style={{
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
@@ -202,13 +202,13 @@ export default function TimeBasedBackground() {
 
       {/* Time of day indicator */}
       <motion.div
-        className="absolute top-4 left-4 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-3 py-1"
+        className="absolute top-4 left-4 rounded-full border border-border/20 bg-foreground/10 backdrop-blur-sm px-3 py-1"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <span className="text-xs font-medium text-white/80">{timeOfDay}</span>
-        <span className="ml-2 text-xs text-white/60">{currentTheme.name}</span>
+        <span className="text-xs font-medium text-foreground/80">{timeOfDay}</span>
+        <span className="ml-2 text-xs text-foreground/60">{currentTheme.name}</span>
       </motion.div>
     </div>
   )

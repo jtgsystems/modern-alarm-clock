@@ -102,28 +102,28 @@ function AlarmCard({ alarm, viewMode, onEdit, onDelete }: AlarmCardProps) {
             {alarm.isRecurring ? (
               <BellRing className="h-4 w-4 text-purple-400/90" />
             ) : (
-              <Bell className="h-4 w-4 text-white/60" />
+              <Bell className="h-4 w-4 text-foreground/60" />
             )}
           </div>
           
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2">
-              <p className="font-mono text-base text-white/90">{alarm.time}</p>
+              <p className="font-mono text-base text-foreground/90">{alarm.time}</p>
               {timeStatus === "soon" && (
                 <Badge variant="destructive" className="animate-pulse">Soon</Badge>
               )}
               {timeStatus === "past" && (
-                <Badge variant="secondary" className="bg-white/5">Past</Badge>
+                <Badge variant="secondary" className="bg-foreground/5">Past</Badge>
               )}
             </div>
             
             {alarm.label && (
-              <p className="text-sm text-white/60 truncate">{alarm.label}</p>
+              <p className="text-sm text-foreground/60 truncate">{alarm.label}</p>
             )}
             
             {alarm.reminderDate && (
               <div className="flex items-center gap-2">
-                <p className="text-xs text-white/40">
+                <p className="text-xs text-foreground/40">
                   {new Date(alarm.reminderDate).toLocaleDateString(undefined, {
                     weekday: 'short',
                     month: 'short',
@@ -151,7 +151,7 @@ function AlarmCard({ alarm, viewMode, onEdit, onDelete }: AlarmCardProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 rounded-full hover:bg-white/10"
+              className="h-7 w-7 rounded-full hover:bg-foreground/10"
               onClick={() => onEdit?.(alarm)}
             >
               <Pencil className="h-3.5 w-3.5" />
@@ -171,7 +171,7 @@ function AlarmCard({ alarm, viewMode, onEdit, onDelete }: AlarmCardProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7 rounded-full hover:bg-white/10"
+                  className="h-7 w-7 rounded-full hover:bg-foreground/10"
                 >
                   <MoreVertical className="h-3.5 w-3.5" />
                   <span className="sr-only">More options</span>
@@ -179,7 +179,7 @@ function AlarmCard({ alarm, viewMode, onEdit, onDelete }: AlarmCardProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="w-48 bg-gray-900/95 border-white/10"
+                className="w-48 bg-gray-900/95 border-border/10"
               >
                 <DropdownMenuItem onClick={() => onEdit?.(alarm)}>
                   <Pencil className="h-4 w-4 mr-2" />
@@ -211,11 +211,11 @@ function AlarmCard({ alarm, viewMode, onEdit, onDelete }: AlarmCardProps) {
 function EmptyState({ filterType }: { filterType: FilterType }) {
   return (
     <div className="text-center py-8 px-4">
-      <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/5 mb-4">
-        <AlarmClockOff className="h-6 w-6 text-white/40" />
+      <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-foreground/5 mb-4">
+        <AlarmClockOff className="h-6 w-6 text-foreground/40" />
       </div>
-      <h3 className="text-base font-medium text-white/80 mb-2">No alarms found</h3>
-      <p className="text-sm text-white/50">
+      <h3 className="text-base font-medium text-foreground/80 mb-2">No alarms found</h3>
+      <p className="text-sm text-foreground/50">
         {filterType === "all" 
           ? "Create an alarm to get started"
           : `No alarms match your "${filterType}" filter`}
@@ -423,17 +423,17 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
         ref={(el) => { groupRefs.current[groupKey] = el }}
         className={cn(
           "space-y-2 transition-colors duration-300",
-          focusedGroup === groupKey && "bg-white/5 -mx-2 px-2 rounded-lg"
+          focusedGroup === groupKey && "bg-foreground/5 -mx-2 px-2 rounded-lg"
         )}
       >
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-medium text-white/60 flex items-center gap-2">
+          <h3 className="text-sm font-medium text-foreground/60 flex items-center gap-2">
             {title}
-            <span className="text-xs text-white/40">({alarms.length})</span>
+            <span className="text-xs text-foreground/40">({alarms.length})</span>
           </h3>
           {groupKey !== "recurring" && (
-            <span className="text-xs text-white/40">
-              <kbd className="px-1.5 py-0.5 bg-white/5 rounded">Alt + {
+            <span className="text-xs text-foreground/40">
+              <kbd className="px-1.5 py-0.5 bg-foreground/5 rounded">Alt + {
                 { today: "1", tomorrow: "2", thisWeek: "3", later: "4", recurring: "5" }[groupKey]
               }</kbd>
             </span>
@@ -453,7 +453,7 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
         "backdrop-blur-sm",
         "transition-all duration-300 ease-in-out",
         viewMode === "grouped" ? "bg-gray-900/20" : "bg-transparent",
-        "border border-white/5"
+        "border border-border/5"
       )}>
         <div className="p-4 space-y-4">
           <div className="flex items-center justify-between">
@@ -467,19 +467,19 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                     placeholder="Search alarms..."
                     className={cn(
                       "pl-9 pr-8",
-                      "bg-white/5 border-white/10",
-                      "text-white placeholder:text-white/50",
-                      "focus:border-white/20 focus:ring-0",
+                      "bg-foreground/5 border-border/10",
+                      "text-foreground placeholder:text-foreground/50",
+                      "focus:border-border/20 focus:ring-0",
                       "h-9 rounded-lg"
                     )}
                     autoFocus
                   />
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/50" />
                   {searchTerm && (
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute right-1.5 top-1/2 -translate-y-1/2 h-6 w-6 hover:bg-white/10"
+                      className="absolute right-1.5 top-1/2 -translate-y-1/2 h-6 w-6 hover:bg-foreground/10"
                       onClick={() => setSearchTerm("")}
                     >
                       <X className="h-3 w-3" />
@@ -487,10 +487,10 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                   )}
                 </div>
               ) : (
-                <h2 className="text-lg font-medium text-white/90">Upcoming Alarms</h2>
+                <h2 className="text-lg font-medium text-foreground/90">Upcoming Alarms</h2>
               )}
               {!isSearching && filterType !== "all" && (
-                <span className="text-xs bg-white/10 text-white/80 px-2 py-1 rounded animate-in fade-in-50 duration-300">
+                <span className="text-xs bg-foreground/10 text-foreground/80 px-2 py-1 rounded animate-in fade-in-50 duration-300">
                   {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
                 </span>
               )}
@@ -504,12 +504,12 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                       variant="ghost"
                       size="icon"
                       onClick={() => setIsSearching(true)}
-                      className="hover:bg-white/10"
+                      className="hover:bg-foreground/10"
                     >
                       <Search className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom" className="bg-gray-900/95 border-white/10">
+                  <TooltipContent side="bottom" className="bg-gray-900/95 border-border/10">
                     <p>Search alarms (Ctrl/⌘ + F)</p>
                   </TooltipContent>
                 </Tooltip>
@@ -522,7 +522,7 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="hover:bg-white/10"
+                        className="hover:bg-foreground/10"
                       >
                         {viewMode === "grouped" ? (
                           <LayoutGrid className="h-4 w-4" />
@@ -535,18 +535,18 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       align="end"
-                      className="w-48 bg-gray-900/95 border-white/10"
+                      className="w-48 bg-gray-900/95 border-border/10"
                     >
                       <DropdownMenuRadioGroup value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)}>
-                        <DropdownMenuRadioItem value="grouped" className="text-white/70 flex items-center gap-2">
+                        <DropdownMenuRadioItem value="grouped" className="text-foreground/70 flex items-center gap-2">
                           <LayoutGrid className="h-4 w-4" />
                           Grouped
                         </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="list" className="text-white/70 flex items-center gap-2">
+                        <DropdownMenuRadioItem value="list" className="text-foreground/70 flex items-center gap-2">
                           <LayoutList className="h-4 w-4" />
                           List
                         </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="compact" className="text-white/70 flex items-center gap-2">
+                        <DropdownMenuRadioItem value="compact" className="text-foreground/70 flex items-center gap-2">
                           <LayoutPanelTop className="h-4 w-4" />
                           Compact
                         </DropdownMenuRadioItem>
@@ -554,7 +554,7 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="bg-gray-900/95 border-white/10">
+                <TooltipContent side="bottom" className="bg-gray-900/95 border-border/10">
                   <p>Change view mode (V)</p>
                 </TooltipContent>
               </Tooltip>
@@ -567,7 +567,7 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                         variant="ghost"
                         size="icon"
                         className={cn(
-                          "hover:bg-white/10",
+                          "hover:bg-foreground/10",
                           sortBy !== "time" && "text-purple-400"
                         )}
                       >
@@ -576,57 +576,57 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       align="end"
-                      className="w-52 bg-gray-900/95 border-white/10 backdrop-blur-xl"
+                      className="w-52 bg-gray-900/95 border-border/10 backdrop-blur-xl"
                     >
                       <div className="px-2 py-1.5">
-                        <p className="text-sm font-medium text-white/80">Sort By</p>
+                        <p className="text-sm font-medium text-foreground/80">Sort By</p>
                       </div>
-                      <Separator className="bg-white/10" />
+                      <Separator className="bg-foreground/10" />
                       <DropdownMenuRadioGroup value={sortBy} onValueChange={(value) => setSortBy(value as SortBy)}>
                         <DropdownMenuRadioItem 
                           value="time" 
-                          className="text-white/70 flex items-center gap-2"
+                          className="text-foreground/70 flex items-center gap-2"
                         >
                           <AlarmClock className="h-4 w-4" />
                           Time
-                          <kbd className="ml-auto text-xs text-white/40 px-1.5 py-0.5 bg-white/5 rounded">1</kbd>
+                          <kbd className="ml-auto text-xs text-foreground/40 px-1.5 py-0.5 bg-foreground/5 rounded">1</kbd>
                         </DropdownMenuRadioItem>
                         <DropdownMenuRadioItem 
                           value="label" 
-                          className="text-white/70 flex items-center gap-2"
+                          className="text-foreground/70 flex items-center gap-2"
                         >
                           <Tag className="h-4 w-4" />
                           Label
-                          <kbd className="ml-auto text-xs text-white/40 px-1.5 py-0.5 bg-white/5 rounded">2</kbd>
+                          <kbd className="ml-auto text-xs text-foreground/40 px-1.5 py-0.5 bg-foreground/5 rounded">2</kbd>
                         </DropdownMenuRadioItem>
                         <DropdownMenuRadioItem 
                           value="date" 
-                          className="text-white/70 flex items-center gap-2"
+                          className="text-foreground/70 flex items-center gap-2"
                         >
                           <CalendarDays className="h-4 w-4" />
                           Date
-                          <kbd className="ml-auto text-xs text-white/40 px-1.5 py-0.5 bg-white/5 rounded">3</kbd>
+                          <kbd className="ml-auto text-xs text-foreground/40 px-1.5 py-0.5 bg-foreground/5 rounded">3</kbd>
                         </DropdownMenuRadioItem>
                       </DropdownMenuRadioGroup>
-                      <Separator className="bg-white/10" />
+                      <Separator className="bg-foreground/10" />
                       <div className="p-2">
                         <Toggle
                           pressed={sortOrder === "desc"}
                           onPressedChange={(pressed) => setSortOrder(pressed ? "desc" : "asc")}
-                          className="w-full justify-start gap-2 hover:bg-white/10"
+                          className="w-full justify-start gap-2 hover:bg-foreground/10"
                         >
                           {sortOrder === "asc" ? (
                             <><SortAsc className="h-4 w-4" /> Ascending</>
                           ) : (
                             <><SortDesc className="h-4 w-4" /> Descending</>
                           )}
-                          <kbd className="ml-auto text-xs text-white/40 px-1.5 py-0.5 bg-white/5 rounded">Space</kbd>
+                          <kbd className="ml-auto text-xs text-foreground/40 px-1.5 py-0.5 bg-foreground/5 rounded">Space</kbd>
                         </Toggle>
                       </div>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="bg-gray-900/95 border-white/10">
+                <TooltipContent side="bottom" className="bg-gray-900/95 border-border/10">
                   <p>Sort options (1,2,3 to change, Space to toggle order)</p>
                 </TooltipContent>
               </Tooltip>
@@ -639,7 +639,7 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                         variant="ghost"
                         size="icon"
                         className={cn(
-                          "hover:bg-white/10",
+                          "hover:bg-foreground/10",
                           filterType !== "all" && "text-purple-400"
                         )}
                       >
@@ -648,14 +648,14 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                     </PopoverTrigger>
                     <PopoverContent
                       align="end"
-                      className="w-56 bg-gray-900/95 border-white/10 backdrop-blur-xl"
+                      className="w-56 bg-gray-900/95 border-border/10 backdrop-blur-xl"
                     >
                       <div className="space-y-1">
                         <div className="flex items-center justify-between px-2 pb-2">
-                          <h3 className="text-sm font-medium text-white/80">Filter Alarms</h3>
-                          <kbd className="text-xs text-white/40 px-1.5 py-0.5 bg-white/5 rounded">ESC to close</kbd>
+                          <h3 className="text-sm font-medium text-foreground/80">Filter Alarms</h3>
+                          <kbd className="text-xs text-foreground/40 px-1.5 py-0.5 bg-foreground/5 rounded">ESC to close</kbd>
                         </div>
-                        <Separator className="bg-white/10" />
+                        <Separator className="bg-foreground/10" />
                         <button
                           onClick={() => {
                             setFilterType("all")
@@ -664,12 +664,12 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                           className={cn(
                             "w-full px-2 py-1.5 text-sm text-left rounded",
                             "transition-colors duration-150",
-                            "hover:bg-white/10",
+                            "hover:bg-foreground/10",
                             "flex items-center justify-between",
-                            filterType === "all" ? "text-white bg-white/10" : "text-white/70"
+                            filterType === "all" ? "text-foreground bg-foreground/10" : "text-foreground/70"
                           )}>
                           All Alarms
-                          <kbd className="text-xs text-white/40 px-1.5 py-0.5 bg-white/5 rounded">A</kbd>
+                          <kbd className="text-xs text-foreground/40 px-1.5 py-0.5 bg-foreground/5 rounded">A</kbd>
                         </button>
                         <button
                           onClick={() => {
@@ -679,14 +679,14 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                           className={cn(
                             "w-full px-2 py-1.5 text-sm text-left rounded flex items-center justify-between",
                             "transition-colors duration-150",
-                            "hover:bg-white/10",
-                            filterType === "today" ? "text-white bg-white/10" : "text-white/70"
+                            "hover:bg-foreground/10",
+                            filterType === "today" ? "text-foreground bg-foreground/10" : "text-foreground/70"
                           )}>
                           <span className="flex items-center gap-2">
                             <Calendar className="h-3.5 w-3.5" />
                             Today
                           </span>
-                          <kbd className="text-xs text-white/40 px-1.5 py-0.5 bg-white/5 rounded">T</kbd>
+                          <kbd className="text-xs text-foreground/40 px-1.5 py-0.5 bg-foreground/5 rounded">T</kbd>
                         </button>
                         <button
                           onClick={() => {
@@ -696,14 +696,14 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                           className={cn(
                             "w-full px-2 py-1.5 text-sm text-left rounded flex items-center justify-between",
                             "transition-colors duration-150",
-                            "hover:bg-white/10",
-                            filterType === "recurring" ? "text-white bg-white/10" : "text-white/70"
+                            "hover:bg-foreground/10",
+                            filterType === "recurring" ? "text-foreground bg-foreground/10" : "text-foreground/70"
                           )}>
                           <span className="flex items-center gap-2">
                             <Clock className="h-3.5 w-3.5" />
                             Recurring
                           </span>
-                          <kbd className="text-xs text-white/40 px-1.5 py-0.5 bg-white/5 rounded">R</kbd>
+                          <kbd className="text-xs text-foreground/40 px-1.5 py-0.5 bg-foreground/5 rounded">R</kbd>
                         </button>
                         <button
                           onClick={() => {
@@ -713,20 +713,20 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                           className={cn(
                             "w-full px-2 py-1.5 text-sm text-left rounded flex items-center justify-between",
                             "transition-colors duration-150",
-                            "hover:bg-white/10",
-                            filterType === "scheduled" ? "text-white bg-white/10" : "text-white/70"
+                            "hover:bg-foreground/10",
+                            filterType === "scheduled" ? "text-foreground bg-foreground/10" : "text-foreground/70"
                           )}>
                           <span className="flex items-center gap-2">
                             <Calendar className="h-3.5 w-3.5" />
                             Scheduled
                           </span>
-                          <kbd className="text-xs text-white/40 px-1.5 py-0.5 bg-white/5 rounded">S</kbd>
+                          <kbd className="text-xs text-foreground/40 px-1.5 py-0.5 bg-foreground/5 rounded">S</kbd>
                         </button>
                       </div>
                     </PopoverContent>
                   </Popover>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="bg-gray-900/95 border-white/10">
+                <TooltipContent side="bottom" className="bg-gray-900/95 border-border/10">
                   <p>Filter alarms (A,T,R,S when menu open)</p>
                 </TooltipContent>
               </Tooltip>
@@ -734,7 +734,7 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
           </div>
 
           {searchTerm && (
-            <div className="text-sm text-white/60">
+            <div className="text-sm text-foreground/60">
               Found {filteredAndSortedAlarms.length} {filteredAndSortedAlarms.length === 1 ? 'alarm' : 'alarms'}
             </div>
           )}
@@ -774,18 +774,18 @@ export default function UpcomingAlarms({ alarms, onEditAlarm, onDeleteAlarm }: U
                   )}
                 >
                   <div className="flex items-center justify-between">
-                    <p className="font-mono text-base text-white/90">{alarm.time}</p>
+                    <p className="font-mono text-base text-foreground/90">{alarm.time}</p>
                     {alarm.isRecurring && (
                       <BellRing className="h-3.5 w-3.5 text-purple-400/90" />
                     )}
                   </div>
                   
                   {alarm.label && (
-                    <p className="text-sm text-white/60 truncate">{alarm.label}</p>
+                    <p className="text-sm text-foreground/60 truncate">{alarm.label}</p>
                   )}
                   
                   {alarm.reminderDate && (
-                    <p className="text-xs text-white/40 mt-auto">
+                    <p className="text-xs text-foreground/40 mt-auto">
                       {new Date(alarm.reminderDate).toLocaleDateString(undefined, {
                         month: 'short',
                         day: 'numeric'

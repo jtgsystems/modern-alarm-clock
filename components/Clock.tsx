@@ -22,7 +22,7 @@ function Clock({ currentTime }: ClockProps) {
       >
         <time 
           dateTime={currentTime.toISOString()}
-          className="time text-[8rem] font-mono font-bold tracking-tighter bg-gradient-to-r from-white to-white/80 text-transparent bg-clip-text"
+        className="time text-[8rem] font-mono font-bold tracking-tighter bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text"
         >
           {formattedTime}
         </time>

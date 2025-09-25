@@ -323,13 +323,13 @@ export default function WeatherSuggestion({ temperature, condition, humidity, wi
               ? "text-blue-100/90"
               : temperature >= 25
               ? "text-orange-100/90"
-              : "text-white/80",
+              : "text-foreground/80",
             "border",
             temperature <= 10 
               ? "border-blue-500/10 hover:border-blue-500/20"
               : temperature >= 25
               ? "border-orange-500/10 hover:border-orange-500/20"
-              : "border-white/10 hover:border-white/20",
+              : "border-border/10 hover:border-border/20",
             "transition-all duration-300",
             "animate-in fade-in-50 slide-in-from-bottom-2",
             "group",
@@ -348,7 +348,7 @@ export default function WeatherSuggestion({ temperature, condition, humidity, wi
               ? "bg-blue-500/10 text-blue-400"
               : temperature >= 25
               ? "bg-orange-500/10 text-orange-400"
-              : "bg-white/10 text-white/70",
+              : "bg-foreground/10 text-foreground/70",
             "transition-transform duration-300",
             "group-hover:scale-110"
           )}>
@@ -366,7 +366,7 @@ export default function WeatherSuggestion({ temperature, condition, humidity, wi
               ? "bg-gradient-to-r from-blue-500/5 to-transparent"
               : temperature >= 25
               ? "bg-gradient-to-r from-orange-500/5 to-transparent"
-              : "bg-gradient-to-r from-white/5 to-transparent"
+              : "bg-gradient-to-r from-foreground/8 to-transparent"
           )} />
         </div>
       ))}

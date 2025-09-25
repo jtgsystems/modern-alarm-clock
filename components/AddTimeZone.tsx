@@ -228,20 +228,20 @@ export default function AddTimeZone({ onAdd, onClose }: AddTimeZoneProps) {
             onChange={(e) => setSearch(e.target.value)}
             className={cn(
               "pl-9",
-              "bg-white/5 border-white/10",
-              "text-white placeholder:text-white/50",
-              "focus:border-white/20 focus:ring-0",
+              "bg-foreground/5 border-border/10",
+              "text-foreground placeholder:text-foreground/50",
+              "focus:border-border/20 focus:ring-0",
               "h-10 rounded-lg"
             )}
           />
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/50" />
         </div>
 
         <Button
           type="button"
           variant="outline"
           onClick={detectLocalTimeZone}
-          className="w-full border-white/20 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white"
+          className="w-full border-border/20 bg-foreground/5 text-foreground/80 hover:bg-foreground/10 hover:text-foreground"
         >
           <MapPin className="h-4 w-4 mr-2" /> Detect My City
         </Button>
@@ -249,15 +249,15 @@ export default function AddTimeZone({ onAdd, onClose }: AddTimeZoneProps) {
         <Select onValueChange={setSelectedTimeZone} required>
           <SelectTrigger
             className={cn(
-              "bg-white/5 border-white/10",
-              "text-white placeholder:text-white/50",
-              "focus:border-white/20 focus:ring-0",
+              "bg-foreground/5 border-border/10",
+              "text-foreground placeholder:text-foreground/50",
+              "focus:border-border/20 focus:ring-0",
               "h-12 px-4 rounded-lg",
             )}
           >
             <SelectValue placeholder="Choose a time zone" />
           </SelectTrigger>
-          <SelectContent className="bg-gray-900 text-white border-white/10">
+          <SelectContent className="bg-gray-900 text-foreground border-border/10">
             <ScrollArea className="h-[300px]">
               <SelectGroup>
                 {filteredTimeZones.map((tz) => {
@@ -267,7 +267,7 @@ export default function AddTimeZone({ onAdd, onClose }: AddTimeZoneProps) {
                       <div className="flex items-center gap-2">
                         <Flag className="w-4 h-4" />
                         <span>{tz.name}</span>
-                        <span className="text-white/40 text-xs">({tz.zone})</span>
+                        <span className="text-foreground/40 text-xs">({tz.zone})</span>
                       </div>
                     </SelectItem>
                   )
@@ -284,10 +284,10 @@ export default function AddTimeZone({ onAdd, onClose }: AddTimeZoneProps) {
           variant="outline"
           onClick={onClose}
           className={cn(
-            "border-white/40 text-white font-medium",
+            "border-border/40 text-foreground font-medium",
             "bg-gray-800/50",
-            "hover:bg-gray-700/70 hover:text-white hover:border-white/60",
-            "focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-900",
+            "hover:bg-gray-700/70 hover:text-foreground hover:border-border/60",
+            "focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-gray-900",
           )}
         >
           Cancel
@@ -296,7 +296,7 @@ export default function AddTimeZone({ onAdd, onClose }: AddTimeZoneProps) {
           type="submit"
           className={cn(
             "bg-gradient-to-r from-cyan-500 to-purple-500",
-            "text-white font-medium",
+            "text-foreground font-medium",
             "border-0",
             "hover:from-cyan-600 hover:to-purple-600",
             "focus:ring-0",

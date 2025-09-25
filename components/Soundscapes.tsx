@@ -20,8 +20,8 @@ export default function Soundscapes({ className }: { className?: string }) {
   return (
     <div className={cn('neu-layer p-5 shadow-[0_20px_60px_rgba(0,0,0,0.35)]', className)}>
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white/50">Soundscapes</h3>
-        <button onClick={stopAll} className="text-xs text-white/60 hover:text-white">Stop all</button>
+        <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground/50">Soundscapes</h3>
+        <button onClick={stopAll} className="text-xs text-foreground/60 hover:text-foreground">Stop all</button>
       </div>
       <div className="flex flex-wrap gap-2">
         {SFX.map((s) => {
@@ -34,7 +34,7 @@ export default function Soundscapes({ className }: { className?: string }) {
               className={cn(
                 'inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs',
                 'transition-colors',
-                isActive ? 'border-white/25 bg-white/10 text-white' : 'border theme-border text-white/70 hover:text-white'
+                isActive ? 'border-border/25 bg-foreground/10 text-foreground' : 'border theme-border text-foreground/70 hover:text-foreground'
               )}
             >
               <span className="text-base leading-none">{s.icon}</span>
@@ -47,7 +47,7 @@ export default function Soundscapes({ className }: { className?: string }) {
         <div className="mt-4 space-y-3">
           {active.map((name) => (
             <div key={name} className="flex items-center gap-3">
-              <span className="w-20 text-xs text-white/60 capitalize">{String(name)}</span>
+              <span className="w-20 text-xs text-foreground/60 capitalize">{String(name)}</span>
               <Slider className="flex-1" defaultValue={[0.5]} max={1} step={0.01} onValueChange={(v) => setVolume(name, v[0])} />
             </div>
           ))}

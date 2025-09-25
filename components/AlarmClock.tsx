@@ -8,7 +8,7 @@ import Clock from "./Clock"
 import SnoozePanel from "./SnoozePanel"
 import ThemeToggle from "./ThemeToggle"
 import UpcomingAlarms from "./UpcomingAlarms"
-const DynamicAlarmDialog = dynamic(() => import('./AlarmDialog'), { ssr: false, loading: () => <div className="h-96 bg-white/5 rounded-xl animate-pulse" /> })
+const DynamicAlarmDialog = dynamic(() => import('./AlarmDialog'), { ssr: false, loading: () => <div className="h-96 bg-foreground/5 rounded-xl animate-pulse" /> })
 // Dialog primitives not used directly; AlarmDialog encapsulates them
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -105,7 +105,7 @@ function CalendarContainer({ isOpen, onClose, children, currentTheme }: Calendar
         className={cn(
           "relative",
           `bg-gradient-to-b ${currentTheme.colors.primary}`,
-          "border border-white/10 rounded-xl",
+          "border border-border/10 rounded-xl",
           "p-4 shadow-2xl",
           "transform transition-all duration-200",
           "animate-in fade-in-0 zoom-in-95"
@@ -267,14 +267,14 @@ export default function AlarmClock() {
         {/* Buttons and Upcoming Alarms Section */}
         <div className="space-y-6">
           <div className="flex gap-2">
-            <button onClick={() => { startTransition(() => setShowAlarmDialog(true)) }} className={`flex-1 p-3 rounded-lg ${currentTheme.colors.secondary} text-cyber-text-primary hover:bg-white/10 border border-white/10 transition-colors`} aria-label="Open dialog to set a new alarm">
+            <button onClick={() => { startTransition(() => setShowAlarmDialog(true)) }} className={`flex-1 p-3 rounded-lg ${currentTheme.colors.secondary} text-cyber-text-primary hover:bg-foreground/10 border border-border/10 transition-colors`} aria-label="Open dialog to set a new alarm">
               Set Alarm
             </button>
-            <button onClick={() => { startTransition(() => setIsCalendarOpen(true)) }} className={`flex-1 p-3 rounded-lg ${currentTheme.colors.secondary} text-cyber-text-primary hover:bg-white/10 border border-white/10 transition-colors`} aria-label="Open calendar to add a time zone">
+            <button onClick={() => { startTransition(() => setIsCalendarOpen(true)) }} className={`flex-1 p-3 rounded-lg ${currentTheme.colors.secondary} text-cyber-text-primary hover:bg-foreground/10 border border-border/10 transition-colors`} aria-label="Open calendar to add a time zone">
               Add Time Zone
             </button>
           </div>
-          <div className={`p-4 rounded-xl ${currentTheme.colors.secondary} border border-white/10 backdrop-blur-sm`}>
+          <div className={`p-4 rounded-xl ${currentTheme.colors.secondary} border border-border/10 backdrop-blur-sm`}>
             <UpcomingAlarms alarms={alarms} />
           </div>
         </div>
@@ -284,11 +284,11 @@ export default function AlarmClock() {
         <AppointmentList appointments={getAllAppointments} />
 
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-medium text-white/90">Calendar</h2>
+          <h2 className="text-lg font-medium text-foreground/90">Calendar</h2>
           <Button
             variant="outline"
             onClick={() => { startTransition(() => setIsCalendarOpen(true)) }}
-            className={`border-white/10 text-cyber-text-secondary hover:${currentTheme.colors.secondary}`}
+            className={`border-border/10 text-cyber-text-secondary hover:${currentTheme.colors.secondary}`}
             aria-label="Open calendar dialog"
           >
             Open Calendar
@@ -299,13 +299,13 @@ export default function AlarmClock() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-medium text-white/90">Select Date</h2>
-                <p className="text-sm text-white/60">Choose a date for your alarm</p>
+                <h2 className="text-lg font-medium text-foreground/90">Select Date</h2>
+                <p className="text-sm text-foreground/60">Choose a date for your alarm</p>
               </div>
-              <div className="text-sm text-white/60">
-                <kbd className="px-2 py-1 bg-white/10 rounded">Alt + ←→</kbd> Navigate weeks
+              <div className="text-sm text-foreground/60">
+                <kbd className="px-2 py-1 bg-foreground/10 rounded">Alt + ←→</kbd> Navigate weeks
                 <br />
-                <kbd className="px-2 py-1 bg-white/10 rounded ml-1">Alt + ↑↓</kbd> Navigate months
+                <kbd className="px-2 py-1 bg-foreground/10 rounded ml-1">Alt + ↑↓</kbd> Navigate months
               </div>
             </div>
 
@@ -316,7 +316,7 @@ export default function AlarmClock() {
               modifiers={{
                 hasReminder: (date) => getDayReminders(date).length > 0,
               }}
-              className="rounded-lg border border-white/10 p-3"
+              className="rounded-lg border border-border/10 p-3"
               classNames={{
                 day_selected: `bg-cyber-accent text-cyber-text-primary hover:bg-cyber-accent`,
                 day_today: `${currentTheme.colors.secondary} text-cyber-text-primary font-semibold`,
@@ -329,18 +329,18 @@ export default function AlarmClock() {
             />
 
             {selectedDate && getDayReminders(selectedDate).length > 0 && (
-              <div className="mt-4 p-4 rounded-lg bg-white/5 border border-white/10">
-                <h4 className="text-sm font-medium text-white/80 mb-3">
+              <div className="mt-4 p-4 rounded-lg bg-foreground/5 border border-border/10">
+                <h4 className="text-sm font-medium text-foreground/80 mb-3">
                   Reminders for {selectedDate.toLocaleDateString()}
                 </h4>
                 <div className="space-y-2">
                   {getDayReminders(selectedDate).map((reminder) => (
                     <div
                       key={reminder.id}
-                      className="flex items-center justify-between p-2 rounded-md bg-white/5 hover:bg-white/10 transition-colors"
+                      className="flex items-center justify-between p-2 rounded-md bg-foreground/5 hover:bg-foreground/10 transition-colors"
                     >
-                      <span className="text-sm text-white/80">{reminder.label || "Reminder"}</span>
-                      <span className="text-xs text-white/60">{reminder.time}</span>
+                      <span className="text-sm text-foreground/80">{reminder.label || "Reminder"}</span>
+                      <span className="text-xs text-foreground/60">{reminder.time}</span>
                     </div>
                   ))}
                 </div>
@@ -362,8 +362,8 @@ export default function AlarmClock() {
       <ShortcutsHint />
 
       {/* Help text for new users */}
-      <div className="fixed bottom-4 left-4 text-xs text-white/40">
-        Press <kbd className="px-1.5 py-0.5 bg-white/10 rounded">Shift + ?</kbd> for keyboard shortcuts
+      <div className="fixed bottom-4 left-4 text-xs text-foreground/40">
+        Press <kbd className="px-1.5 py-0.5 bg-foreground/10 rounded">Shift + ?</kbd> for keyboard shortcuts
       </div>
     </>
   )

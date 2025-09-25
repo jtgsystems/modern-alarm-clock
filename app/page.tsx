@@ -12,10 +12,10 @@ const DynamicDigitalClock = dynamic(() => import('../components/DigitalClock'), 
 export default function Home() {
   return (
     <DynamicThemeProvider>
-      <ClientMotionWrapper className="relative min-h-screen overflow-hidden bg-[#060b16] text-white">
+      <ClientMotionWrapper className="relative min-h-screen overflow-hidden bg-background text-foreground transition-colors duration-500">
  
         {/* Main Digital Clock Application with streamlined styling */}
-        <Suspense fallback={<div className="h-screen flex items-center justify-center text-white">Loading clock...</div>}>
+        <Suspense fallback={<div className="h-screen flex items-center justify-center text-foreground">Loading clock...</div>}>
           <DynamicDigitalClock />
         </Suspense>
  

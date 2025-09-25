@@ -70,6 +70,7 @@ A sophisticated, feature-rich alarm clock application built with Next.js 15, fea
 - **Ambient Sounds**: Nature sounds and white noise
 - **Focus Music**: Concentration-enhancing audio
 - **Sleep Sounds**: Relaxing audio for better rest
+- **CC0 Library**: See `docs/soundscape-assets.md` for source links and licensing details
 
 ## 🛠️ Technology Stack
 

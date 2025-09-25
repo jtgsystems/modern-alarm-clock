@@ -90,7 +90,7 @@ export default function Stopwatch() {
 
   return (
     <div className="w-full">
-      <Card className={`border-white/10 ${currentTheme.colors.primary} backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.45)]`}>
+      <Card className={`border-border/10 ${currentTheme.colors.primary} backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.45)]`}>
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
             <Timer className="w-5 h-5" style={{ color: currentTheme.colors.accent }} />
@@ -117,21 +117,21 @@ export default function Stopwatch() {
               const { h, m, s, cs } = getTimeParts(elapsedTime)
               const segment = (value: string, label: string) => (
                 <div className="bg-black/40 px-3 sm:px-4 py-2 sm:py-2.5 text-center">
-                  <div className="text-[clamp(1.2rem,3.6vw,2.2rem)] font-sans font-medium tracking-[0.06em] tabular-nums text-white/95">
+                  <div className="text-[clamp(1.2rem,3.6vw,2.2rem)] font-sans font-medium tracking-[0.06em] tabular-nums text-foreground/95">
                     {value}
                   </div>
-                  <div className="mt-1 text-[10px] sm:text-[11px] tracking-[0.22em] text-white/40 uppercase">{label}</div>
+                  <div className="mt-1 text-[10px] sm:text-[11px] tracking-[0.22em] text-foreground/40 uppercase">{label}</div>
                 </div>
               )
 
               return (
                 <div className="z-10 flex items-end justify-center gap-2 sm:gap-3">
                   {segment(h, 'HRS')}
-                  <div className="pb-3 sm:pb-3.5 text-white/40 text-lg sm:text-2xl">:</div>
+                  <div className="pb-3 sm:pb-3.5 text-foreground/40 text-lg sm:text-2xl">:</div>
                   {segment(m, 'MIN')}
-                  <div className="pb-3 sm:pb-3.5 text-white/40 text-lg sm:text-2xl">:</div>
+                  <div className="pb-3 sm:pb-3.5 text-foreground/40 text-lg sm:text-2xl">:</div>
                   {segment(s, 'SEC')}
-                  <div className="pb-3 sm:pb-3.5 text-white/40 text-lg sm:text-2xl">.</div>
+                  <div className="pb-3 sm:pb-3.5 text-foreground/40 text-lg sm:text-2xl">.</div>
                   {segment(cs, 'CS')}
                 </div>
               )
@@ -193,7 +193,7 @@ export default function Stopwatch() {
                 {laps.map((lap, index) => (
                   <motion.div
                     key={index}
-                    className={`flex justify-between items-center p-3 rounded-xl ${currentTheme.colors.secondary} border border-white/10 text-sm`}
+                    className={`flex justify-between items-center p-3 rounded-xl ${currentTheme.colors.secondary} border border-border/10 text-sm`}
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: index * 0.06 }}

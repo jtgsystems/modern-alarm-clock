@@ -18,7 +18,7 @@ function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
       animate={{ opacity: 1, scale: 1 }}
       className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/20 dark:to-orange-950/20"
     >
-      <div className="max-w-md w-full mx-4 p-6 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-xl border border-red-200 dark:border-red-800">
+      <div className="max-w-md w-full mx-4 p-6 bg-foreground/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-xl border border-red-200 dark:border-red-800">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}

@@ -27,8 +27,8 @@ export default function CalendarButton({ onClick, className = '' }: CalendarButt
         onMouseDown={() => setIsPressed(true)}
         onMouseUp={() => setIsPressed(false)}
         onMouseLeave={() => setIsPressed(false)}
-        className={`h-12 w-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 transition-colors duration-150 ${
-          isPressed ? 'bg-white/30' : ''
+        className={`h-12 w-12 rounded-full bg-foreground/10 backdrop-blur-sm border border-border/20 transition-colors duration-150 ${
+          isPressed ? 'bg-foreground/30' : ''
         }`}
       >
         <motion.div

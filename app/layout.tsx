@@ -103,7 +103,7 @@ export default function RootLayout({
               closeButton={true}
               toastOptions={{
                 duration: 4000,
-                className: 'backdrop-blur-md bg-white/90 dark:bg-gray-900/90 border border-white/20 dark:border-gray-700/20'
+                className: 'backdrop-blur-md bg-surface/95 dark:bg-gray-900/90 border border-border/20 dark:border-gray-700/20 shadow-glass'
               }}
             />
           </SettingsProvider>
