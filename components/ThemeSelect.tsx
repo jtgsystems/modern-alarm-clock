@@ -5,6 +5,7 @@ import { ChevronDown } from 'lucide-react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useSettings, type AppTheme } from '@/context/SettingsContext'
 import { cn } from '@/lib/utils'
+import { useTheme as useNextTheme } from 'next-themes'
 
 type ThemeMeta = {
   id: AppTheme
@@ -141,16 +142,19 @@ interface ThemeSelectProps {
 }
 
 export function ThemeSelect({ className }: ThemeSelectProps = {}) {
-  const { settings, setTheme } = useSettings()
+  const { settings, setTheme: setAppTheme } = useSettings()
+  const { setTheme: setNextTheme } = useNextTheme()
   const [theme, setThemeState] = useState<string>(settings.app.theme)
 
   useEffect(() => {
     setThemeState(settings.app.theme)
-  }, [settings.app.theme])
+    setNextTheme(settings.app.theme === 'light' ? 'light' : 'dark')
+  }, [settings.app.theme, setNextTheme])
 
   const onChange = (value: string) => {
     setThemeState(value)
-    setTheme(value as AppTheme)
+    setAppTheme(value as AppTheme)
+    setNextTheme(value === 'light' ? 'light' : 'dark')
   }
 
   const selectedPreset = useMemo(
