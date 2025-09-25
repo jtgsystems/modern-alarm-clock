@@ -79,6 +79,62 @@ const THEME_PRESETS: ThemeMeta[] = [
     description: 'Luminous violets blended with fuchsia sparks for dreamy focus sessions.',
     palette: ['#12051C', '#A855F7', '#F472B6', '#F3E8FF'],
   },
+  {
+    id: 'hyrule-dawn',
+    label: 'Hyrule Dawn',
+    theory: 'Triadic Pastels',
+    description: 'Verdant fields, sunrise gold, and skyward blues channeling legendary quests.',
+    palette: ['#0B2B2F', '#2F7F5F', '#A5D9C8', '#F9C857'],
+  },
+  {
+    id: 'vault-tec',
+    label: 'Vault-Tec',
+    theory: 'Retro Complementary',
+    description: 'Atomic-age cobalt and vault yellow for optimistic wasteland resilience.',
+    palette: ['#04112F', '#0056A6', '#FFD54F', '#FFF6CC'],
+  },
+  {
+    id: 'wild-hunt',
+    label: 'Wild Hunt',
+    theory: 'Muted Complementary',
+    description: 'Stormy blues and elder blood crimson evoking monster-slaying nights.',
+    palette: ['#0F1A21', '#3A4F5F', '#C9D6CF', '#B6463D'],
+  },
+  {
+    id: 'pixel-plains',
+    label: 'Pixel Plains',
+    theory: 'Analogous Earth',
+    description: 'Blocky emerald hills and torchlight gold for cozy crafting sessions.',
+    palette: ['#0F2A1A', '#2D6A4F', '#8ED081', '#F4E8C1'],
+  },
+  {
+    id: 'duke-nukem',
+    label: 'Duke Nukem',
+    theory: 'Complementary Hazard',
+    description: 'Industrial midnight steel splashed with hazard yellow and explosive crimson.',
+    palette: ['#090B1A', '#FFB400', '#FF5630', '#FFE29A'],
+  },
+  {
+    id: 'doom-eternal',
+    label: 'DOOM Eternal',
+    theory: 'Infernal Complementary',
+    description: 'Charred basalt, inferno orange, and argent glow for relentless demon slaying.',
+    palette: ['#110607', '#8B1E1E', '#FF521B', '#FCE5C8'],
+  },
+  {
+    id: 'dk-country',
+    label: 'DK Country',
+    theory: 'Jungle Analogous',
+    description: 'Lush canopy greens with barrel browns and banana gold straight from the jungle.',
+    palette: ['#0D1F12', '#2E7D32', '#8FBF5B', '#F4C542'],
+  },
+  {
+    id: 'battlefield',
+    label: 'Battlefield',
+    theory: 'Split Complementary',
+    description: 'Frostbitten blues ignited by tracer orange for high-impact skirmish energy.',
+    palette: ['#061420', '#1E3A5F', '#4D88B3', '#FF7849'],
+  },
 ]
 
 const ThemeSwatches = ({ colors, size = 'md' }: { colors: string[]; size?: 'sm' | 'md' }) => {

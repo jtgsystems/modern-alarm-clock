@@ -2,7 +2,24 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
 
-export type AppTheme = 'midnight' | 'aurora' | 'sunset' | 'slate' | 'light' | 'dark' | 'cyberpunk' | 'neon-blue' | 'purple-glow'
+export type AppTheme =
+  | 'midnight'
+  | 'aurora'
+  | 'sunset'
+  | 'slate'
+  | 'light'
+  | 'dark'
+  | 'cyberpunk'
+  | 'neon-blue'
+  | 'purple-glow'
+  | 'hyrule-dawn'
+  | 'vault-tec'
+  | 'wild-hunt'
+  | 'pixel-plains'
+  | 'duke-nukem'
+  | 'doom-eternal'
+  | 'dk-country'
+  | 'battlefield'
 export type AppFont = 'inter' | 'roboto' | 'montserrat' | 'lora' | 'space-grotesk'
 
 export interface SettingsSchema {
