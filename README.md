@@ -1,3 +1,5 @@
+![Banner](banner.png)
+
 # 🕐 Modern Alarm Clock
 
 A sophisticated, feature-rich alarm clock application built with Next.js 15, featuring dynamic theming, neumorphic design, and comprehensive time management capabilities.
