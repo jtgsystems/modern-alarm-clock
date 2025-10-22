@@ -233,3 +233,7 @@ If you encounter any issues or have questions:
 [🌟 Star this project](https://github.com/jtgsystems/modern-alarm-clock) | [🐛 Report Bug](https://github.com/jtgsystems/modern-alarm-clock/issues) | [✨ Request Feature](https://github.com/jtgsystems/modern-alarm-clock/issues)
 
 </div>
+
+### SEO Keyword Cloud
+
+`alarm` `clock` `nextjs` `react` `typescript` `tailwind` `framer` `motion` `neumorphism` `glassmorphism` `theming` `ui` `ux` `responsive` `mobile` `desktop` `darkmode` `lightmode` `radio` `streaming` `weather` `forecast` `alarms` `scheduler` `snooze` `sleep` `focus` `productivity` `soundscapes` `ambient` `music` `gesture` `controls` `touchscreen` `accessibility` `animation` `transitions` `timezone` `worldclock` `notifications` `performance` `lighthouse` `corewebvitals` `progressive` `webapp` `pwa` `monitoring` `customization` `personalization` `experience`
